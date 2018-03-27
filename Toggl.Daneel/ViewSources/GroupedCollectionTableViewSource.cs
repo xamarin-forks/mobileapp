@@ -34,7 +34,7 @@ namespace Toggl.Daneel.ViewSources
             this.cellIdentifier = cellIdentifier;
             this.headerCellIdentifier = headerCellIdentifier;
 
-            UseAnimations = true;
+            UseAnimations = false;
         }
 
         public override UIView GetViewForHeader(UITableView tableView, nint section)
