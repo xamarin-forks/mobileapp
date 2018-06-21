@@ -72,7 +72,7 @@ namespace Toggl.Foundation.Tests.DataSources
 
             protected IDatabaseTimeEntry FromDto(TimeEntryDto dto)
             {
-                var te = new MockTimeEntry(Models.TimeEntry.Clean(dto));
+                var te = new MockTimeEntry(Models.TimeEntry.From(dto));
                 te.SyncStatus = dto.SyncStatus;
                 te.IsDeleted = dto.IsDeleted;
                 te.LastSyncErrorMessage = dto.LastSyncErrorMessage;

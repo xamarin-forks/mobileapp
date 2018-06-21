@@ -269,7 +269,7 @@ namespace Toggl.Foundation.Tests.Login
             [Fact, LogIfTooSlow]
             public void ReturnsADataSourceIfTheUserExistsInTheDatabase()
             {
-                var observable = Observable.Return<IDatabaseUser>(FoundationUser.Clean(User));
+                var observable = Observable.Return<IDatabaseUser>(FoundationUser.From(UserDto.Clean(User)));
                 Database.User.Single().Returns(observable);
 
                 var result = LoginManager.GetDataSourceIfLoggedIn();

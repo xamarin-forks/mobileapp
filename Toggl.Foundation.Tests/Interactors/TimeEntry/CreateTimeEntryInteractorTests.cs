@@ -63,7 +63,7 @@ namespace Toggl.Foundation.Tests.Interactors
 
             private IThreadSafeTimeEntry fromDto(TimeEntryDto dto)
             {
-                var te = new MockTimeEntry(TimeEntry.Clean(dto));
+                var te = new MockTimeEntry(TimeEntry.From(dto));
                 te.SyncStatus = dto.SyncStatus;
                 te.IsDeleted = dto.IsDeleted;
                 te.LastSyncErrorMessage = dto.LastSyncErrorMessage;
