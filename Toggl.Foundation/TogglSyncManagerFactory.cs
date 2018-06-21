@@ -81,49 +81,57 @@ namespace Toggl.Foundation
             var fetchAllSince = new FetchAllSinceState(database, api, timeService);
 
             var persistWorkspaces =
-                new PersistListState<IWorkspace, IDatabaseWorkspace, IThreadSafeWorkspace>(dataSource.Workspaces, Workspace.Clean)
+                new PersistListState<IWorkspace, IDatabaseWorkspace, IThreadSafeWorkspace, WorkspaceDto>(
+                        dataSource.Workspaces, WorkspaceDto.Clean)
                     .UpdateSince<IWorkspace, IDatabaseWorkspace>(database.SinceParameters)
                     .ThrowNoWorkspaceExceptionIfNeeded()
                     .CatchApiExceptions();
 
             var persistWorkspaceFeatures =
-                new PersistListState<IWorkspaceFeatureCollection, IDatabaseWorkspaceFeatureCollection, IThreadSafeWorkspaceFeatureCollection>(
-                        dataSource.WorkspaceFeatures, WorkspaceFeatureCollection.From)
+                new PersistListState<IWorkspaceFeatureCollection, IDatabaseWorkspaceFeatureCollection, IThreadSafeWorkspaceFeatureCollection, WorkspaceFeatureCollectionDto>(
+                        dataSource.WorkspaceFeatures, collection => WorkspaceFeatureCollectionDto.From(collection))
                     .CatchApiExceptions();
 
             var persistUser =
-                new PersistSingletonState<IUser, IDatabaseUser, IThreadSafeUser>(dataSource.User, User.Clean)
+                new PersistSingletonState<IUser, IDatabaseUser, IThreadSafeUser, UserDto>(
+                        dataSource.User, UserDto.Clean)
                     .TrackNoDefaultWorkspace(analyticsService)
                     .CatchApiExceptions();
 
             var persistTags =
-                new PersistListState<ITag, IDatabaseTag, IThreadSafeTag>(dataSource.Tags, Tag.Clean)
+                new PersistListState<ITag, IDatabaseTag, IThreadSafeTag, TagDto>(
+                        dataSource.Tags, TagDto.Clean)
                     .UpdateSince<ITag, IDatabaseTag>(database.SinceParameters)
                     .CatchApiExceptions();
 
             var persistClients =
-                new PersistListState<IClient, IDatabaseClient, IThreadSafeClient>(dataSource.Clients, Client.Clean)
+                new PersistListState<IClient, IDatabaseClient, IThreadSafeClient, ClientDto>(
+                        dataSource.Clients, ClientDto.Clean)
                     .UpdateSince<IClient, IDatabaseClient>(database.SinceParameters)
                     .CatchApiExceptions();
 
             var persistPreferences =
-                new PersistSingletonState<IPreferences, IDatabasePreferences, IThreadSafePreferences>(dataSource.Preferences, Preferences.Clean)
+                new PersistSingletonState<IPreferences, IDatabasePreferences, IThreadSafePreferences, PreferencesDto>(
+                        dataSource.Preferences, PreferencesDto.Clean)
                     .CatchApiExceptions();
 
             var persistProjects =
-                new PersistListState<IProject, IDatabaseProject, IThreadSafeProject>(dataSource.Projects, Project.Clean)
+                new PersistListState<IProject, IDatabaseProject, IThreadSafeProject, ProjectDto>(
+                        dataSource.Projects, ProjectDto.Clean)
                     .UpdateSince<IProject, IDatabaseProject>(database.SinceParameters)
                     .CatchApiExceptions();
 
             var createGhostProjects = new CreateGhostProjectsState(dataSource.Projects, analyticsService).CatchApiExceptions();
 
             var persistTimeEntries =
-                new PersistListState<ITimeEntry, IDatabaseTimeEntry, IThreadSafeTimeEntry>(dataSource.TimeEntries, TimeEntry.Clean)
+                new PersistListState<ITimeEntry, IDatabaseTimeEntry, IThreadSafeTimeEntry, TimeEntryDto>(
+                        dataSource.TimeEntries, TimeEntryDto.Clean)
                     .UpdateSince<ITimeEntry, IDatabaseTimeEntry>(database.SinceParameters)
                     .CatchApiExceptions();
 
             var persistTasks =
-                new PersistListState<ITask, IDatabaseTask, IThreadSafeTask>(dataSource.Tasks, Task.Clean)
+                new PersistListState<ITask, IDatabaseTask, IThreadSafeTask, TaskDto>(
+                        dataSource.Tasks, TaskDto.Clean)
                     .UpdateSince<ITask, IDatabaseTask>(database.SinceParameters)
                     .CatchApiExceptions();
 
@@ -180,43 +188,43 @@ namespace Toggl.Foundation
             StateResult entryPoint,
             IObservable<Unit> delayCancellation)
         {
-            var pushingWorkspacesFinished = configureCreateOnlyPush(transitions, entryPoint, dataSource.Workspaces, api.Workspaces, Workspace.Clean, Workspace.Unsyncable, api, scheduler, delayCancellation);
-            var pushingUsersFinished = configurePushSingleton(transitions, pushingWorkspacesFinished, dataSource.User, api.User, User.Clean, User.Unsyncable, api, scheduler, delayCancellation);
-            var pushingPreferencesFinished = configurePushSingleton(transitions, pushingUsersFinished, dataSource.Preferences, api.Preferences, Preferences.Clean, Preferences.Unsyncable, api, scheduler, delayCancellation);
-            var pushingTagsFinished = configureCreateOnlyPush(transitions, pushingPreferencesFinished, dataSource.Tags, api.Tags, Tag.Clean, Tag.Unsyncable, api, scheduler, delayCancellation);
-            var pushingClientsFinished = configureCreateOnlyPush(transitions, pushingTagsFinished, dataSource.Clients, api.Clients, Client.Clean, Client.Unsyncable, api, scheduler, delayCancellation);
-            var pushingProjectsFinished = configureCreateOnlyPush(transitions, pushingClientsFinished, dataSource.Projects, api.Projects, Project.Clean, Project.Unsyncable, api, scheduler, delayCancellation);
-            configurePush(transitions, pushingProjectsFinished, dataSource.TimeEntries, api.TimeEntries, api.TimeEntries, api.TimeEntries, TimeEntry.Clean, TimeEntry.Unsyncable, api, apiDelay, scheduler, delayCancellation);
+            var pushingWorkspacesFinished = configureCreateOnlyPush(transitions, entryPoint, dataSource.Workspaces, api.Workspaces, WorkspaceDto.Clean, WorkspaceDto.Unsyncable, api, scheduler, delayCancellation);
+            var pushingUsersFinished = configurePushSingleton(transitions, pushingWorkspacesFinished, dataSource.User, api.User, UserDto.Clean, UserDto.Unsyncable, api, scheduler, delayCancellation);
+            var pushingPreferencesFinished = configurePushSingleton(transitions, pushingUsersFinished, dataSource.Preferences, api.Preferences, PreferencesDto.Clean, PreferencesDto.Unsyncable, api, scheduler, delayCancellation);
+            var pushingTagsFinished = configureCreateOnlyPush(transitions, pushingPreferencesFinished, dataSource.Tags, api.Tags, TagDto.Clean, TagDto.Unsyncable, api, scheduler, delayCancellation);
+            var pushingClientsFinished = configureCreateOnlyPush(transitions, pushingTagsFinished, dataSource.Clients, api.Clients, ClientDto.Clean, ClientDto.Unsyncable, api, scheduler, delayCancellation);
+            var pushingProjectsFinished = configureCreateOnlyPush(transitions, pushingClientsFinished, dataSource.Projects, api.Projects, ProjectDto.Clean, ProjectDto.Unsyncable, api, scheduler, delayCancellation);
+            configurePush(transitions, pushingProjectsFinished, dataSource.TimeEntries, api.TimeEntries, api.TimeEntries, api.TimeEntries, TimeEntryDto.Clean, TimeEntryDto.Unsyncable, api, apiDelay, scheduler, delayCancellation);
         }
 
-        private static IStateResult configurePush<TModel, TDatabase, TThreadsafe>(
+        private static IStateResult configurePush<TModel, TDatabase, TThreadsafe, TDto>(
             TransitionHandlerProvider transitions,
             IStateResult entryPoint,
-            IDataSource<TThreadsafe, TDatabase> dataSource,
+            IDataSource<TThreadsafe, TDatabase, TDto> dataSource,
             ICreatingApiClient<TModel> creatingApi,
             IUpdatingApiClient<TModel> updatingApi,
             IDeletingApiClient<TModel> deletingApi,
-            Func<TModel, TThreadsafe> toClean,
-            Func<TThreadsafe, string, TThreadsafe> toUnsyncable,
+            Func<TModel, TDto> toClean,
+            Func<TThreadsafe, string, TDto> toUnsyncable,
             ITogglApi api,
             IRetryDelayService apiDelay,
             IScheduler scheduler,
             IObservable<Unit> delayCancellation)
             where TModel : class, IIdentifiable, ILastChangedDatable
-            where TDatabase : class, TModel, IDatabaseSyncable
+            where TDatabase : class, TModel, IDatabaseModel, IDatabaseSyncable
             where TThreadsafe : class, TDatabase, IThreadSafeModel
         {
             var rnd = new Random();
             var statusDelay = new RetryDelayService(rnd);
 
-            var push = new PushState<TDatabase, TThreadsafe>(dataSource);
+            var push = new PushState<TDatabase, TThreadsafe, TDto>(dataSource);
             var pushOne = new PushOneEntityState<TThreadsafe>();
-            var create = new CreateEntityState<TModel, TThreadsafe>(creatingApi, dataSource, toClean);
-            var update = new UpdateEntityState<TModel, TThreadsafe>(updatingApi, dataSource, toClean);
-            var delete = new DeleteEntityState<TModel, TDatabase, TThreadsafe>(deletingApi, dataSource);
-            var deleteLocal = new DeleteLocalEntityState<TDatabase, TThreadsafe>(dataSource);
+            var create = new CreateEntityState<TModel, TThreadsafe, TDto>(creatingApi, dataSource, toClean);
+            var update = new UpdateEntityState<TModel, TThreadsafe, TDto>(updatingApi, dataSource, toClean);
+            var delete = new DeleteEntityState<TModel, TDatabase, TThreadsafe, TDto>(deletingApi, dataSource);
+            var deleteLocal = new DeleteLocalEntityState<TDatabase, TThreadsafe, TDto>(dataSource);
             var tryResolveClientError = new TryResolveClientErrorState<TThreadsafe>();
-            var unsyncable = new UnsyncableEntityState<TThreadsafe>(dataSource, toUnsyncable);
+            var unsyncable = new UnsyncableEntityState<TThreadsafe, TDto>(dataSource, toUnsyncable);
             var checkServerStatus = new CheckServerStatusState(api, scheduler, apiDelay, statusDelay, delayCancellation);
             var finished = new ResetAPIDelayState(apiDelay);
 
@@ -256,29 +264,29 @@ namespace Toggl.Foundation
             return push.NothingToPush;
         }
 
-        private static IStateResult configureCreateOnlyPush<TModel, TDatabase, TThreadsafe>(
+        private static IStateResult configureCreateOnlyPush<TModel, TDatabase, TThreadsafe, TDto>(
             TransitionHandlerProvider transitions,
             IStateResult entryPoint,
-            IDataSource<TThreadsafe, TDatabase> dataSource,
+            IDataSource<TThreadsafe, TDatabase, TDto> dataSource,
             ICreatingApiClient<TModel> creatingApi,
-            Func<TModel, TThreadsafe> toClean,
-            Func<TThreadsafe, string, TThreadsafe> toUnsyncable,
+            Func<TModel, TDto> toClean,
+            Func<TThreadsafe, string, TDto> toUnsyncable,
             ITogglApi api,
             IScheduler scheduler,
             IObservable<Unit> delayCancellation)
             where TModel : IIdentifiable, ILastChangedDatable
-            where TDatabase : class, TModel, IDatabaseSyncable
+            where TDatabase : class, TModel, IDatabaseSyncable, IDatabaseModel
             where TThreadsafe : class, TDatabase, IThreadSafeModel
         {
             var rnd = new Random();
             var apiDelay = new RetryDelayService(rnd);
             var statusDelay = new RetryDelayService(rnd);
 
-            var push = new PushState<TDatabase, TThreadsafe>(dataSource);
+            var push = new PushState<TDatabase, TThreadsafe, TDto>(dataSource);
             var pushOne = new PushOneEntityState<TThreadsafe>();
-            var create = new CreateEntityState<TModel, TThreadsafe>(creatingApi, dataSource, toClean);
+            var create = new CreateEntityState<TModel, TThreadsafe, TDto>(creatingApi, dataSource, toClean);
             var tryResolveClientError = new TryResolveClientErrorState<TThreadsafe>();
-            var unsyncable = new UnsyncableEntityState<TThreadsafe>(dataSource, toUnsyncable);
+            var unsyncable = new UnsyncableEntityState<TThreadsafe, TDto>(dataSource, toUnsyncable);
             var checkServerStatus = new CheckServerStatusState(api, scheduler, apiDelay, statusDelay, delayCancellation);
             var finished = new ResetAPIDelayState(apiDelay);
 
@@ -307,13 +315,13 @@ namespace Toggl.Foundation
             return push.NothingToPush;
         }
 
-        private static IStateResult configurePushSingleton<TModel, TThreadsafe>(
+        private static IStateResult configurePushSingleton<TModel, TThreadsafe, TDto>(
             TransitionHandlerProvider transitions,
             IStateResult entryPoint,
-            ISingletonDataSource<TThreadsafe> dataSource,
+            ISingletonDataSource<TThreadsafe, TDto> dataSource,
             IUpdatingApiClient<TModel> updatingApi,
-            Func<TModel, TThreadsafe> toClean,
-            Func<TThreadsafe, string, TThreadsafe> toUnsyncable,
+            Func<TModel, TDto> toClean,
+            Func<TThreadsafe, string, TDto> toUnsyncable,
             ITogglApi api,
             IScheduler scheduler,
             IObservable<Unit> delayCancellation)
@@ -324,11 +332,11 @@ namespace Toggl.Foundation
             var apiDelay = new RetryDelayService(rnd);
             var statusDelay = new RetryDelayService(rnd);
 
-            var push = new PushSingleState<TThreadsafe>(dataSource);
+            var push = new PushSingleState<TThreadsafe, TDto>(dataSource);
             var pushOne = new PushOneEntityState<TThreadsafe>();
-            var update = new UpdateEntityState<TModel, TThreadsafe>(updatingApi, dataSource, toClean);
+            var update = new UpdateEntityState<TModel, TThreadsafe, TDto>(updatingApi, dataSource, toClean);
             var tryResolveClientError = new TryResolveClientErrorState<TThreadsafe>();
-            var unsyncable = new UnsyncableEntityState<TThreadsafe>(dataSource, toUnsyncable);
+            var unsyncable = new UnsyncableEntityState<TThreadsafe, TDto>(dataSource, toUnsyncable);
             var checkServerStatus = new CheckServerStatusState(api, scheduler, apiDelay, statusDelay, delayCancellation);
             var finished = new ResetAPIDelayState(apiDelay);
 
