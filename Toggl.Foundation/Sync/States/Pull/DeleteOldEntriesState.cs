@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive.Linq;
 using Toggl.Foundation.DataSources;
 using Toggl.Multivac;
@@ -31,6 +32,7 @@ namespace Toggl.Foundation.Sync.States
         public IObservable<ITransition> Start() =>
             dataSource
                 .GetAll(suitableForDeletion)
+                .Select(list => list.Select(timeEntry => TimeEntryDto.From(timeEntry)))
                 .SelectMany(dataSource.DeleteAll)
                 .Select(_ => FinishedDeleting.Transition());
 

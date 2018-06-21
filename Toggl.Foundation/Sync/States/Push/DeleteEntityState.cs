@@ -5,26 +5,26 @@ using Toggl.Foundation.DataSources.Interfaces;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Multivac;
 using Toggl.Multivac.Models;
-using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.Models;
 using Toggl.Ultrawave.ApiClients.Interfaces;
 
 namespace Toggl.Foundation.Sync.States.Push
 {
-    internal sealed class DeleteEntityState<TModel, TDatabaseModel, TThreadsafeModel>
-        : BasePushEntityState<TThreadsafeModel>
+    internal sealed class DeleteEntityState<TModel, TDatabaseModel, TThreadsafeModel, TDto>
+        : BasePushEntityState<TThreadsafeModel, TDto>
         where TModel : IIdentifiable
-        where TDatabaseModel : class, TModel, IDatabaseSyncable
+        where TDatabaseModel : class, TModel, IDatabaseModel
         where TThreadsafeModel : class, TDatabaseModel, IThreadSafeModel
     {
         private readonly IDeletingApiClient<TModel> api;
 
-        private readonly IDataSource<TThreadsafeModel, TDatabaseModel> dataSource;
+        private readonly IDataSource<TThreadsafeModel, TDatabaseModel, TDto> dataSource;
 
         public StateResult DeletingFinished { get; } = new StateResult();
 
         public DeleteEntityState(
             IDeletingApiClient<TModel> api,
-            IDataSource<TThreadsafeModel, TDatabaseModel> dataSource)
+            IDataSource<TThreadsafeModel, TDatabaseModel, TDto> dataSource)
             : base(dataSource)
         {
             Ensure.Argument.IsNotNull(api, nameof(api));

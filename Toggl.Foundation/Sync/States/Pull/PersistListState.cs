@@ -12,36 +12,36 @@ using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.Sync.States.Pull
 {
-    internal sealed class PersistListState<TInterface, TDatabaseInterface, TThreadsafeInterface>
+    internal sealed class PersistListState<TInterface, TDatabaseInterface, TThreadsafeInterface, TDto>
         : IPersistState
         where TDatabaseInterface : TInterface, IDatabaseModel
         where TThreadsafeInterface : TDatabaseInterface, IThreadSafeModel
     {
-        private readonly IDataSource<TThreadsafeInterface, TDatabaseInterface> dataSource;
+        private readonly IDataSource<TThreadsafeInterface, TDatabaseInterface, TDto> dataSource;
 
-        private readonly Func<TInterface, TThreadsafeInterface> convertToThreadsafeEntity;
+        private readonly Func<TInterface, TDto> clean;
 
         public StateResult<IFetchObservables> FinishedPersisting { get; } = new StateResult<IFetchObservables>();
 
         public PersistListState(
-            IDataSource<TThreadsafeInterface, TDatabaseInterface> dataSource,
-            Func<TInterface, TThreadsafeInterface> convertToThreadsafeEntity)
+            IDataSource<TThreadsafeInterface, TDatabaseInterface, TDto> dataSource,
+            Func<TInterface, TDto> clean)
         {
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
-            Ensure.Argument.IsNotNull(convertToThreadsafeEntity, nameof(convertToThreadsafeEntity));
+            Ensure.Argument.IsNotNull(clean, nameof(clean));
 
             this.dataSource = dataSource;
-            this.convertToThreadsafeEntity = convertToThreadsafeEntity;
+            this.clean = clean;
         }
 
         public IObservable<ITransition> Start(IFetchObservables fetch)
             => fetch.GetList<TInterface>()
                 .SingleAsync()
-                .Select(toThreadsafeList)
+                .Select(toDtos)
                 .SelectMany(dataSource.BatchUpdate)
                 .Select(_ => FinishedPersisting.Transition(fetch));
 
-        private IList<TThreadsafeInterface> toThreadsafeList(IEnumerable<TInterface> entities)
-            => entities?.Select(convertToThreadsafeEntity).ToList() ?? new List<TThreadsafeInterface>();
+        private IList<TDto> toDtos(IEnumerable<TInterface> entities)
+            => entities?.Select(clean).ToList() ?? new List<TDto>();
     }
 }

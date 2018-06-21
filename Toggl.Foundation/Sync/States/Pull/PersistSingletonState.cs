@@ -10,26 +10,26 @@ using Toggl.PrimeRadiant;
 
 namespace Toggl.Foundation.Sync.States.Pull
 {
-    internal sealed class PersistSingletonState<TInterface, TDatabaseInterface, TThreadsafeInterface>
+    internal sealed class PersistSingletonState<TInterface, TDatabaseInterface, TThreadsafeInterface, TDto>
         : IPersistState
         where TDatabaseInterface : TInterface, IDatabaseSyncable
         where TThreadsafeInterface : class, TDatabaseInterface, IThreadSafeModel
     {
-        private readonly ISingletonDataSource<TThreadsafeInterface> dataSource;
+        private readonly ISingletonDataSource<TThreadsafeInterface, TDto> dataSource;
 
-        private readonly Func<TInterface, TThreadsafeInterface> convertToThreadsafeEntity;
+        private readonly Func<TInterface, TDto> clean;
 
         public StateResult<IFetchObservables> FinishedPersisting { get; } = new StateResult<IFetchObservables>();
 
         public PersistSingletonState(
-            ISingletonDataSource<TThreadsafeInterface> dataSource,
-            Func<TInterface, TThreadsafeInterface> convertToThreadsafeEntity)
+            ISingletonDataSource<TThreadsafeInterface, TDto> dataSource,
+            Func<TInterface, TDto> clean)
         {
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
-            Ensure.Argument.IsNotNull(convertToThreadsafeEntity, nameof(convertToThreadsafeEntity));
+            Ensure.Argument.IsNotNull(clean, nameof(clean));
 
             this.dataSource = dataSource;
-            this.convertToThreadsafeEntity = convertToThreadsafeEntity;
+            this.clean = clean;
         }
 
         public IObservable<ITransition> Start(IFetchObservables fetch)
@@ -37,7 +37,7 @@ namespace Toggl.Foundation.Sync.States.Pull
                 .SingleAsync()
                 .SelectMany(entity => entity == null
                     ? Observable.Return(Unit.Default)
-                    : dataSource.UpdateWithConflictResolution(convertToThreadsafeEntity(entity)).Select(_ => Unit.Default))
+                    : dataSource.UpdateWithConflictResolution(clean(entity)).Select(_ => Unit.Default))
                 .Select(_ => FinishedPersisting.Transition(fetch));
     }
 }

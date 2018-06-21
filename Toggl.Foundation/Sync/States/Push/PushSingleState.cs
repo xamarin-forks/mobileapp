@@ -8,16 +8,16 @@ using Toggl.PrimeRadiant;
 
 namespace Toggl.Foundation.Sync.States.Push
 {
-    internal sealed class PushSingleState<T> : IPushState<T>
+    internal sealed class PushSingleState<T, TDto> : IPushState<T>
         where T : class, IThreadSafeModel, IDatabaseSyncable
     {
-        private readonly ISingletonDataSource<T> dataSource;
+        private readonly ISingletonDataSource<T, TDto> dataSource;
 
         public StateResult<T> PushEntity { get; } = new StateResult<T>();
 
         public StateResult NothingToPush { get; } = new StateResult();
 
-        public PushSingleState(ISingletonDataSource<T> dataSource)
+        public PushSingleState(ISingletonDataSource<T, TDto> dataSource)
         {
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
         

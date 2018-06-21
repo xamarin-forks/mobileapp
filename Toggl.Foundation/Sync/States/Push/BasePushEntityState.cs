@@ -7,10 +7,10 @@ using Toggl.Ultrawave.Exceptions;
 
 namespace Toggl.Foundation.Sync.States.Push
 {
-    public abstract class BasePushEntityState<T> : IPushEntityState<T>
+    public abstract class BasePushEntityState<T, TDto> : IPushEntityState<T>
         where T : class, IThreadSafeModel
     {
-        private readonly IBaseDataSource<T> dataSource;
+        private readonly IBaseDataSource<T, TDto> dataSource;
 
         public StateResult<(Exception, T)> ServerError { get; } = new StateResult<(Exception, T)>();
 
@@ -18,12 +18,12 @@ namespace Toggl.Foundation.Sync.States.Push
 
         public StateResult<(Exception, T)> UnknownError { get; } = new StateResult<(Exception, T)>();
 
-        protected BasePushEntityState(IBaseDataSource<T> dataSource)
+        protected BasePushEntityState(IBaseDataSource<T, TDto> dataSource)
         {
             this.dataSource = dataSource;
         }
 
-        protected Func<T, IObservable<T>> Overwrite(T entity)
+        protected Func<TDto, IObservable<T>> Overwrite(T entity)
             => pushedEntity => dataSource.Overwrite(entity, pushedEntity);
 
         protected Func<Exception, IObservable<ITransition>> Fail(T entity)

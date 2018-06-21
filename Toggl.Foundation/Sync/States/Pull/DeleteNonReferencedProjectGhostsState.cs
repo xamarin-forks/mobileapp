@@ -31,6 +31,7 @@ namespace Toggl.Foundation.Sync.States.Pull
                 .SelectMany(CommonFunctions.Identity)
                 .SelectMany(notReferencedByAnyTimeEntryOrNull)
                 .Where(project => project != null)
+                .Select(project => ProjectDto.From(project))
                 .ToList()
                 .SelectMany(projectsDataSource.DeleteAll)
                 .Select(FinishedDeleting.Transition());

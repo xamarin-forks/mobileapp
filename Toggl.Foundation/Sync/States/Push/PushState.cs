@@ -7,20 +7,21 @@ using Toggl.Foundation.Sync.States.Push.Interfaces;
 using Toggl.Multivac;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.Sync.States.Push
 {
-    internal sealed class PushState<TDatabaseModel, TThreadsafeModel> : IPushState<TThreadsafeModel>
-        where TDatabaseModel : IDatabaseSyncable
+    internal sealed class PushState<TDatabaseModel, TThreadsafeModel, TDto> : IPushState<TThreadsafeModel>
+        where TDatabaseModel : IDatabaseModel, IDatabaseSyncable
         where TThreadsafeModel : class, TDatabaseModel, ILastChangedDatable, IThreadSafeModel
     {
-        private readonly IDataSource<TThreadsafeModel, TDatabaseModel> dataSource;
+        private readonly IDataSource<TThreadsafeModel, TDatabaseModel, TDto> dataSource;
 
         public StateResult<TThreadsafeModel> PushEntity { get; } = new StateResult<TThreadsafeModel>();
 
         public StateResult NothingToPush { get; } = new StateResult();
 
-        public PushState(IDataSource<TThreadsafeModel, TDatabaseModel> dataSource)
+        public PushState(IDataSource<TThreadsafeModel, TDatabaseModel, TDto> dataSource)
         {
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
         

@@ -8,15 +8,15 @@ using Toggl.Ultrawave.ApiClients;
 
 namespace Toggl.Foundation.Sync.States.Push
 {
-    internal sealed class UpdateEntityState<TModel, TThreadsafeModel>
-        : BasePushEntityState<TThreadsafeModel>
+    internal sealed class UpdateEntityState<TModel, TThreadsafeModel, TDto>
+        : BasePushEntityState<TThreadsafeModel, TDto>
         where TThreadsafeModel : class, TModel, IDatabaseSyncable, IThreadSafeModel
     {
         private readonly IUpdatingApiClient<TModel> api;
 
-        private readonly IBaseDataSource<TThreadsafeModel> dataSource;
+        private readonly IBaseDataSource<TThreadsafeModel, TDto> dataSource;
 
-        private readonly Func<TModel, TThreadsafeModel> convertToThreadsafeModel;
+        private readonly Func<TModel, TDto> clean;
 
         public StateResult<TThreadsafeModel> EntityChanged { get; } = new StateResult<TThreadsafeModel>();
 
@@ -24,17 +24,17 @@ namespace Toggl.Foundation.Sync.States.Push
 
         public UpdateEntityState(
             IUpdatingApiClient<TModel> api,
-            IBaseDataSource<TThreadsafeModel> dataSource,
-            Func<TModel, TThreadsafeModel> convertToThreadsafeModel)
+            IBaseDataSource<TThreadsafeModel, TDto> dataSource,
+            Func<TModel, TDto> clean)
             : base(dataSource)
         {
             Ensure.Argument.IsNotNull(api, nameof(api));
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
-            Ensure.Argument.IsNotNull(convertToThreadsafeModel, nameof(convertToThreadsafeModel));
+            Ensure.Argument.IsNotNull(clean, nameof(clean));
 
             this.api = api;
             this.dataSource = dataSource;
-            this.convertToThreadsafeModel = convertToThreadsafeModel;
+            this.clean = clean;
         }
 
         public override IObservable<ITransition> Start(TThreadsafeModel entity)
@@ -53,9 +53,8 @@ namespace Toggl.Foundation.Sync.States.Push
         private IObservable<ITransition> entityChanged(TThreadsafeModel entity)
             => Observable.Return(EntityChanged.Transition(entity));
 
-        private Func<TModel, IObservable<IConflictResolutionResult<TThreadsafeModel>>> tryOverwrite(TModel entity)
-            => updatedEntity => dataSource.OverwriteIfOriginalDidNotChange(
-            convertToThreadsafeModel(entity), convertToThreadsafeModel(updatedEntity));
+        private Func<TModel, IObservable<IConflictResolutionResult<TThreadsafeModel>>> tryOverwrite(TThreadsafeModel entity)
+            => updatedEntity => dataSource.OverwriteIfOriginalDidNotChange(entity, clean(updatedEntity));
 
         private TThreadsafeModel extractFrom(IConflictResolutionResult<TThreadsafeModel> result)
         {

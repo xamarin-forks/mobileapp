@@ -4,21 +4,21 @@ using System.Reactive.Linq;
 using Toggl.Foundation.DataSources.Interfaces;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Multivac.Models;
-using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.Sync.States.Push
 {
-    internal sealed class DeleteLocalEntityState<TDatabaseModel, TThreadsafeModel> : ISyncState<TThreadsafeModel>
-        where TDatabaseModel : class, IDatabaseSyncable
+    internal sealed class DeleteLocalEntityState<TDatabaseModel, TThreadsafeModel, TDto> : ISyncState<TThreadsafeModel>
+        where TDatabaseModel : class, IDatabaseModel
         where TThreadsafeModel : TDatabaseModel, IThreadSafeModel, IIdentifiable
     {
-        private IDataSource<TThreadsafeModel, TDatabaseModel> dataSource { get; }
+        private IDataSource<TThreadsafeModel, TDatabaseModel, TDto> dataSource { get; }
 
         public StateResult Deleted { get; } = new StateResult();
 
         public StateResult DeletingFailed { get; } = new StateResult();
 
-        public DeleteLocalEntityState(IDataSource<TThreadsafeModel, TDatabaseModel> dataSource)
+        public DeleteLocalEntityState(IDataSource<TThreadsafeModel, TDatabaseModel, TDto> dataSource)
         {
             this.dataSource = dataSource;
         }

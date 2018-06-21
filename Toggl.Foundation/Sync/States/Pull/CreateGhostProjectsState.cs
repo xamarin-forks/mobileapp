@@ -54,14 +54,26 @@ namespace Toggl.Foundation.Sync.States.Pull
 
         private IObservable<IThreadSafeProject> createGhostProject(ITimeEntry timeEntry)
         {
-            var ghost = Project.Builder.Create(timeEntry.ProjectId.Value)
-                .SetName(Resources.InaccessibleProject)
-                .SetWorkspaceId(timeEntry.WorkspaceId)
-                .SetColor(Color.NoProject)
-                .SetActive(false)
-                .SetAt(default(DateTimeOffset))
-                .SetSyncStatus(SyncStatus.RefetchingNeeded)
-                .Build();
+            var ghost = new ProjectDto(
+                id: timeEntry.ProjectId.Value,
+                workspaceId: timeEntry.WorkspaceId,
+                name: Resources.InaccessibleProject,
+                active: false,
+                color: Color.NoProject,
+                at: default(DateTimeOffset),
+                syncStatus: SyncStatus.RefetchingNeeded,
+                serverDeletedAt: null,
+                clientId: null,
+                isPrivate: true,
+                billable: false,
+                template: null,
+                autoEstimates: null,
+                estimatedHours: null,
+                rate: null,
+                currency: null,
+                actualHours: null,
+                isDeleted: false,
+                lastSyncErrorMessage: null);
 
             return dataSource.Create(ghost);
         }
