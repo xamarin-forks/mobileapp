@@ -2,7 +2,7 @@ using Toggl.Multivac.Models;
 
 namespace Toggl.PrimeRadiant.Models
 {
-    public interface IDatabaseTask : ITask, IDatabaseSyncable 
+    public interface IDatabaseTask : ITask, IDatabaseSyncable, IDatabaseModel
     {
         IDatabaseUser User { get; }
         
