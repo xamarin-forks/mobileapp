@@ -42,7 +42,7 @@ namespace Toggl.PrimeRadiant.Realm
 
         if (!databaseInterfaceExists) continue;
 
-        var updatesFromInterface = databaseInterfaceExists ? databaseInterfaceName : interfaceName;
+        var updatesFrom = $"{className}Dto";
 
         var hasModifiableId = implementsIDatabaseSyncable && implementsIIdentifiable;
 
@@ -54,7 +54,7 @@ namespace Toggl.PrimeRadiant.Realm
             var isStartOfClass = line.Contains($" interface {interfaceName}");
             if (isStartOfClass)
             {
-                var interfaces = $"IUpdatesFrom<{updatesFromInterface}>";
+                var interfaces = $"IUpdatesFrom<{updatesFrom}>";
                 if (hasModifiableId)
                     interfaces += ", IModifiableId";
 
@@ -86,12 +86,12 @@ namespace Toggl.PrimeRadiant.Realm
 
                 WriteLine($"        public {realmClassName}() {{ }}\n");
 
-                WriteLine($"        public {realmClassName}({updatesFromInterface} entity, Realms.Realm realm)");
+                WriteLine($"        public {realmClassName}({updatesFrom} entity, Realms.Realm realm)");
                 WriteLine( "        {");
                 WriteLine( "            SetPropertiesFrom(entity, realm);");
                 WriteLine( "        }\n");
 
-                WriteLine($"        public void SetPropertiesFrom({updatesFromInterface} entity, Realms.Realm realm)");
+                WriteLine($"        public void SetPropertiesFrom({updatesFrom} entity, Realms.Realm realm)");
                 WriteLine( "        {");
 
                 if (implementsILastChangedDatabale)
@@ -139,7 +139,7 @@ namespace Toggl.PrimeRadiant.Realm
             if (isRealmProperty)
             {
                 var entityName = propName.Replace("Id", "");
-                WriteLine($"            var skip{entityName}Fetch = entity?.{entityName}Id == null || entity.{entityName}Id == 0;");
+                WriteLine($"            var skip{entityName}Fetch = entity.{entityName}Id == null || entity.{entityName}Id == 0;");
 
                 propName = $"Realm{entityName}";
                 assignment = $"skip{entityName}Fetch ? null : realm.All<{propName}>().Single(x => x.Id == entity.{entityName}Id || x.OriginalId == entity.{entityName}Id)";

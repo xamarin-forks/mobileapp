@@ -1,8 +1,8 @@
 ﻿
 namespace Toggl.PrimeRadiant.Realm
 {
-    internal interface IUpdatesFrom<TEntity>
+    internal interface IUpdatesFrom<TDto>
     {
-        void SetPropertiesFrom(TEntity entity, Realms.Realm realm);
+        void SetPropertiesFrom(TDto entity, Realms.Realm realm);
     }
 }

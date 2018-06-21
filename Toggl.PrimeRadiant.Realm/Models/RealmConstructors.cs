@@ -1,12 +1,11 @@
 ﻿using System.Linq;
 using Realms;
-using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant.Models;
 using Toggl.PrimeRadiant.Realm.Models;
 
 namespace Toggl.PrimeRadiant.Realm
 {
-    internal partial class RealmClient : IUpdatesFrom<IDatabaseClient>, IModifiableId
+    internal partial class RealmClient : IUpdatesFrom<ClientDto>, IModifiableId
     {
         public long Id { get; set; }
 
@@ -27,12 +26,12 @@ namespace Toggl.PrimeRadiant.Realm
 
         public RealmClient() { }
 
-        public RealmClient(IDatabaseClient entity, Realms.Realm realm)
+        public RealmClient(ClientDto entity, Realms.Realm realm)
         {
             SetPropertiesFrom(entity, realm);
         }
 
-        public void SetPropertiesFrom(IDatabaseClient entity, Realms.Realm realm)
+        public void SetPropertiesFrom(ClientDto entity, Realms.Realm realm)
         {
             At = entity.At;
             ServerDeletedAt = entity.ServerDeletedAt;
@@ -40,13 +39,13 @@ namespace Toggl.PrimeRadiant.Realm
             SyncStatus = entity.SyncStatus;
             LastSyncErrorMessage = entity.LastSyncErrorMessage;
             Id = entity.Id;
-            var skipWorkspaceFetch = entity?.WorkspaceId == null || entity.WorkspaceId == 0;
+            var skipWorkspaceFetch = entity.WorkspaceId == null || entity.WorkspaceId == 0;
             RealmWorkspace = skipWorkspaceFetch ? null : realm.All<RealmWorkspace>().Single(x => x.Id == entity.WorkspaceId || x.OriginalId == entity.WorkspaceId);
             Name = entity.Name;
         }
     }
 
-    internal partial class RealmPreferences : IUpdatesFrom<IDatabasePreferences>
+    internal partial class RealmPreferences : IUpdatesFrom<PreferencesDto>
     {
         public bool IsDeleted { get; set; }
 
@@ -63,12 +62,12 @@ namespace Toggl.PrimeRadiant.Realm
 
         public RealmPreferences() { }
 
-        public RealmPreferences(IDatabasePreferences entity, Realms.Realm realm)
+        public RealmPreferences(PreferencesDto entity, Realms.Realm realm)
         {
             SetPropertiesFrom(entity, realm);
         }
 
-        public void SetPropertiesFrom(IDatabasePreferences entity, Realms.Realm realm)
+        public void SetPropertiesFrom(PreferencesDto entity, Realms.Realm realm)
         {
             IsDeleted = entity.IsDeleted;
             SyncStatus = entity.SyncStatus;
@@ -80,7 +79,7 @@ namespace Toggl.PrimeRadiant.Realm
         }
     }
 
-    internal partial class RealmProject : IUpdatesFrom<IDatabaseProject>, IModifiableId
+    internal partial class RealmProject : IUpdatesFrom<ProjectDto>, IModifiableId
     {
         public long Id { get; set; }
 
@@ -101,12 +100,12 @@ namespace Toggl.PrimeRadiant.Realm
 
         public RealmProject() { }
 
-        public RealmProject(IDatabaseProject entity, Realms.Realm realm)
+        public RealmProject(ProjectDto entity, Realms.Realm realm)
         {
             SetPropertiesFrom(entity, realm);
         }
 
-        public void SetPropertiesFrom(IDatabaseProject entity, Realms.Realm realm)
+        public void SetPropertiesFrom(ProjectDto entity, Realms.Realm realm)
         {
             At = entity.At;
             ServerDeletedAt = entity.ServerDeletedAt;
@@ -114,9 +113,9 @@ namespace Toggl.PrimeRadiant.Realm
             SyncStatus = entity.SyncStatus;
             LastSyncErrorMessage = entity.LastSyncErrorMessage;
             Id = entity.Id;
-            var skipWorkspaceFetch = entity?.WorkspaceId == null || entity.WorkspaceId == 0;
+            var skipWorkspaceFetch = entity.WorkspaceId == null || entity.WorkspaceId == 0;
             RealmWorkspace = skipWorkspaceFetch ? null : realm.All<RealmWorkspace>().Single(x => x.Id == entity.WorkspaceId || x.OriginalId == entity.WorkspaceId);
-            var skipClientFetch = entity?.ClientId == null || entity.ClientId == 0;
+            var skipClientFetch = entity.ClientId == null || entity.ClientId == 0;
             RealmClient = skipClientFetch ? null : realm.All<RealmClient>().Single(x => x.Id == entity.ClientId || x.OriginalId == entity.ClientId);
             Name = entity.Name;
             IsPrivate = entity.IsPrivate;
@@ -132,7 +131,7 @@ namespace Toggl.PrimeRadiant.Realm
         }
     }
 
-    internal partial class RealmTag : IUpdatesFrom<IDatabaseTag>, IModifiableId
+    internal partial class RealmTag : IUpdatesFrom<TagDto>, IModifiableId
     {
         public long Id { get; set; }
 
@@ -153,12 +152,12 @@ namespace Toggl.PrimeRadiant.Realm
 
         public RealmTag() { }
 
-        public RealmTag(IDatabaseTag entity, Realms.Realm realm)
+        public RealmTag(TagDto entity, Realms.Realm realm)
         {
             SetPropertiesFrom(entity, realm);
         }
 
-        public void SetPropertiesFrom(IDatabaseTag entity, Realms.Realm realm)
+        public void SetPropertiesFrom(TagDto entity, Realms.Realm realm)
         {
             At = entity.At;
             ServerDeletedAt = entity.ServerDeletedAt;
@@ -166,13 +165,13 @@ namespace Toggl.PrimeRadiant.Realm
             SyncStatus = entity.SyncStatus;
             LastSyncErrorMessage = entity.LastSyncErrorMessage;
             Id = entity.Id;
-            var skipWorkspaceFetch = entity?.WorkspaceId == null || entity.WorkspaceId == 0;
+            var skipWorkspaceFetch = entity.WorkspaceId == null || entity.WorkspaceId == 0;
             RealmWorkspace = skipWorkspaceFetch ? null : realm.All<RealmWorkspace>().Single(x => x.Id == entity.WorkspaceId || x.OriginalId == entity.WorkspaceId);
             Name = entity.Name;
         }
     }
 
-    internal partial class RealmTask : IUpdatesFrom<IDatabaseTask>, IModifiableId
+    internal partial class RealmTask : IUpdatesFrom<TaskDto>, IModifiableId
     {
         public long Id { get; set; }
 
@@ -193,12 +192,12 @@ namespace Toggl.PrimeRadiant.Realm
 
         public RealmTask() { }
 
-        public RealmTask(IDatabaseTask entity, Realms.Realm realm)
+        public RealmTask(TaskDto entity, Realms.Realm realm)
         {
             SetPropertiesFrom(entity, realm);
         }
 
-        public void SetPropertiesFrom(IDatabaseTask entity, Realms.Realm realm)
+        public void SetPropertiesFrom(TaskDto entity, Realms.Realm realm)
         {
             At = entity.At;
             IsDeleted = entity.IsDeleted;
@@ -206,11 +205,11 @@ namespace Toggl.PrimeRadiant.Realm
             LastSyncErrorMessage = entity.LastSyncErrorMessage;
             Id = entity.Id;
             Name = entity.Name;
-            var skipProjectFetch = entity?.ProjectId == null || entity.ProjectId == 0;
+            var skipProjectFetch = entity.ProjectId == null || entity.ProjectId == 0;
             RealmProject = skipProjectFetch ? null : realm.All<RealmProject>().Single(x => x.Id == entity.ProjectId || x.OriginalId == entity.ProjectId);
-            var skipWorkspaceFetch = entity?.WorkspaceId == null || entity.WorkspaceId == 0;
+            var skipWorkspaceFetch = entity.WorkspaceId == null || entity.WorkspaceId == 0;
             RealmWorkspace = skipWorkspaceFetch ? null : realm.All<RealmWorkspace>().Single(x => x.Id == entity.WorkspaceId || x.OriginalId == entity.WorkspaceId);
-            var skipUserFetch = entity?.UserId == null || entity.UserId == 0;
+            var skipUserFetch = entity.UserId == null || entity.UserId == 0;
             RealmUser = skipUserFetch ? null : realm.All<RealmUser>().Single(x => x.Id == entity.UserId || x.OriginalId == entity.UserId);
             EstimatedSeconds = entity.EstimatedSeconds;
             Active = entity.Active;
@@ -218,7 +217,7 @@ namespace Toggl.PrimeRadiant.Realm
         }
     }
 
-    internal partial class RealmTimeEntry : IUpdatesFrom<IDatabaseTimeEntry>, IModifiableId
+    internal partial class RealmTimeEntry : IUpdatesFrom<TimeEntryDto>, IModifiableId
     {
         public long Id { get; set; }
 
@@ -239,12 +238,12 @@ namespace Toggl.PrimeRadiant.Realm
 
         public RealmTimeEntry() { }
 
-        public RealmTimeEntry(IDatabaseTimeEntry entity, Realms.Realm realm)
+        public RealmTimeEntry(TimeEntryDto entity, Realms.Realm realm)
         {
             SetPropertiesFrom(entity, realm);
         }
 
-        public void SetPropertiesFrom(IDatabaseTimeEntry entity, Realms.Realm realm)
+        public void SetPropertiesFrom(TimeEntryDto entity, Realms.Realm realm)
         {
             At = entity.At;
             ServerDeletedAt = entity.ServerDeletedAt;
@@ -252,12 +251,12 @@ namespace Toggl.PrimeRadiant.Realm
             SyncStatus = entity.SyncStatus;
             LastSyncErrorMessage = entity.LastSyncErrorMessage;
             Id = entity.Id;
-            var skipWorkspaceFetch = entity?.WorkspaceId == null || entity.WorkspaceId == 0;
+            var skipWorkspaceFetch = entity.WorkspaceId == null || entity.WorkspaceId == 0;
             RealmWorkspace = skipWorkspaceFetch ? null : realm.All<RealmWorkspace>().Single(x => x.Id == entity.WorkspaceId || x.OriginalId == entity.WorkspaceId);
-            var skipProjectFetch = entity?.ProjectId == null || entity.ProjectId == 0;
-            RealmProject = skipProjectFetch ? null : realm.All<RealmProject>().SingleOrDefault(x => x.Id == entity.ProjectId || x.OriginalId == entity.ProjectId);
-            var skipTaskFetch = RealmProject == null || entity?.TaskId == null || entity.TaskId == 0;
-            RealmTask = skipTaskFetch ? null : realm.All<RealmTask>().SingleOrDefault(x => x.Id == entity.TaskId || x.OriginalId == entity.TaskId);
+            var skipProjectFetch = entity.ProjectId == null || entity.ProjectId == 0;
+            RealmProject = skipProjectFetch ? null : realm.All<RealmProject>().Single(x => x.Id == entity.ProjectId || x.OriginalId == entity.ProjectId);
+            var skipTaskFetch = entity.TaskId == null || entity.TaskId == 0;
+            RealmTask = skipTaskFetch ? null : realm.All<RealmTask>().Single(x => x.Id == entity.TaskId || x.OriginalId == entity.TaskId);
             Billable = entity.Billable;
             Start = entity.Start;
             Duration = entity.Duration;
@@ -265,6 +264,7 @@ namespace Toggl.PrimeRadiant.Realm
 
             var tags = entity.TagIds?.Select(id =>
                 realm.All<RealmTag>().Single(x => x.Id == id || x.OriginalId == id)) ?? new RealmTag[0];
+            realm.All<RealmTag>().Single(x => x.Id == id || x.OriginalId == id)) ?? new RealmTag[0];
             RealmTags.Clear();
             tags.ForEach(RealmTags.Add);
 
@@ -274,6 +274,7 @@ namespace Toggl.PrimeRadiant.Realm
     }
 
     internal partial class RealmUser : IUpdatesFrom<IDatabaseUser>, IModifiableId
+    internal partial class RealmUser : IUpdatesFrom<UserDto>, IModifiableId
     {
         public long Id { get; set; }
 
@@ -294,12 +295,12 @@ namespace Toggl.PrimeRadiant.Realm
 
         public RealmUser() { }
 
-        public RealmUser(IDatabaseUser entity, Realms.Realm realm)
+        public RealmUser(UserDto entity, Realms.Realm realm)
         {
             SetPropertiesFrom(entity, realm);
         }
 
-        public void SetPropertiesFrom(IDatabaseUser entity, Realms.Realm realm)
+        public void SetPropertiesFrom(UserDto entity, Realms.Realm realm)
         {
             At = entity.At;
             IsDeleted = entity.IsDeleted;
@@ -316,7 +317,7 @@ namespace Toggl.PrimeRadiant.Realm
         }
     }
 
-    internal partial class RealmWorkspace : IUpdatesFrom<IDatabaseWorkspace>, IModifiableId
+    internal partial class RealmWorkspace : IUpdatesFrom<WorkspaceDto>, IModifiableId
     {
         public long Id { get; set; }
 
@@ -337,12 +338,12 @@ namespace Toggl.PrimeRadiant.Realm
 
         public RealmWorkspace() { }
 
-        public RealmWorkspace(IDatabaseWorkspace entity, Realms.Realm realm)
+        public RealmWorkspace(WorkspaceDto entity, Realms.Realm realm)
         {
             SetPropertiesFrom(entity, realm);
         }
 
-        public void SetPropertiesFrom(IDatabaseWorkspace entity, Realms.Realm realm)
+        public void SetPropertiesFrom(WorkspaceDto entity, Realms.Realm realm)
         {
             At = entity.At;
             ServerDeletedAt = entity.ServerDeletedAt;
@@ -365,34 +366,34 @@ namespace Toggl.PrimeRadiant.Realm
         }
     }
 
-    internal partial class RealmWorkspaceFeature : IUpdatesFrom<IDatabaseWorkspaceFeature>
+    internal partial class RealmWorkspaceFeature : IUpdatesFrom<WorkspaceFeatureDto>
     {
         public RealmWorkspaceFeature() { }
 
-        public RealmWorkspaceFeature(IDatabaseWorkspaceFeature entity, Realms.Realm realm)
+        public RealmWorkspaceFeature(WorkspaceFeatureDto entity, Realms.Realm realm)
         {
             SetPropertiesFrom(entity, realm);
         }
 
-        public void SetPropertiesFrom(IDatabaseWorkspaceFeature entity, Realms.Realm realm)
+        public void SetPropertiesFrom(WorkspaceFeatureDto entity, Realms.Realm realm)
         {
             FeatureId = entity.FeatureId;
             Enabled = entity.Enabled;
         }
     }
 
-    internal partial class RealmWorkspaceFeatureCollection : IUpdatesFrom<IDatabaseWorkspaceFeatureCollection>
+    internal partial class RealmWorkspaceFeatureCollection : IUpdatesFrom<WorkspaceFeatureCollectionDto>
     {
         public RealmWorkspaceFeatureCollection() { }
 
-        public RealmWorkspaceFeatureCollection(IDatabaseWorkspaceFeatureCollection entity, Realms.Realm realm)
+        public RealmWorkspaceFeatureCollection(WorkspaceFeatureCollectionDto entity, Realms.Realm realm)
         {
             SetPropertiesFrom(entity, realm);
         }
 
-        public void SetPropertiesFrom(IDatabaseWorkspaceFeatureCollection entity, Realms.Realm realm)
+        public void SetPropertiesFrom(WorkspaceFeatureCollectionDto entity, Realms.Realm realm)
         {
-            var skipWorkspaceFetch = entity?.WorkspaceId == null || entity.WorkspaceId == 0;
+            var skipWorkspaceFetch = entity.WorkspaceId == null || entity.WorkspaceId == 0;
             RealmWorkspace = skipWorkspaceFetch ? null : realm.All<RealmWorkspace>().Single(x => x.Id == entity.WorkspaceId || x.OriginalId == entity.WorkspaceId);
             foreach (var oneOfFeatures in entity.Features)
             {
