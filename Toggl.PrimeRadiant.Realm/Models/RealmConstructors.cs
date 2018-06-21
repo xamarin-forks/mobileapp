@@ -261,19 +261,15 @@ namespace Toggl.PrimeRadiant.Realm
             Start = entity.Start;
             Duration = entity.Duration;
             Description = entity.Description;
-
             var tags = entity.TagIds?.Select(id =>
-                realm.All<RealmTag>().Single(x => x.Id == id || x.OriginalId == id)) ?? new RealmTag[0];
             realm.All<RealmTag>().Single(x => x.Id == id || x.OriginalId == id)) ?? new RealmTag[0];
             RealmTags.Clear();
             tags.ForEach(RealmTags.Add);
-
             var skipUserFetch = entity?.UserId == null || entity.UserId == 0;
             RealmUser = skipUserFetch ? null : realm.All<RealmUser>().Single(x => x.Id == entity.UserId || x.OriginalId == entity.UserId);
         }
     }
 
-    internal partial class RealmUser : IUpdatesFrom<IDatabaseUser>, IModifiableId
     internal partial class RealmUser : IUpdatesFrom<UserDto>, IModifiableId
     {
         public long Id { get; set; }
