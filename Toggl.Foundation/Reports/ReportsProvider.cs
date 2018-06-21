@@ -21,8 +21,8 @@ namespace Toggl.Foundation.Reports
 
         private readonly IProjectsApi projectsApi;
         private readonly IProjectsSummaryApi projectSummaryApi;
-        private readonly IRepository<IDatabaseProject> projectsRepository;
-        private readonly IRepository<IDatabaseClient> clientsRepository;
+        private readonly IRepository<IDatabaseProject, ProjectDto> projectsRepository;
+        private readonly IRepository<IDatabaseClient, ClientDto> clientsRepository;
 
         private readonly IList<IProject> memoryCache = new List<IProject>();
 
