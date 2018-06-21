@@ -40,7 +40,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             await state.Start().SingleAsync();
 
             await dataSource.Received()
-                .DeleteAll(Arg.Is<IEnumerable<IThreadSafeTimeEntry>>(tes => tes.Count() == 10));
+                .DeleteAll(Arg.Is<IEnumerable<TimeEntryDto>>(tes => tes.Count() == 10));
         }
 
         [Fact, LogIfTooSlow]
@@ -53,7 +53,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             await state.Start().SingleAsync();
 
             await dataSource.Received()
-                .DeleteAll(Arg.Is<IEnumerable<IThreadSafeTimeEntry>>(tes => tes.Count() == 5));
+                .DeleteAll(Arg.Is<IEnumerable<TimeEntryDto>>(tes => tes.Count() == 5));
         }
 
         [Fact, LogIfTooSlow]
@@ -66,7 +66,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             await state.Start().SingleAsync();
 
             await dataSource.Received()
-                .DeleteAll(Arg.Is<IEnumerable<IThreadSafeTimeEntry>>(tes => tes.Count() == 5));
+                .DeleteAll(Arg.Is<IEnumerable<TimeEntryDto>>(tes => tes.Count() == 5));
         }
 
         private void configureDataSourceReturn(IEnumerable<IDatabaseTimeEntry> timeEntries)

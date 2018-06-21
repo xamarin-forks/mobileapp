@@ -49,7 +49,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 DataSource.Create("Some tag", 10).Wait();
 
                 DataBase.Tags.Received().Create(
-                    Arg.Is<IDatabaseTag>(tag => tag.Id == nextId)
+                    Arg.Is<TagDto>(tag => tag.Id == nextId)
                 ).Wait();
             }
 
@@ -61,7 +61,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 DataSource.Create(tagName, 10).Wait();
 
                 DataBase.Tags.Received().Create(
-                    Arg.Is<IDatabaseTag>(tag => tag.Name == tagName)
+                    Arg.Is<TagDto>(tag => tag.Name == tagName)
                 ).Wait();
             }
 
@@ -72,7 +72,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 DataSource.Create("Some tag", workspaceId).Wait();
 
                 DataBase.Tags.Received().Create(
-                    Arg.Is<IDatabaseTag>(tag => tag.WorkspaceId == workspaceId)
+                    Arg.Is<TagDto>(tag => tag.WorkspaceId == workspaceId)
                 ).Wait();
             }
 
@@ -85,7 +85,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 DataSource.Create("Some tag", 100).Wait();
 
                 DataBase.Tags.Received().Create(
-                    Arg.Is<IDatabaseTag>(tag => tag.At == currentTime)
+                    Arg.Is<TagDto>(tag => tag.At == currentTime)
                 ).Wait();
             }
 
@@ -96,7 +96,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 DataSource.Create(name.Get, workspaceId.Get).Wait();
 
                 DataBase.Tags.Received().Create(
-                    Arg.Is<IDatabaseTag>(tag => tag.SyncStatus == SyncStatus.SyncNeeded)
+                    Arg.Is<TagDto>(tag => tag.SyncStatus == SyncStatus.SyncNeeded)
                 ).Wait();
             }
         }

@@ -10,18 +10,6 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
 {
     public sealed class PreferNewerTests
     {
-        [Fact, LogIfTooSlow]
-        public void ThrowsWhenIncomingEntityIsNull()
-        {
-            var existingEntity = new TestModel();
-
-            Action resolving = () => resolver.Resolve(null, null);
-            Action resolvingWithExistingLocalEntity = () => resolver.Resolve(existingEntity, null);
-
-            resolving.Should().Throw<ArgumentNullException>();
-            resolvingWithExistingLocalEntity.Should().Throw<ArgumentNullException>();
-        }
-
         [Property]
         public void IgnoreOutdatedIncomingDataWhenLocalEntityIsDirty(DateTimeOffset existing, DateTimeOffset incoming)
         {
@@ -179,10 +167,10 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
             return TimeSpan.FromSeconds(lessThanMarginOfErrorSeconds);
         }
 
-        private PreferNewer<TestModel> resolver { get; }
-            = new PreferNewer<TestModel>(TimeSpan.FromSeconds(5));
+        private PreferNewer<TestModel, TestModel> resolver { get; }
+            = new PreferNewer<TestModel, TestModel>(TimeSpan.FromSeconds(5));
 
-        private PreferNewer<TestModel> zeroMarginOfErrorResolver { get; }
-            = new PreferNewer<TestModel>();
+        private PreferNewer<TestModel, TestModel> zeroMarginOfErrorResolver { get; }
+            = new PreferNewer<TestModel, TestModel>();
     }
 }

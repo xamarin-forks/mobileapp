@@ -22,7 +22,7 @@ namespace Toggl.PrimeRadiant.Tests
         protected sealed override IObservable<Unit> Delete(long id)
             => Repository.Delete(id);
 
-        protected abstract IRepository<TTestModel> Repository { get; }
+        protected abstract IRepository<TTestModel, TTestModel> Repository { get; }
 
         [Fact, LogIfTooSlow]
         public void TheGetByIdMethodThrowsIfThereIsNoEntityWithThatIdInTheRepository()

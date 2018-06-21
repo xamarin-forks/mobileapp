@@ -9,18 +9,6 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
     public sealed class OverwriteUnlessNeedsSyncTests
     {
         [Fact, LogIfTooSlow]
-        public void ThrowsWhenIncomingEntityIsNull()
-        {
-            var existingEntity = new TestModel();
-
-            Action resolving = () => resolver.Resolve(null, null);
-            Action resolvingWithExistingLocalEntity = () => resolver.Resolve(existingEntity, null);
-
-            resolving.Should().Throw<ArgumentNullException>();
-            resolvingWithExistingLocalEntity.Should().Throw<ArgumentNullException>();
-        }
-
-        [Fact, LogIfTooSlow]
         public void IgnoreWhenThereIsAnExistingEntityLocallyWhichNeedsSync()
         {
             var existingEntity = new TestModel();
@@ -62,7 +50,7 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
             public bool IsDeleted { get; }
         }
 
-        private OverwriteUnlessNeedsSync<TestModel> resolver { get; }
-            = new OverwriteUnlessNeedsSync<TestModel>();
+        private OverwriteUnlessNeedsSync<TestModel, TestModel> resolver { get; }
+            = new OverwriteUnlessNeedsSync<TestModel, TestModel>();
     }
 }

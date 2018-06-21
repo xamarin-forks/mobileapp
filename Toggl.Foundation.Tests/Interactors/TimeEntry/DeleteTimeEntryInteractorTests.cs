@@ -5,6 +5,7 @@ using FluentAssertions;
 using NSubstitute;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.Tests.Mocks;
+using Toggl.PrimeRadiant;
 using Xunit;
 
 namespace Toggl.Foundation.Tests.Interactors
@@ -22,7 +23,7 @@ namespace Toggl.Foundation.Tests.Interactors
             
             DataSource.TimeEntries.GetById(timeEntry.Id)
                 .Returns(Observable.Return(timeEntry));
-            DataSource.TimeEntries.Update(Arg.Any<IThreadSafeTimeEntry>())
+            DataSource.TimeEntries.Update(Arg.Any<TimeEntryDto>())
                 .Returns(callInfo => Observable.Return(callInfo.Arg<IThreadSafeTimeEntry>()));
         }
 

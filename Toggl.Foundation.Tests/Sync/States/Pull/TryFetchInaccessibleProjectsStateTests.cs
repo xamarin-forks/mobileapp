@@ -121,7 +121,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Pull
             await state.Start(fetch);
 
             await dataSource.Received()
-                .Update(Arg.Is<IThreadSafeProject>(updatedProject => updatedProject.SyncStatus == SyncStatus.InSync));
+                .Update(Arg.Is<ProjectDto>(updatedProject => updatedProject.SyncStatus == SyncStatus.InSync));
         }
 
         [Fact]
@@ -143,7 +143,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Pull
             await state.Start(fetch);
 
             await dataSource.Received()
-                .Update(Arg.Is<IThreadSafeProject>(updatedProject =>
+                .Update(Arg.Is<ProjectDto>(updatedProject =>
                     updatedProject.SyncStatus == SyncStatus.RefetchingNeeded
                     && updatedProject.At == now));
         }
@@ -172,13 +172,13 @@ namespace Toggl.Foundation.Tests.Sync.States.Pull
             var calls = dataSource.ReceivedCalls();
 
             await dataSource.Received()
-                .Update(Arg.Is<IThreadSafeProject>(project => project.Id == 1 && project.SyncStatus == SyncStatus.InSync));
+                .Update(Arg.Is<ProjectDto>(project => project.Id == 1 && project.SyncStatus == SyncStatus.InSync));
             await dataSource.Received()
-                .Update(Arg.Is<IThreadSafeProject>(project => project.Id == 2 && project.SyncStatus == SyncStatus.RefetchingNeeded));
+                .Update(Arg.Is<ProjectDto>(project => project.Id == 2 && project.SyncStatus == SyncStatus.RefetchingNeeded));
             await dataSource.Received()
-                .Update(Arg.Is<IThreadSafeProject>(project => project.Id == 3 && project.SyncStatus == SyncStatus.RefetchingNeeded));
+                .Update(Arg.Is<ProjectDto>(project => project.Id == 3 && project.SyncStatus == SyncStatus.RefetchingNeeded));
             await dataSource.Received()
-                .Update(Arg.Is<IThreadSafeProject>(project => project.Id == 4 && project.SyncStatus == SyncStatus.InSync));
+                .Update(Arg.Is<ProjectDto>(project => project.Id == 4 && project.SyncStatus == SyncStatus.InSync));
         }
                 
 

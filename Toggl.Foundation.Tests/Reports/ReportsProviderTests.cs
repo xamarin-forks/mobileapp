@@ -30,10 +30,10 @@ namespace Toggl.Foundation.Tests.Reports
 
             protected IProjectsApi ProjectsApi { get; } = Substitute.For<IProjectsApi>();
             protected IProjectsSummaryApi ProjectsSummaryApi { get; } = Substitute.For<IProjectsSummaryApi>();
-            protected IRepository<IDatabaseProject> ProjectsRepository { get; } =
-                Substitute.For<IRepository<IDatabaseProject>>();
-            protected IRepository<IDatabaseClient> ClientsRepository { get; } =
-                Substitute.For<IRepository<IDatabaseClient>>();
+            protected IRepository<IDatabaseProject, ProjectDto> ProjectsRepository { get; } =
+                Substitute.For<IRepository<IDatabaseProject, ProjectDto>>();
+            protected IRepository<IDatabaseClient, ClientDto> ClientsRepository { get; } =
+                Substitute.For<IRepository<IDatabaseClient, ClientDto>>();
 
             protected IReportsProvider ReportsProvider { get; }
 

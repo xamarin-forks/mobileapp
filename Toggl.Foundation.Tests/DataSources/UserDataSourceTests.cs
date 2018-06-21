@@ -24,7 +24,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 IDatabaseUser initialUser = newUser(userId, InitialWorkspaceId);
                 IDatabaseUser updatedUser = newUser(userId, UpdatedWorkspaceId);
 
-                Storage = Substitute.For<ISingleObjectStorage<IDatabaseUser>>();
+                Storage = Substitute.For<ISingleObjectStorage<IDatabaseUser, UserDto>>();
 
                 Storage.Single().Returns(
                     Observable.Return(initialUser),
@@ -44,7 +44,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 return user;
             }
 
-            protected ISingleObjectStorage<IDatabaseUser> Storage;
+            protected ISingleObjectStorage<IDatabaseUser, UserDto> Storage;
         }
 
         public sealed class TheConstructor
@@ -53,7 +53,7 @@ namespace Toggl.Foundation.Tests.DataSources
             [ClassData(typeof(TwoParameterConstructorTestData))]
             public void ThrowsIfAnyArgumentIsNull(bool useRepository, bool useTimeServide)
             {
-                var repository = useRepository ? Substitute.For<ISingleObjectStorage<IDatabaseUser>>() : null;
+                var repository = useRepository ? Substitute.For<ISingleObjectStorage<IDatabaseUser, UserDto>>() : null;
                 var timeService = useTimeServide ? Substitute.For<ITimeService>() : null;
 
                 Action tryingToConstructWithEmptyParameters =

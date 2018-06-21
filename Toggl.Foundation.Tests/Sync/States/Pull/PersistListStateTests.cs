@@ -16,16 +16,16 @@ namespace Toggl.Foundation.Tests.Sync.States
 {
     public sealed class PersistListStateTests
     {
-        private readonly PersistListState<ITestModel, IDatabaseTestModel, IThreadSafeTestModel> state;
+        private readonly PersistListState<ITestModel, IDatabaseTestModel, IThreadSafeTestModel, IDatabaseTestModel> state;
 
-        private readonly IDataSource<IThreadSafeTestModel, IDatabaseTestModel> dataSource =
-            Substitute.For<IDataSource<IThreadSafeTestModel, IDatabaseTestModel>>();
+        private readonly IDataSource<IThreadSafeTestModel, IDatabaseTestModel, IDatabaseTestModel> dataSource =
+            Substitute.For<IDataSource<IThreadSafeTestModel, IDatabaseTestModel, IDatabaseTestModel>>();
 
         private readonly DateTimeOffset now = new DateTimeOffset(2017, 04, 05, 12, 34, 56, TimeSpan.Zero);
 
         public PersistListStateTests()
         {
-            state = new PersistListState<ITestModel, IDatabaseTestModel, IThreadSafeTestModel>(dataSource, TestModel.From);
+            state = new PersistListState<ITestModel, IDatabaseTestModel, IThreadSafeTestModel, IDatabaseTestModel>(dataSource, TestModel.From);
         }
 
         [Fact, LogIfTooSlow]
@@ -63,14 +63,14 @@ namespace Toggl.Foundation.Tests.Sync.States
             var transition = (Transition<IFetchObservables>)(await state.Start(observables).SingleAsync());
 
             transition.Result.Should().Be(state.FinishedPersisting);
-            dataSource.Received().BatchUpdate(Arg.Is<IEnumerable<IThreadSafeTestModel>>(batch => batch.Count() == 0));
+            dataSource.Received().BatchUpdate(Arg.Is<IEnumerable<IDatabaseTestModel>>(batch => batch.Count() == 0));
         }
 
         [Fact, LogIfTooSlow]
         public void ThrowsWhenBatchUpdateThrows()
         {
             var observables = createObservables();
-            dataSource.BatchUpdate(Arg.Any<IEnumerable<IThreadSafeTestModel>>()).Returns(
+            dataSource.BatchUpdate(Arg.Any<IEnumerable<IDatabaseTestModel>>()).Returns(
                 Observable.Throw<IEnumerable<IConflictResolutionResult<IThreadSafeTestModel>>>(new TestException()));
 
             Action startingState = () => state.Start(observables).SingleAsync().Wait();

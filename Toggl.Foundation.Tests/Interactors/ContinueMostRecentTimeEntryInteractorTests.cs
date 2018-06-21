@@ -83,7 +83,7 @@ namespace Toggl.Foundation.Tests.Interactors
                 await DataSource
                     .TimeEntries
                     .Received()
-                    .Create(Arg.Is<IThreadSafeTimeEntry>(
+                    .Create(Arg.Is<TimeEntryDto>(
                         te => te.TagIds.SequenceEqual(mostRecentTimeEntry.TagIds)));
             }
 
@@ -95,7 +95,7 @@ namespace Toggl.Foundation.Tests.Interactors
                 await DataSource
                     .TimeEntries
                     .Received()
-                    .Create(Arg.Is<IThreadSafeTimeEntry>(
+                    .Create(Arg.Is<TimeEntryDto>(
                         te => te.UserId == mostRecentTimeEntry.UserId));
             }
 
@@ -107,7 +107,7 @@ namespace Toggl.Foundation.Tests.Interactors
                 await DataSource
                     .TimeEntries
                     .Received()
-                    .Create(Arg.Is<IThreadSafeTimeEntry>(
+                    .Create(Arg.Is<TimeEntryDto>(
                         te => te.TaskId == mostRecentTimeEntry.TaskId));
             }
 
@@ -119,7 +119,7 @@ namespace Toggl.Foundation.Tests.Interactors
                 await DataSource
                     .TimeEntries
                     .Received()
-                    .Create(Arg.Is<IThreadSafeTimeEntry>(
+                    .Create(Arg.Is<TimeEntryDto>(
                         te => te.Billable == mostRecentTimeEntry.Billable));
             }
 
@@ -131,7 +131,7 @@ namespace Toggl.Foundation.Tests.Interactors
                 await DataSource
                     .TimeEntries
                     .Received()
-                    .Create(Arg.Is<IThreadSafeTimeEntry>(
+                    .Create(Arg.Is<TimeEntryDto>(
                         te => te.ProjectId == mostRecentTimeEntry.ProjectId));
             }
 
@@ -143,7 +143,7 @@ namespace Toggl.Foundation.Tests.Interactors
                 await DataSource
                     .TimeEntries
                     .Received()
-                    .Create(Arg.Is<IThreadSafeTimeEntry>(
+                    .Create(Arg.Is<TimeEntryDto>(
                         te => te.At == now));
             }
 
@@ -155,7 +155,7 @@ namespace Toggl.Foundation.Tests.Interactors
                 await DataSource
                     .TimeEntries
                     .Received()
-                    .Create(Arg.Is<IThreadSafeTimeEntry>(
+                    .Create(Arg.Is<TimeEntryDto>(
                         te => te.SyncStatus == SyncStatus.SyncNeeded));
             }
 
@@ -167,7 +167,7 @@ namespace Toggl.Foundation.Tests.Interactors
                 await DataSource
                     .TimeEntries
                     .Received()
-                    .Create(Arg.Is<IThreadSafeTimeEntry>(
+                    .Create(Arg.Is<TimeEntryDto>(
                         te => te.Description == mostRecentTimeEntry.Description));
             }
 
@@ -179,7 +179,7 @@ namespace Toggl.Foundation.Tests.Interactors
                 await DataSource
                     .TimeEntries
                     .Received()
-                    .Create(Arg.Is<IThreadSafeTimeEntry>(
+                    .Create(Arg.Is<TimeEntryDto>(
                         te => te.Start == now));
             }
 
@@ -191,7 +191,7 @@ namespace Toggl.Foundation.Tests.Interactors
                 await DataSource
                     .TimeEntries
                     .Received()
-                    .Create(Arg.Is<IThreadSafeTimeEntry>(
+                    .Create(Arg.Is<TimeEntryDto>(
                         te => te.WorkspaceId == mostRecentTimeEntry.WorkspaceId));
             }
 

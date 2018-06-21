@@ -104,7 +104,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push.BaseStates
             caughtException.Should().BeAssignableTo(exception.GetType());
         }
 
-        protected abstract BasePushEntityState<IThreadSafeTestModel> CreateState();
+        protected abstract BasePushEntityState<IThreadSafeTestModel, IDatabaseTestModel> CreateState();
 
         protected abstract void PrepareApiCallFunctionToThrow(Exception e);
 

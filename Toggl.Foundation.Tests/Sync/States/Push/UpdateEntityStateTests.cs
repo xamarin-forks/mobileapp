@@ -20,13 +20,13 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         private readonly IUpdatingApiClient<ITestModel> api
             = Substitute.For<IUpdatingApiClient<ITestModel>>();
 
-        private readonly IDataSource<IThreadSafeTestModel, IDatabaseTestModel> dataSource
-            = Substitute.For<IDataSource<IThreadSafeTestModel, IDatabaseTestModel>>();
+        private readonly IDataSource<IThreadSafeTestModel, IDatabaseTestModel, IDatabaseTestModel> dataSource
+            = Substitute.For<IDataSource<IThreadSafeTestModel, IDatabaseTestModel, IDatabaseTestModel>>();
 
         [Fact, LogIfTooSlow]
         public void ReturnsTheFailTransitionWhenEntityIsNull()
         {
-            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel>)CreateState();
+            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>)CreateState();
             var transition = state.Start(null).SingleAsync().Wait();
             var parameter = ((Transition<(Exception Reason, IThreadSafeTestModel)>)transition).Parameter;
 
@@ -38,7 +38,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         [MemberData(nameof(ApiExceptions.ServerExceptions), MemberType = typeof(ApiExceptions))]
         public void ReturnsTheServerErrorTransitionWhenHttpFailsWithServerError(ServerErrorException exception)
         {
-            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel>)CreateState();
+            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>)CreateState();
             var entity = new TestModel(1, SyncStatus.InSync);
             api.Update(Arg.Any<ITestModel>())
                 .Returns(_ => Observable.Throw<ITestModel>(exception));
@@ -54,7 +54,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         [MemberData(nameof(ApiExceptions.ClientExceptionsWhichAreNotReThrownInSyncStates), MemberType = typeof(ApiExceptions))]
         public void ReturnsTheClientErrorTransitionWhenHttpFailsWithClientError(ClientErrorException exception)
         {
-            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel>)CreateState();
+            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>)CreateState();
             var entity = new TestModel(1, SyncStatus.InSync);
             api.Update(Arg.Any<ITestModel>())
                 .Returns(_ => Observable.Throw<ITestModel>(exception));
@@ -69,7 +69,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         [Fact, LogIfTooSlow]
         public void ReturnsTheUnknownErrorTransitionWhenHttpFailsWithNonApiError()
         {
-            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel>)CreateState();
+            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>)CreateState();
             var entity = new TestModel(1, SyncStatus.InSync);
             api.Update(Arg.Any<ITestModel>())
                 .Returns(_ => Observable.Throw<ITestModel>(new TestException()));
@@ -84,7 +84,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         [Fact, LogIfTooSlow]
         public void ReturnsTheFailTransitionWhenDatabaseOperationFails()
         {
-            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel>)CreateState();
+            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>)CreateState();
             var entity = new TestModel(1, SyncStatus.InSync);
             dataSource
                 .OverwriteIfOriginalDidNotChange(Arg.Any<IThreadSafeTestModel>(), Arg.Any<IThreadSafeTestModel>())
@@ -100,7 +100,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         [Fact, LogIfTooSlow]
         public void UpdateApiCallIsCalledWithTheInputEntity()
         {
-            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel>)CreateState();
+            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>)CreateState();
             var entity = new TestModel(1, SyncStatus.InSync);
             api.Update(entity)
                 .Returns(Observable.Return(Substitute.For<ITestModel>()));
@@ -116,7 +116,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         [Fact, LogIfTooSlow]
         public void ReturnsTheEntityChangedTransitionWhenEntityChangesLocally()
         {
-            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel>)CreateState();
+            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>)CreateState();
             var at = new DateTimeOffset(2017, 9, 1, 12, 34, 56, TimeSpan.Zero);
             var entity = new TestModel { Id = 1, At = at, SyncStatus = SyncStatus.SyncNeeded };
             api.Update(Arg.Any<ITestModel>())
@@ -135,7 +135,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         [Fact, LogIfTooSlow]
         public void ReturnsTheUpdatingSuccessfulTransitionWhenEntityDoesNotChangeLocallyAndAllFunctionsAreCalledWithCorrectParameters()
         {
-            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel>)CreateState();
+            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>)CreateState();
             var at = new DateTimeOffset(2017, 9, 1, 12, 34, 56, TimeSpan.Zero);
             var entity = new TestModel { Id = 1, At = at, SyncStatus = SyncStatus.SyncNeeded };
             var serverEntity = new TestModel { Id = 2, At = at, SyncStatus = SyncStatus.SyncNeeded };
@@ -160,8 +160,8 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
                     Arg.Is<IThreadSafeTestModel>(theOriginalEntity => theOriginalEntity.Id == entity.Id), Arg.Is<IThreadSafeTestModel>(theUpdatedEntity => theUpdatedEntity.Id == serverEntity.Id));
         }
 
-        protected override BasePushEntityState<IThreadSafeTestModel> CreateState()
-            => new UpdateEntityState<ITestModel, IThreadSafeTestModel>(api, dataSource, TestModel.From);
+        protected override BasePushEntityState<IThreadSafeTestModel, IDatabaseTestModel> CreateState()
+            => new UpdateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>(api, dataSource, TestModel.From);
 
         protected override void PrepareApiCallFunctionToThrow(Exception e)
         {

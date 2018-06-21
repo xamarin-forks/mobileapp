@@ -64,7 +64,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Pull
             await state.Start();
 
             await projectsDataSource.Received()
-                .DeleteAll(Arg.Is<IEnumerable<IThreadSafeProject>>(projects => projects.Count() == 1 && projects.First().Id == project.Id));
+                .DeleteAll(Arg.Is<IEnumerable<ProjectDto>>(projects => projects.Count() == 1 && projects.First().Id == project.Id));
         }
 
         [Fact, LogIfTooSlow]
@@ -80,7 +80,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Pull
             await state.Start();
 
             await projectsDataSource.Received()
-                .DeleteAll(Arg.Is<IEnumerable<IThreadSafeProject>>(projects => !projects.Any()));
+                .DeleteAll(Arg.Is<IEnumerable<ProjectDto>>(projects => !projects.Any()));
         }
 
         [Fact, LogIfTooSlow]
@@ -107,7 +107,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Pull
 
             await state.Start();
 
-            await projectsDataSource.Received().DeleteAll(Arg.Is<IEnumerable<IThreadSafeProject>>(deletedProjects =>
+            await projectsDataSource.Received().DeleteAll(Arg.Is<IEnumerable<ProjectDto>>(deletedProjects =>
                 deletedProjects.Count() == 2
                 && deletedProjects.Any(project => project.Id == 1)
                 && deletedProjects.Any(project => project.Id == 2)));

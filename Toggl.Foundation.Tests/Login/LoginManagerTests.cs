@@ -157,7 +157,7 @@ namespace Toggl.Foundation.Tests.Login
             {
                 await LoginManager.Login(Email, Password);
 
-                await Database.User.Received().Create(Arg.Is<IDatabaseUser>(receivedUser => receivedUser.Id == User.Id));
+                await Database.User.Received().Create(Arg.Is<UserDto>(receivedUser => receivedUser.Id == User.Id));
             }
 
             [Fact, LogIfTooSlow]
@@ -165,7 +165,7 @@ namespace Toggl.Foundation.Tests.Login
             {
                 await LoginManager.Login(Email, Password);
 
-                await Database.User.Received().Create(Arg.Is<IDatabaseUser>(receivedUser => receivedUser.SyncStatus == SyncStatus.InSync));
+                await Database.User.Received().Create(Arg.Is<UserDto>(receivedUser => receivedUser.SyncStatus == SyncStatus.InSync));
             }
 
             [Fact, LogIfTooSlow]
@@ -333,7 +333,7 @@ namespace Toggl.Foundation.Tests.Login
             {
                 await LoginManager.SignUp(Email, Password, TermsAccepted, CountryId);
 
-                await Database.User.Received().Create(Arg.Is<IDatabaseUser>(receivedUser => receivedUser.Id == User.Id));
+                await Database.User.Received().Create(Arg.Is<UserDto>(receivedUser => receivedUser.Id == User.Id));
             }
 
             [Fact, LogIfTooSlow]
@@ -341,7 +341,7 @@ namespace Toggl.Foundation.Tests.Login
             {
                 await LoginManager.SignUp(Email, Password, TermsAccepted, CountryId);
 
-                await Database.User.Received().Create(Arg.Is<IDatabaseUser>(receivedUser => receivedUser.SyncStatus == SyncStatus.InSync));
+                await Database.User.Received().Create(Arg.Is<UserDto>(receivedUser => receivedUser.SyncStatus == SyncStatus.InSync));
             }
 
             [Fact, LogIfTooSlow]
@@ -426,7 +426,7 @@ namespace Toggl.Foundation.Tests.Login
             {
                 await LoginManager.RefreshToken(Password);
 
-                await Database.User.Received().Update(Arg.Is<IDatabaseUser>(receivedUser => receivedUser.Id == User.Id));
+                await Database.User.Received().Update(Arg.Is<UserDto>(receivedUser => receivedUser.Id == User.Id));
             }
 
             [Fact, LogIfTooSlow]
@@ -434,7 +434,7 @@ namespace Toggl.Foundation.Tests.Login
             {
                 await LoginManager.RefreshToken(Password);
 
-                await Database.User.Received().Update(Arg.Is<IDatabaseUser>(receivedUser => receivedUser.SyncStatus == SyncStatus.InSync));
+                await Database.User.Received().Update(Arg.Is<UserDto>(receivedUser => receivedUser.SyncStatus == SyncStatus.InSync));
             }
 
             [Fact, LogIfTooSlow]
@@ -486,7 +486,7 @@ namespace Toggl.Foundation.Tests.Login
             {
                 await LoginManager.LoginWithGoogle();
 
-                await Database.User.Received().Create(Arg.Is<IDatabaseUser>(receivedUser => receivedUser.Id == User.Id));
+                await Database.User.Received().Create(Arg.Is<UserDto>(receivedUser => receivedUser.Id == User.Id));
             }
 
             [Fact, LogIfTooSlow]
@@ -494,7 +494,7 @@ namespace Toggl.Foundation.Tests.Login
             {
                 await LoginManager.LoginWithGoogle();
 
-                await Database.User.Received().Create(Arg.Is<IDatabaseUser>(receivedUser => receivedUser.SyncStatus == SyncStatus.InSync));
+                await Database.User.Received().Create(Arg.Is<UserDto>(receivedUser => receivedUser.SyncStatus == SyncStatus.InSync));
             }
 
             [Fact, LogIfTooSlow]

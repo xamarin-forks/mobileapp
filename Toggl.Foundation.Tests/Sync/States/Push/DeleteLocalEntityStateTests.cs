@@ -12,13 +12,13 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
 {
     public sealed class DeleteLocalEntityStateTests
     {
-        private readonly IDataSource<IThreadSafeTestModel, IDatabaseTestModel> dataSource
-            = Substitute.For<IDataSource<IThreadSafeTestModel, IDatabaseTestModel>>();
+        private readonly IDataSource<IThreadSafeTestModel, IDatabaseTestModel, IDatabaseTestModel> dataSource
+            = Substitute.For<IDataSource<IThreadSafeTestModel, IDatabaseTestModel, IDatabaseTestModel>>();
 
         [Fact, LogIfTooSlow]
         public void ReturnsFailTransitionWhenEntityIsNull()
         {
-            var state = new DeleteLocalEntityState<IDatabaseTestModel, IThreadSafeTestModel>(dataSource);
+            var state = new DeleteLocalEntityState<IDatabaseTestModel, IThreadSafeTestModel, IDatabaseTestModel>(dataSource);
 
             var transition = state.Start(null).SingleAsync().Wait();
 
@@ -28,7 +28,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         [Fact, LogIfTooSlow]
         public void ReturnsFailTransitionWhenDatabaseOperationFails()
         {
-            var state = new DeleteLocalEntityState<IDatabaseTestModel, IThreadSafeTestModel>(dataSource);
+            var state = new DeleteLocalEntityState<IDatabaseTestModel, IThreadSafeTestModel, IDatabaseTestModel>(dataSource);
             var entity = new TestModel(0, SyncStatus.SyncNeeded);
             dataSource.Delete(entity.Id).Returns(Observable.Throw<Unit>(new Exception()));
 
@@ -40,7 +40,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         [Fact, LogIfTooSlow]
         public void ReturnsDeletedTransitionWhenEverythingIsOk()
         {
-            var state = new DeleteLocalEntityState<IDatabaseTestModel, IThreadSafeTestModel>(dataSource);
+            var state = new DeleteLocalEntityState<IDatabaseTestModel, IThreadSafeTestModel, IDatabaseTestModel>(dataSource);
             var entity = new TestModel(0, SyncStatus.SyncNeeded);
             dataSource.Delete(Arg.Any<long>()).Returns(Observable.Return(Unit.Default));
 
@@ -52,7 +52,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         [Fact, LogIfTooSlow]
         public void DeletesTheEntityFromTheLocalDatabase()
         {
-            var state = new DeleteLocalEntityState<IDatabaseTestModel, IThreadSafeTestModel>(dataSource);
+            var state = new DeleteLocalEntityState<IDatabaseTestModel, IThreadSafeTestModel, IDatabaseTestModel>(dataSource);
             var entity = new TestModel(0, SyncStatus.SyncNeeded);
             dataSource.Delete(Arg.Any<long>()).Returns(Observable.Return(Unit.Default));
 

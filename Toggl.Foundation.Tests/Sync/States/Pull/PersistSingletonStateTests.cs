@@ -14,16 +14,16 @@ namespace Toggl.Foundation.Tests.Sync.States
 {
     public sealed class PersistSingletonStateTests
     {
-        private readonly PersistSingletonState<ITestModel, IDatabaseTestModel, IThreadSafeTestModel> state;
+        private readonly PersistSingletonState<ITestModel, IDatabaseTestModel, IThreadSafeTestModel, IDatabaseTestModel> state;
 
-        private readonly ISingletonDataSource<IThreadSafeTestModel> dataSource =
-            Substitute.For<ISingletonDataSource<IThreadSafeTestModel>>();
+        private readonly ISingletonDataSource<IThreadSafeTestModel, IDatabaseTestModel> dataSource =
+            Substitute.For<ISingletonDataSource<IThreadSafeTestModel, IDatabaseTestModel>>();
 
         private readonly DateTimeOffset now = new DateTimeOffset(2017, 04, 05, 12, 34, 56, TimeSpan.Zero);
 
         public PersistSingletonStateTests()
         {
-            state = new PersistSingletonState<ITestModel, IDatabaseTestModel, IThreadSafeTestModel>(dataSource,
+            state = new PersistSingletonState<ITestModel, IDatabaseTestModel, IThreadSafeTestModel, IDatabaseTestModel>(dataSource,
                 TestModel.From);
         }
 

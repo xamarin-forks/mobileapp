@@ -25,7 +25,7 @@ namespace Toggl.Foundation.Tests.DataSources
             [Fact]
             public async Task InitializesTheCurrentObservableWithTheDefaultValueIfTheStorageDoesNotContainTheObject()
             {
-                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel>>();
+                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel, IDatabaseTestModel>>();
                 var defaultValue = new TestModel(123, SyncStatus.InSync);
                 storage.Single().Returns(Observable.Throw<IDatabaseTestModel>(new Exception()));
 
@@ -38,7 +38,7 @@ namespace Toggl.Foundation.Tests.DataSources
             [Fact]
             public async Task InitializesTheCurrentObservableWithTheStoredValueFromTheStorage()
             {
-                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel>>();
+                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel, IDatabaseTestModel>>();
                 var storedValue = new TestModel(456, SyncStatus.InSync);
                 storage.Single().Returns(Observable.Return(storedValue));
 
@@ -51,7 +51,7 @@ namespace Toggl.Foundation.Tests.DataSources
             [Fact]
             public async Task IgnoresTheDefaultValueWhenTheStorageContainsSomeValue()
             {
-                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel>>();
+                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel, IDatabaseTestModel>>();
                 var defaultValue = new TestModel(123, SyncStatus.InSync);
                 var storedValue = new TestModel(456, SyncStatus.InSync);
                 storage.Single().Returns(Observable.Return(storedValue));
@@ -68,7 +68,7 @@ namespace Toggl.Foundation.Tests.DataSources
             [Fact]
             public async Task UpdatesTheCurrentObservableValue()
             {
-                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel>>();
+                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel, IDatabaseTestModel>>();
                 var createdValue = new TestModel(123, SyncStatus.InSync);
                 var storedValue = new TestModel(456, SyncStatus.InSync);
                 storage.Single().Returns(Observable.Return(storedValue));
@@ -87,7 +87,7 @@ namespace Toggl.Foundation.Tests.DataSources
             [Fact]
             public async Task UpdatesTheCurrentObservableValue()
             {
-                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel>>();
+                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel, IDatabaseTestModel>>();
                 var updatedValue = new TestModel(123, SyncStatus.InSync);
                 var storedValue = new TestModel(456, SyncStatus.InSync);
                 storage.Single().Returns(Observable.Return(storedValue));
@@ -106,7 +106,7 @@ namespace Toggl.Foundation.Tests.DataSources
             [Fact]
             public async Task UpdatesTheCurrentObservableValue()
             {
-                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel>>();
+                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel, IDatabaseTestModel>>();
                 var updatedValue = new TestModel(123, SyncStatus.InSync);
                 var storedValue = new TestModel(456, SyncStatus.InSync);
                 storage.Single().Returns(Observable.Return(storedValue));
@@ -125,7 +125,7 @@ namespace Toggl.Foundation.Tests.DataSources
             [Fact]
             public async Task UpdatesTheCurrentObservableValue()
             {
-                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel>>();
+                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel, IDatabaseTestModel>>();
                 var updatedValue = new TestModel(123, SyncStatus.InSync);
                 var storedValue = new TestModel(456, SyncStatus.InSync);
                 storage.Single().Returns(Observable.Return(storedValue));
@@ -145,7 +145,7 @@ namespace Toggl.Foundation.Tests.DataSources
             [Fact]
             public async Task UpdatesTheCurrentObservableValueWhenTheStoredValueIsCreated()
             {
-                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel>>();
+                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel, IDatabaseTestModel>>();
                 var createdValue = new TestModel(123, SyncStatus.InSync);
                 storage.Single().Returns(Observable.Throw<IDatabaseTestModel>(new Exception()));
                 storage.BatchUpdate(null, null, null)
@@ -161,7 +161,7 @@ namespace Toggl.Foundation.Tests.DataSources
             [Fact]
             public async Task UpdatesTheCurrentObservableValueWhenTheStoredValueIsUpdated()
             {
-                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel>>();
+                var storage = Substitute.For<ISingleObjectStorage<IDatabaseTestModel, IDatabaseTestModel>>();
                 var updatedValue = new TestModel(123, SyncStatus.InSync);
                 var storedValue = new TestModel(456, SyncStatus.InSync);
                 storage.Single().Returns(Observable.Return(storedValue));
@@ -176,9 +176,9 @@ namespace Toggl.Foundation.Tests.DataSources
             }
         }
 
-        private class TestSingletonSource : SingletonDataSource<IThreadSafeTestModel, IDatabaseTestModel>
+        private class TestSingletonSource : SingletonDataSource<IThreadSafeTestModel, IDatabaseTestModel, IDatabaseTestModel>
         {
-            public TestSingletonSource(ISingleObjectStorage<IDatabaseTestModel> storage, IThreadSafeTestModel defaultCurrentValue) : base(storage, defaultCurrentValue)
+            public TestSingletonSource(ISingleObjectStorage<IDatabaseTestModel, IDatabaseTestModel> storage, IThreadSafeTestModel defaultCurrentValue) : base(storage, defaultCurrentValue)
             {
             }
 

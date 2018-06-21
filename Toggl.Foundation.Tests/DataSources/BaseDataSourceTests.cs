@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using FsCheck.Experimental;
 using NSubstitute;
 using NSubstitute.Core;
 using Toggl.Foundation.DataSources;
@@ -39,10 +40,10 @@ namespace Toggl.Foundation.Tests.DataSources
     public sealed class DataSourceTests
     {
         private readonly ITimeService timeService = Substitute.For<ITimeService>();
-        private readonly IRepository<IDatabaseTimeEntry> repository
-            = Substitute.For<IRepository<IDatabaseTimeEntry>>();
+        private readonly IRepository<IDatabaseTimeEntry, TimeEntryDto> repository
+            = Substitute.For<IRepository<IDatabaseTimeEntry, TimeEntryDto>>();
 
-        private readonly DataSource<IThreadSafeTimeEntry, IDatabaseTimeEntry> dataSource;
+        private readonly DataSource<IThreadSafeTimeEntry, IDatabaseTimeEntry, TimeEntryDto> dataSource;
 
         public DataSourceTests()
         {
@@ -52,11 +53,11 @@ namespace Toggl.Foundation.Tests.DataSources
         [Fact]
         public async Task TheDeleteAllMethodIgnoresTheConflictIfTheOldEntityIsNull()
         {
-            var entities = Enumerable.Range(0, 10).Select(i => new MockTimeEntry { Id = i });
+            var entities = Enumerable.Range(0, 10).Select(i => TimeEntryDto.From(new MockTimeEntry { Id = i }));
 
             repository.BatchUpdate(
-                Arg.Any<IEnumerable<(long id, IDatabaseTimeEntry)>>(),
-                Arg.Any<Func<IDatabaseTimeEntry, IDatabaseTimeEntry, ConflictResolutionMode>>())
+                Arg.Any<IEnumerable<(long id, TimeEntryDto)>>(),
+                Arg.Any<Func<IDatabaseTimeEntry, TimeEntryDto, ConflictResolutionMode>>())
                 .Returns(batchUpdateResult);
 
             var results = await dataSource.DeleteAll(entities);
@@ -66,19 +67,19 @@ namespace Toggl.Foundation.Tests.DataSources
         private IObservable<IEnumerable<IConflictResolutionResult<IDatabaseTimeEntry>>> batchUpdateResult(CallInfo info)
         { 
             var conflictFn =
-                info.Arg<Func<IDatabaseTimeEntry, IDatabaseTimeEntry, ConflictResolutionMode>>();
+                info.Arg<Func<IDatabaseTimeEntry, TimeEntryDto, ConflictResolutionMode>>();
 
             var entitiesToDelete =
-                info.Arg<IEnumerable<(long Id, IDatabaseTimeEntry Entity)>>();
+                info.Arg<IEnumerable<(long Id, TimeEntryDto Entity)>>();
 
             var result = entitiesToDelete.Select(ignoreResultFromTuple);
 
             return Observable.Return(result);
 
-            IConflictResolutionResult<IDatabaseTimeEntry> ignoreResultFromTuple((long Id, IDatabaseTimeEntry Entity) tuple)
+            IConflictResolutionResult<IDatabaseTimeEntry> ignoreResultFromTuple((long Id, TimeEntryDto Entity) tuple)
             {
-                var entity = tuple.Id % 2 == 0 ? null : tuple.Entity;
-                var confictMode = conflictFn(entity, null);
+                var entity = tuple.Id % 2 == 0 ? null : new MockTimeEntry { Id = tuple.Id };
+                var confictMode = conflictFn(entity, new TimeEntryDto());
                 switch (confictMode)
                 {
                     case ConflictResolutionMode.Ignore:

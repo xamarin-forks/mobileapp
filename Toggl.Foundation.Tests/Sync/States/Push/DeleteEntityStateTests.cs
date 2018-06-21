@@ -17,13 +17,13 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         private readonly IDeletingApiClient<ITestModel> api
             = Substitute.For<IDeletingApiClient<ITestModel>>();
 
-        private readonly IDataSource<IThreadSafeTestModel, IDatabaseTestModel> dataSource
-            = Substitute.For<IDataSource<IThreadSafeTestModel, IDatabaseTestModel>>();
+        private readonly IDataSource<IThreadSafeTestModel, IDatabaseTestModel, IDatabaseTestModel> dataSource
+            = Substitute.For<IDataSource<IThreadSafeTestModel, IDatabaseTestModel, IDatabaseTestModel>>();
 
         [Fact, LogIfTooSlow]
         public void ReturnsSuccessfulTransitionWhenEverythingWorks()
         {
-            var state = (DeleteEntityState<ITestModel, IDatabaseTestModel, IThreadSafeTestModel>)CreateState();
+            var state = (DeleteEntityState<ITestModel, IDatabaseTestModel, IThreadSafeTestModel, IDatabaseTestModel>)CreateState();
             var dirtyEntity = new TestModel(-1, SyncStatus.SyncNeeded);
             api.Delete(Arg.Any<ITestModel>())
                 .Returns(Observable.Return(Unit.Default));
@@ -79,8 +79,8 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
             calledDelete.Should().BeTrue();
         }
 
-        protected override BasePushEntityState<IThreadSafeTestModel> CreateState()
-            => new DeleteEntityState<ITestModel, IDatabaseTestModel, IThreadSafeTestModel>(api, dataSource);
+        protected override BasePushEntityState<IThreadSafeTestModel, IDatabaseTestModel> CreateState()
+            => new DeleteEntityState<ITestModel, IDatabaseTestModel, IThreadSafeTestModel, IDatabaseTestModel>(api, dataSource);
 
         protected override void PrepareApiCallFunctionToThrow(Exception e)
         {

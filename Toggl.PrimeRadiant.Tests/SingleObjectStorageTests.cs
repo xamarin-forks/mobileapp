@@ -23,7 +23,7 @@ namespace Toggl.PrimeRadiant.Tests
         protected sealed override IObservable<Unit> Delete(long id)
             => Storage.Delete();
 
-        protected abstract ISingleObjectStorage<TTestModel> Storage { get; }
+        protected abstract ISingleObjectStorage<TTestModel, TTestModel> Storage { get; }
 
         [Fact, LogIfTooSlow]
         public void TheSingleMethodThrowsIfThereIsNoDataInTheRepository()
@@ -72,6 +72,6 @@ namespace Toggl.PrimeRadiant.Tests
         }
 
         private IObservable<IEnumerable<IConflictResolutionResult<TTestModel>>> callBatchUpdate(IEnumerable<(long, TTestModel)> batch)
-            => Storage.BatchUpdate(batch, (a, b) => ConflictResolutionMode.Ignore, Substitute.For<IRivalsResolver<TTestModel>>());
+            => Storage.BatchUpdate(batch, (a, b) => ConflictResolutionMode.Ignore, Substitute.For<IRivalsResolver<TTestModel, TTestModel>>());
     }
 }

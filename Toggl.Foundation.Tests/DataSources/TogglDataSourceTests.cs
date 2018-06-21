@@ -232,26 +232,22 @@ namespace Toggl.Foundation.Tests.DataSources
 
         public sealed class TheHasUnsyncedDataMetod
         {
-            public abstract class BaseHasUnsyncedDataTest<TModel, TDatabaseModel> : TogglDataSourceTest
+            public abstract class BaseHasUnsyncedDataTest<TModel, TDatabaseModel, TDto> : TogglDataSourceTest
                 where TModel : class
-                where TDatabaseModel : TModel, IDatabaseSyncable
+                where TDatabaseModel : class, TModel, IDatabaseSyncable
             {
-                private readonly IRepository<TDatabaseModel> repository;
-                private readonly Func<TModel, TDatabaseModel> dirty;
-                private readonly Func<TModel, string, TDatabaseModel> unsyncable;
+                private readonly IRepository<TDatabaseModel, TDto> repository;
 
-                public BaseHasUnsyncedDataTest(Func<ITogglDatabase, IRepository<TDatabaseModel>> repository,
-                    Func<TModel, TDatabaseModel> dirty, Func<TModel, string, TDatabaseModel> unsyncable)
+                public BaseHasUnsyncedDataTest(Func<ITogglDatabase, IRepository<TDatabaseModel, TDto>> repository)
                 {
                     this.repository = repository(Database);
-                    this.dirty = dirty;
-                    this.unsyncable = unsyncable;
                 }
 
                 [Fact, LogIfTooSlow]
                 public async ThreadingTask ReturnsTrueWhenThereIsAnEntityWhichNeedsSync()
                 {
-                    var dirtyEntity = dirty(Substitute.For<TModel>());
+                    var dirtyEntity = Substitute.For<TDatabaseModel>();
+                    dirtyEntity.SyncStatus.Returns(SyncStatus.SyncNeeded);
                     repository.GetAll(Arg.Any<Func<TDatabaseModel, bool>>())
                         .Returns(Observable.Return(new[] { dirtyEntity }));
 
@@ -263,7 +259,8 @@ namespace Toggl.Foundation.Tests.DataSources
                 [Fact, LogIfTooSlow]
                 public async ThreadingTask ReturnsTrueWhenThereIsAnEntityWhichFailedToSync()
                 {
-                    var unsyncableEntity = unsyncable(Substitute.For<TModel>(), "Error message.");
+                    var unsyncableEntity = Substitute.For<TDatabaseModel>();
+                    unsyncableEntity.SyncStatus.Returns(SyncStatus.SyncFailed);
                     repository.GetAll(Arg.Any<Func<TDatabaseModel, bool>>())
                         .Returns(Observable.Return(new[] { unsyncableEntity }));
 
@@ -284,58 +281,58 @@ namespace Toggl.Foundation.Tests.DataSources
                 }
             }
 
-            public sealed class TimeEntriesTest : BaseHasUnsyncedDataTest<ITimeEntry, IDatabaseTimeEntry>
+            public sealed class TimeEntriesTest : BaseHasUnsyncedDataTest<ITimeEntry, IDatabaseTimeEntry, TimeEntryDto>
             {
                 public TimeEntriesTest()
-                    : base(database => database.TimeEntries, TimeEntry.Dirty, TimeEntry.Unsyncable)
+                    : base(database => database.TimeEntries)
                 {
                 }
             }
 
-            public sealed class ProjectsTest : BaseHasUnsyncedDataTest<IProject, IDatabaseProject>
+            public sealed class ProjectsTest : BaseHasUnsyncedDataTest<IProject, IDatabaseProject, ProjectDto>
             {
                 public ProjectsTest()
-                    : base(database => database.Projects, Project.Dirty, Project.Unsyncable)
+                    : base(database => database.Projects)
                 {
                 }
             }
 
-            public sealed class UserTest : BaseHasUnsyncedDataTest<IUser, IDatabaseUser>
+            public sealed class UserTest : BaseHasUnsyncedDataTest<IUser, IDatabaseUser, UserDto>
             {
                 public UserTest()
-                    : base(database => database.User, User.Dirty, User.Unsyncable)
+                    : base(database => database.User)
                 {
                 }
             }
 
-            public sealed class TasksTest : BaseHasUnsyncedDataTest<ITask, IDatabaseTask>
+            public sealed class TasksTest : BaseHasUnsyncedDataTest<ITask, IDatabaseTask, TaskDto>
             {
                 public TasksTest()
-                    : base(database => database.Tasks, Task.Dirty, Task.Unsyncable)
+                    : base(database => database.Tasks)
                 {
                 }
             }
 
-            public sealed class ClientsTest : BaseHasUnsyncedDataTest<IClient, IDatabaseClient>
+            public sealed class ClientsTest : BaseHasUnsyncedDataTest<IClient, IDatabaseClient, ClientDto>
             {
                 public ClientsTest()
-                    : base(database => database.Clients, Client.Dirty, Client.Unsyncable)
+                    : base(database => database.Clients)
                 {
                 }
             }
 
-            public sealed class TagsTest : BaseHasUnsyncedDataTest<ITag, IDatabaseTag>
+            public sealed class TagsTest : BaseHasUnsyncedDataTest<ITag, IDatabaseTag, TagDto>
             {
                 public TagsTest()
-                    : base(database => database.Tags, Tag.Dirty, Tag.Unsyncable)
+                    : base(database => database.Tags)
                 {
                 }
             }
 
-            public sealed class WorkspacesTest : BaseHasUnsyncedDataTest<IWorkspace, IDatabaseWorkspace>
+            public sealed class WorkspacesTest : BaseHasUnsyncedDataTest<IWorkspace, IDatabaseWorkspace, WorkspaceDto>
             {
                 public WorkspacesTest()
-                    : base(database => database.Workspaces, Workspace.Dirty, Workspace.Unsyncable)
+                    : base(database => database.Workspaces)
                 {
                 }
             }

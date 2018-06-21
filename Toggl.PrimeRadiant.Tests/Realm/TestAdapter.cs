@@ -6,7 +6,7 @@ using Toggl.PrimeRadiant.Realm;
 
 namespace Toggl.PrimeRadiant.Tests.Realm
 {
-    public class GenericTestAdapter<T> : IRealmAdapter<T>
+    public class GenericTestAdapter<T> : IRealmAdapter<T, T>
         where T : class, IIdentifiable
     {
         private readonly List<T> list = new List<T>();
@@ -62,7 +62,7 @@ namespace Toggl.PrimeRadiant.Tests.Realm
         public IEnumerable<IConflictResolutionResult<T>> BatchUpdate(
             IEnumerable<(long Id, T Entity)> entities,
             Func<T, T, ConflictResolutionMode> conflictResolution,
-            IRivalsResolver<T> resolver)
+            IRivalsResolver<T, T> resolver)
         {
             throw new NotImplementedException();
         }

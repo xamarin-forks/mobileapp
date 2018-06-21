@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Toggl.Foundation.Analytics;
+using Toggl.Foundation.Models;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.Suggestions;
 using Toggl.Foundation.Tests.Mocks;
@@ -12,6 +12,7 @@ using Toggl.PrimeRadiant;
 using Toggl.PrimeRadiant.Models;
 using Xunit;
 using ITimeEntryPrototype = Toggl.Foundation.Models.ITimeEntryPrototype;
+using Task = System.Threading.Tasks.Task;
 
 namespace Toggl.Foundation.Tests.Interactors
 {
@@ -56,8 +57,17 @@ namespace Toggl.Foundation.Tests.Interactors
                 DataSource.User.Current.Returns(Observable.Return(user));
 
                 DataSource.TimeEntries
-                    .Create(Arg.Any<IThreadSafeTimeEntry>())
-                    .Returns(callInfo => Observable.Return(callInfo.Arg<IThreadSafeTimeEntry>()));
+                    .Create(Arg.Any<TimeEntryDto>())
+                    .Returns(callInfo => Observable.Return(fromDto(callInfo.Arg<TimeEntryDto>())));
+            }
+
+            private IThreadSafeTimeEntry fromDto(TimeEntryDto dto)
+            {
+                var te = new MockTimeEntry(TimeEntry.Clean(dto));
+                te.SyncStatus = dto.SyncStatus;
+                te.IsDeleted = dto.IsDeleted;
+                te.LastSyncErrorMessage = dto.LastSyncErrorMessage;
+                return te;
             }
 
             protected abstract IObservable<IDatabaseTimeEntry> CallInteractor(ITimeEntryPrototype prototype);
@@ -67,7 +77,7 @@ namespace Toggl.Foundation.Tests.Interactors
             {
                 await CallInteractor(CreatePrototype(ValidTime, ValidDescription, true, ProjectId));
 
-                await DataSource.TimeEntries.ReceivedWithAnyArgs().Create(null);
+                await DataSource.TimeEntries.Received().Create(Arg.Any<TimeEntryDto>());
             }
 
             [Fact, LogIfTooSlow]
@@ -75,7 +85,7 @@ namespace Toggl.Foundation.Tests.Interactors
             {
                 await CallInteractor(CreatePrototype(ValidTime, ValidDescription, true, ProjectId));
 
-                await DataSource.TimeEntries.Received().Create(Arg.Is<IThreadSafeTimeEntry>(
+                await DataSource.TimeEntries.Received().Create(Arg.Is<TimeEntryDto>(
                     te => te.SyncStatus == SyncStatus.SyncNeeded
                 ));
             }
@@ -87,7 +97,7 @@ namespace Toggl.Foundation.Tests.Interactors
             {
                 await CallInteractor(CreatePrototype(ValidTime, ValidDescription, billable, ProjectId));
 
-                await DataSource.TimeEntries.Received().Create(Arg.Is<IThreadSafeTimeEntry>(
+                await DataSource.TimeEntries.Received().Create(Arg.Is<TimeEntryDto>(
                     te => te.Billable == billable
                 ));
             }
@@ -97,7 +107,7 @@ namespace Toggl.Foundation.Tests.Interactors
             {
                 await CallInteractor(CreatePrototype(ValidTime, ValidDescription, true, ProjectId));
 
-                await DataSource.TimeEntries.Received().Create(Arg.Is<IThreadSafeTimeEntry>(
+                await DataSource.TimeEntries.Received().Create(Arg.Is<TimeEntryDto>(
                     te => te.Description == ValidDescription
                 ));
             }
@@ -107,7 +117,7 @@ namespace Toggl.Foundation.Tests.Interactors
             {
                 await CallInteractor(CreatePrototype(ValidTime, ValidDescription, true, ProjectId));
 
-                await DataSource.TimeEntries.Received().Create(Arg.Is<IThreadSafeTimeEntry>(
+                await DataSource.TimeEntries.Received().Create(Arg.Is<TimeEntryDto>(
                     te => te.ProjectId == ProjectId
                 ));
             }
@@ -117,7 +127,7 @@ namespace Toggl.Foundation.Tests.Interactors
             {
                 await CallInteractor(CreatePrototype(ValidTime, ValidDescription, true, ProjectId));
 
-                await DataSource.TimeEntries.Received().Create(Arg.Is<IThreadSafeTimeEntry>(
+                await DataSource.TimeEntries.Received().Create(Arg.Is<TimeEntryDto>(
                     te => te.UserId == UserId
                 ));
             }
@@ -127,7 +137,7 @@ namespace Toggl.Foundation.Tests.Interactors
             {
                 await CallInteractor(CreatePrototype(ValidTime, ValidDescription, true, ProjectId, TaskId));
 
-                await DataSource.TimeEntries.Received().Create(Arg.Is<IThreadSafeTimeEntry>(
+                await DataSource.TimeEntries.Received().Create(Arg.Is<TimeEntryDto>(
                     te => te.TaskId == TaskId
                 ));
             }
@@ -137,7 +147,7 @@ namespace Toggl.Foundation.Tests.Interactors
             {
                 await CallInteractor(CreatePrototype(ValidTime, ValidDescription, true, ProjectId));
 
-                await DataSource.TimeEntries.Received().Create(Arg.Is<IThreadSafeTimeEntry>(
+                await DataSource.TimeEntries.Received().Create(Arg.Is<TimeEntryDto>(
                     te => te.WorkspaceId == WorkspaceId
                 ));
             }
@@ -149,7 +159,7 @@ namespace Toggl.Foundation.Tests.Interactors
 
                 await CallInteractor(CreatePrototype(ValidTime, ValidDescription, true, ProjectId));
 
-                await DataSource.TimeEntries.Received().Create(Arg.Is<IThreadSafeTimeEntry>(
+                await DataSource.TimeEntries.Received().Create(Arg.Is<TimeEntryDto>(
                     te => te.Id == -1
                 ));
             }
@@ -166,7 +176,7 @@ namespace Toggl.Foundation.Tests.Interactors
             public async Task DoesNotInitiatePushSyncWhenStartingFails()
             {
                 var observable = Observable.Throw<IThreadSafeTimeEntry>(new Exception());
-                DataSource.TimeEntries.Create(Arg.Any<IThreadSafeTimeEntry>())
+                DataSource.TimeEntries.Create(Arg.Any<TimeEntryDto>())
                           .Returns(observable);
 
                 Action executeCommand =
@@ -200,7 +210,7 @@ namespace Toggl.Foundation.Tests.Interactors
             {
                 await CallInteractor(CreatePrototype(ValidTime, ValidDescription, true, ProjectId));
 
-                await DataSource.TimeEntries.Received().Create(Arg.Is<IThreadSafeTimeEntry>(
+                await DataSource.TimeEntries.Received().Create(Arg.Is<TimeEntryDto>(
                     te => te.Start == TimeService.CurrentDateTime
                 ));
             }
@@ -243,7 +253,7 @@ namespace Toggl.Foundation.Tests.Interactors
             {
                 await CallInteractor(CreatePrototype(ValidTime, ValidDescription, true, ProjectId));
 
-                await DataSource.TimeEntries.Received().Create(Arg.Is<IThreadSafeTimeEntry>(
+                await DataSource.TimeEntries.Received().Create(Arg.Is<TimeEntryDto>(
                     te => te.Start == TimeService.CurrentDateTime
                 ));
             }
@@ -276,7 +286,7 @@ namespace Toggl.Foundation.Tests.Interactors
             {
                 await CallInteractor(CreatePrototype(ValidTime, ValidDescription, true, ProjectId));
 
-                await DataSource.TimeEntries.Received().Create(Arg.Is<IThreadSafeTimeEntry>(
+                await DataSource.TimeEntries.Received().Create(Arg.Is<TimeEntryDto>(
                     te => te.Start == ValidTime
                 ));
             }

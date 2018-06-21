@@ -1,8 +1,9 @@
 using Toggl.Multivac.Models;
+using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.PrimeRadiant.Tests
 {
-    public interface ITestModel : IIdentifiable, IDatabaseSyncable { }
+    public interface ITestModel : IIdentifiable, IDatabaseSyncable, IDatabaseModel { }
 
     public sealed class TestModel : ITestModel
     {

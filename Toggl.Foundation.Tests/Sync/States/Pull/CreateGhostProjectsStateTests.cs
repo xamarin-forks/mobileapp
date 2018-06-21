@@ -61,7 +61,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Pull
 
             await state.Start(fetchObservables);
 
-            await dataSource.Received().Create(Arg.Is<IThreadSafeProject>(dto =>
+            await dataSource.Received().Create(Arg.Is<ProjectDto>(dto =>
                 dto.Id == timeEntry.ProjectId.Value
                 && dto.WorkspaceId == timeEntry.WorkspaceId
                 && dto.SyncStatus == SyncStatus.RefetchingNeeded));
@@ -79,7 +79,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Pull
 
             await state.Start(fetchObservables);
 
-            await dataSource.Received(1).Create(Arg.Is<IThreadSafeProject>(dto =>
+            await dataSource.Received(1).Create(Arg.Is<ProjectDto>(dto =>
                 dto.Id == projectId && dto.SyncStatus == SyncStatus.RefetchingNeeded));
         }
 
@@ -93,7 +93,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Pull
 
             await state.Start(fetchObservables);
 
-            await dataSource.DidNotReceive().Create(Arg.Any<IThreadSafeProject>());
+            await dataSource.DidNotReceive().Create(Arg.Any<ProjectDto>());
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Pull
             await state.Start(fetchObservables);
 
             await dataSource.Received().Create(
-                Arg.Is<IThreadSafeProject>(project => project.Active == false));
+                Arg.Is<ProjectDto>(project => project.Active == false));
         }
 
         [Fact]

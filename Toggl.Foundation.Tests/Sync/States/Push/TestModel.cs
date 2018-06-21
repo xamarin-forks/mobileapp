@@ -2,6 +2,7 @@
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.Tests.Sync.States
 {
@@ -9,7 +10,7 @@ namespace Toggl.Foundation.Tests.Sync.States
     {
     }
 
-    public interface IDatabaseTestModel : IDatabaseSyncable, ITestModel
+    public interface IDatabaseTestModel : IDatabaseSyncable, ITestModel, IDatabaseModel
     {
     }
 
