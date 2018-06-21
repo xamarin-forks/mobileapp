@@ -11,11 +11,11 @@ using Toggl.PrimeRadiant.Models;
 namespace Toggl.Foundation.DataSources
 {
     public sealed class UserDataSource
-        : SingletonDataSource<IThreadSafeUser, IDatabaseUser>, IUserSource
+        : SingletonDataSource<IThreadSafeUser, IDatabaseUser, UserDto>, IUserSource
     {
         private readonly ITimeService timeService;
 
-        public UserDataSource(ISingleObjectStorage<IDatabaseUser> storage, ITimeService timeService)
+        public UserDataSource(ISingleObjectStorage<IDatabaseUser, UserDto> storage, ITimeService timeService)
             : base(storage, null)
         {
             Ensure.Argument.IsNotNull(timeService, nameof(timeService));
@@ -23,28 +23,27 @@ namespace Toggl.Foundation.DataSources
             this.timeService = timeService;
         }
 
-        public IObservable<IDatabaseUser> UpdateWorkspace(long workspaceId)
+        public IObservable<IThreadSafeUser> UpdateWorkspace(long workspaceId)
             => Get()
-                .Select(user => user.With(workspaceId))
+                .Select(user => UserDto.From(user, defaultWorkspaceId: workspaceId))
                 .SelectMany(Update);
 
-        public IObservable<IDatabaseUser> Update(EditUserDTO dto)
+        public IObservable<IThreadSafeUser> Update(EditUserDTO dto)
             => Get()
                 .Select(user => updatedUser(user, dto))
                 .SelectMany(Update);
 
-        public IThreadSafeUser updatedUser(IThreadSafeUser existing, EditUserDTO dto)
-            => User.Builder
-                   .FromExisting(existing)
-                   .SetBeginningOfWeek(dto.BeginningOfWeek)
-                   .SetSyncStatus(SyncStatus.SyncNeeded)
-                   .SetAt(timeService.CurrentDateTime)
-                   .Build();
+        public UserDto updatedUser(IThreadSafeUser existing, EditUserDTO dto)
+            => UserDto.From<IThreadSafeUser>(
+                existing,
+                beginningOfWeek: dto.BeginningOfWeek,
+                syncStatus: SyncStatus.SyncNeeded,
+                at: timeService.CurrentDateTime);
 
         protected override IThreadSafeUser Convert(IDatabaseUser entity)
             => User.From(entity);
 
-        protected override ConflictResolutionMode ResolveConflicts(IDatabaseUser first, IDatabaseUser second)
+        protected override ConflictResolutionMode ResolveConflicts(IDatabaseUser first, UserDto second)
             => Resolver.ForUser.Resolve(first, second);
     }
 }

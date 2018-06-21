@@ -4,15 +4,15 @@ using Toggl.PrimeRadiant;
 
 namespace Toggl.Foundation.DataSources.Interfaces
 {
-    public interface IBaseDataSource<T>
+    public interface IBaseDataSource<T, TDto>
         where T : IThreadSafeModel
     {
-        IObservable<T> Create(T entity);
+        IObservable<T> Create(TDto entity);
 
-        IObservable<T> Update(T entity);
+        IObservable<T> Update(TDto entity);
 
-        IObservable<T> Overwrite(T original, T entity);
+        IObservable<T> Overwrite(T original, TDto entity);
 
-        IObservable<IConflictResolutionResult<T>> OverwriteIfOriginalDidNotChange(T original, T entity);
+        IObservable<IConflictResolutionResult<T>> OverwriteIfOriginalDidNotChange(T original, TDto entity);
     }
 }

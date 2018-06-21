@@ -6,9 +6,11 @@ using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.DataSources
 {
-    public sealed class WorkspaceFeaturesDataSource : DataSource<IThreadSafeWorkspaceFeatureCollection, IDatabaseWorkspaceFeatureCollection>
+    public sealed class WorkspaceFeaturesDataSource
+        : DataSource<IThreadSafeWorkspaceFeatureCollection, IDatabaseWorkspaceFeatureCollection, WorkspaceFeatureCollectionDto>
     {
-        public WorkspaceFeaturesDataSource(IRepository<IDatabaseWorkspaceFeatureCollection> repository)
+        public WorkspaceFeaturesDataSource(
+            IRepository<IDatabaseWorkspaceFeatureCollection, WorkspaceFeatureCollectionDto> repository)
             : base(repository)
         {
         }
@@ -17,7 +19,7 @@ namespace Toggl.Foundation.DataSources
             => WorkspaceFeatureCollection.From(entity);
 
         protected override ConflictResolutionMode ResolveConflicts(IDatabaseWorkspaceFeatureCollection first,
-            IDatabaseWorkspaceFeatureCollection second)
+            WorkspaceFeatureCollectionDto second)
             => Resolver.ForWorkspaceFeatures.Resolve(first, second);
     }
 }

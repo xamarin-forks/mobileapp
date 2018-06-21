@@ -1,30 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Toggl.Foundation.DataSources.Interfaces;
 using Toggl.Foundation.Extensions;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Multivac;
-using Toggl.Multivac.Extensions;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.DataSources
 {
-    public abstract class SingletonDataSource<TThreadsafe, TDatabase>
-        : BaseDataSource<TThreadsafe, TDatabase>,
-          ISingletonDataSource<TThreadsafe>
-        where TDatabase : IDatabaseSyncable
+    public abstract class SingletonDataSource<TThreadsafe, TDatabase, TDto>
+        : BaseDataSource<TThreadsafe, TDatabase, TDto>,
+          ISingletonDataSource<TThreadsafe, TDto>
+        where TDto : IIdentifiable
+        where TDatabase : IDatabaseModel
         where TThreadsafe : IThreadSafeModel, IIdentifiable, TDatabase
     {
-        private readonly ISingleObjectStorage<TDatabase> storage;
+        private readonly ISingleObjectStorage<TDatabase, TDto> storage;
 
         private readonly ISubject<TThreadsafe> currentSubject;
 
         public IObservable<TThreadsafe> Current { get; }
 
-        protected SingletonDataSource(ISingleObjectStorage<TDatabase> storage, TThreadsafe defaultCurrentValue)
+        protected SingletonDataSource(ISingleObjectStorage<TDatabase, TDto> storage, TThreadsafe defaultCurrentValue)
             : base(storage)
         {
             Ensure.Argument.IsNotNull(storage, nameof(storage));
@@ -47,21 +47,21 @@ namespace Toggl.Foundation.DataSources
         public virtual IObservable<TThreadsafe> Get()
             => storage.Single().Select(Convert);
 
-        public override IObservable<TThreadsafe> Create(TThreadsafe entity)
+        public override IObservable<TThreadsafe> Create(TDto entity)
             => base.Create(entity).Do(currentSubject.OnNext);
 
-        public override IObservable<TThreadsafe> Update(TThreadsafe entity)
+        public override IObservable<TThreadsafe> Update(TDto entity)
             => base.Update(entity).Do(currentSubject.OnNext);
 
-        public override IObservable<TThreadsafe> Overwrite(TThreadsafe original, TThreadsafe entity)
+        public override IObservable<TThreadsafe> Overwrite(TThreadsafe original, TDto entity)
             => base.Overwrite(original, entity).Do(currentSubject.OnNext);
 
         public override IObservable<IConflictResolutionResult<TThreadsafe>> OverwriteIfOriginalDidNotChange(
-            TThreadsafe original, TThreadsafe entity)
+            TThreadsafe original, TDto entity)
             => base.OverwriteIfOriginalDidNotChange(original, entity).Do(handleConflictResolutionResult);
 
         public virtual IObservable<IConflictResolutionResult<TThreadsafe>> UpdateWithConflictResolution(
-            TThreadsafe entity)
+            TDto entity)
             => Repository.UpdateWithConflictResolution(entity.Id, entity, ResolveConflicts, RivalsResolver)
                 .Select(result => result.ToThreadSafeResult(Convert))
                 .Do(handleConflictResolutionResult);

@@ -4,13 +4,13 @@ using Toggl.PrimeRadiant;
 
 namespace Toggl.Foundation.DataSources.Interfaces
 {
-    public interface ISingletonDataSource<T> : IBaseDataSource<T>
+    public interface ISingletonDataSource<T, TDto> : IBaseDataSource<T, TDto>
         where T : IThreadSafeModel
     {
         IObservable<T> Current { get; }
 
         IObservable<T> Get();
 
-        IObservable<IConflictResolutionResult<T>> UpdateWithConflictResolution(T entity);
+        IObservable<IConflictResolutionResult<T>> UpdateWithConflictResolution(TDto entity);
     }
 }

@@ -3,19 +3,18 @@ using Toggl.Foundation.Models;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.Sync.ConflictResolution;
 using Toggl.Multivac;
-using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant;
 using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.DataSources
 {
     public sealed class TagsDataSource
-        : DataSource<IThreadSafeTag, IDatabaseTag>, ITagsSource
+        : DataSource<IThreadSafeTag, IDatabaseTag, TagDto>, ITagsSource
     {
         private readonly IIdProvider idProvider;
         private readonly ITimeService timeService;
 
-        public TagsDataSource(IIdProvider idProvider, IRepository<IDatabaseTag> repository, ITimeService timeService)
+        public TagsDataSource(IIdProvider idProvider, IRepository<IDatabaseTag, TagDto> repository, ITimeService timeService)
             : base(repository)
         {
             Ensure.Argument.IsNotNull(idProvider, nameof(idProvider));
@@ -26,20 +25,25 @@ namespace Toggl.Foundation.DataSources
         }
 
         public IObservable<IThreadSafeTag> Create(string name, long workspaceId)
-            => idProvider
-                .GetNextIdentifier()
-                .Apply(Tag.Builder.Create)
-                .SetName(name)
-                .SetWorkspaceId(workspaceId)
-                .SetAt(timeService.CurrentDateTime)
-                .SetSyncStatus(SyncStatus.SyncNeeded)
-                .Build()
-                .Apply(Create);
+        {
+            var id = idProvider.GetNextIdentifier();
+            var dto = new TagDto(
+                id: id,
+                workspaceId: workspaceId,
+                name: name,
+                serverDeletedAt: null,
+                at: timeService.CurrentDateTime,
+                syncStatus: SyncStatus.SyncNeeded,
+                isDeleted: false,
+                lastSyncErrorMessage: null);
+
+            return Create(dto);
+        }
 
         protected override IThreadSafeTag Convert(IDatabaseTag entity)
             => Tag.From(entity);
 
-        protected override ConflictResolutionMode ResolveConflicts(IDatabaseTag first, IDatabaseTag second)
+        protected override ConflictResolutionMode ResolveConflicts(IDatabaseTag first, TagDto second)
             => Resolver.ForTags.Resolve(first, second);
     }
 }

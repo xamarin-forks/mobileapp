@@ -3,12 +3,13 @@ using System.Reactive;
 using Toggl.Foundation.DataSources.Interfaces;
 using Toggl.Foundation.DTOs;
 using Toggl.Foundation.Models.Interfaces;
+using Toggl.PrimeRadiant;
 using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.DataSources
 {
     public interface ITimeEntriesSource
-        : IObservableDataSource<IThreadSafeTimeEntry, IDatabaseTimeEntry>
+        : IObservableDataSource<IThreadSafeTimeEntry, IDatabaseTimeEntry, TimeEntryDto>
     {
         IObservable<IThreadSafeTimeEntry> CurrentlyRunningTimeEntry { get; }
 

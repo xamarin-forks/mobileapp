@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Linq;
@@ -15,23 +16,23 @@ using Toggl.Foundation.Sync.ConflictResolution;
 namespace Toggl.Foundation.DataSources
 {
     internal sealed class TimeEntriesDataSource
-        : ObservableDataSource<IThreadSafeTimeEntry, IDatabaseTimeEntry>,
+        : ObservableDataSource<IThreadSafeTimeEntry, IDatabaseTimeEntry, TimeEntryDto>,
           ITimeEntriesSource
     {
         private long? currentlyRunningTimeEntryId;
 
         private readonly ITimeService timeService;
-        private readonly Func<IDatabaseTimeEntry, IDatabaseTimeEntry, ConflictResolutionMode> alwaysCreate
+        private readonly Func<IDatabaseTimeEntry, TimeEntryDto, ConflictResolutionMode> alwaysCreate
             = (a, b) => ConflictResolutionMode.Create;
 
         public IObservable<bool> IsEmpty { get; }
 
         public IObservable<IThreadSafeTimeEntry> CurrentlyRunningTimeEntry { get; }
 
-        protected override IRivalsResolver<IDatabaseTimeEntry> RivalsResolver { get; }
+        protected override IRivalsResolver<IDatabaseTimeEntry, TimeEntryDto> RivalsResolver { get; }
 
         public TimeEntriesDataSource(
-            IRepository<IDatabaseTimeEntry> repository,
+            IRepository<IDatabaseTimeEntry, TimeEntryDto> repository,
             ITimeService timeService)
             : base(repository)
         {
@@ -39,7 +40,7 @@ namespace Toggl.Foundation.DataSources
 
             this.timeService = timeService;
 
-            CurrentlyRunningTimeEntry = 
+            CurrentlyRunningTimeEntry =
                 GetAll(te => te.IsDeleted == false && te.Duration == null)
                     .Select(tes => tes.SingleOrDefault())
                     .StartWith()
@@ -56,11 +57,11 @@ namespace Toggl.Foundation.DataSources
                     .Merge(Created)
                     .SelectMany(_ => GetAll(te => te.IsDeleted == false))
                     .Select(timeEntries => !timeEntries.Any());
-            
+
             RivalsResolver = new TimeEntryRivalsResolver(timeService);
         }
 
-        public override IObservable<IThreadSafeTimeEntry> Create(IThreadSafeTimeEntry entity)
+        public override IObservable<IThreadSafeTimeEntry> Create(TimeEntryDto entity)
             => Repository.UpdateWithConflictResolution(entity.Id, entity, alwaysCreate, RivalsResolver)
                 .OfType<CreateResult<IDatabaseTimeEntry>>()
                 .Select(result => result.Entity)
@@ -72,42 +73,41 @@ namespace Toggl.Foundation.DataSources
                 .Select(timeEntries => timeEntries.SingleOrDefault() ?? throw new NoRunningTimeEntryException())
                 .SelectMany(timeEntry => timeEntry
                     .With((long)(stopTime - timeEntry.Start).TotalSeconds)
+                    .Apply(TimeEntryDto.Dirty)
                     .Apply(Update));
+
+        public IObservable<IThreadSafeTimeEntry> Update(EditTimeEntryDto dto)
+            => GetById(dto.Id)
+                .Select(timeEntry =>
+                    TimeEntryDto.From<IThreadSafeTimeEntry>(
+                        timeEntry,
+                        description: dto.Description,
+                        duration: dto.StopTime.HasValue ? (long?)(dto.StopTime.Value - dto.StartTime).TotalSeconds : null,
+                        tagIds: New<IEnumerable<long>>.Value(dto.TagIds),
+                        start: dto.StartTime,
+                        taskId: dto.TaskId,
+                        billable: dto.Billable,
+                        projectId: dto.ProjectId,
+                        workspaceId: dto.WorkspaceId,
+                        userId: timeEntry.UserId,
+                        isDeleted: timeEntry.IsDeleted,
+                        serverDeletedAt: timeEntry.ServerDeletedAt,
+                        at: timeService.CurrentDateTime,
+                        syncStatus: SyncStatus.SyncNeeded))
+                .SelectMany(Update);
 
         public IObservable<Unit> SoftDelete(IThreadSafeTimeEntry timeEntry)
             => Observable.Return(timeEntry)
-                .Select(TimeEntry.DirtyDeleted)
+                .Select(TimeEntryDto.DirtyDeleted)
                 .SelectMany(Repository.Update)
                 .Do(entity => DeletedSubject.OnNext(entity.Id))
                 .Select(_ => Unit.Default);
 
-        public IObservable<IThreadSafeTimeEntry> Update(EditTimeEntryDto dto)
-            => GetById(dto.Id)
-                 .Select(te => createUpdatedTimeEntry(te, dto))
-                 .SelectMany(Update);
-
         protected override IThreadSafeTimeEntry Convert(IDatabaseTimeEntry entity)
             => TimeEntry.From(entity);
 
-        protected override ConflictResolutionMode ResolveConflicts(IDatabaseTimeEntry first, IDatabaseTimeEntry second)
+        protected override ConflictResolutionMode ResolveConflicts(IDatabaseTimeEntry first, TimeEntryDto second)
             => Resolver.ForTimeEntries.Resolve(first, second);
-
-        private TimeEntry createUpdatedTimeEntry(IThreadSafeTimeEntry timeEntry, EditTimeEntryDto dto)
-            => TimeEntry.Builder.Create(dto.Id)
-                        .SetDescription(dto.Description)
-                        .SetDuration(dto.StopTime.HasValue ? (long?)(dto.StopTime.Value - dto.StartTime).TotalSeconds : null)
-                        .SetTagIds(dto.TagIds)
-                        .SetStart(dto.StartTime)
-                        .SetTaskId(dto.TaskId)
-                        .SetBillable(dto.Billable)
-                        .SetProjectId(dto.ProjectId)
-                        .SetWorkspaceId(dto.WorkspaceId)
-                        .SetUserId(timeEntry.UserId)
-                        .SetIsDeleted(timeEntry.IsDeleted)
-                        .SetServerDeletedAt(timeEntry.ServerDeletedAt)
-                        .SetAt(timeService.CurrentDateTime)
-                        .SetSyncStatus(SyncStatus.SyncNeeded)
-                        .Build();
 
         private IThreadSafeTimeEntry runningTimeEntry(IThreadSafeTimeEntry timeEntry)
         {

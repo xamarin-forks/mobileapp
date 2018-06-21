@@ -7,7 +7,7 @@ using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.DataSources.Interfaces
 {
-    public interface IDataSource<TThreadsafe, out TDatabase> : IBaseDataSource<TThreadsafe>
+    public interface IDataSource<TThreadsafe, out TDatabase, TDto> : IBaseDataSource<TThreadsafe, TDto>
         where TDatabase : IDatabaseModel
         where TThreadsafe : TDatabase, IThreadSafeModel
     {
@@ -17,10 +17,10 @@ namespace Toggl.Foundation.DataSources.Interfaces
 
         IObservable<IEnumerable<TThreadsafe>> GetAll(Func<TDatabase, bool> predicate);
 
-        IObservable<IEnumerable<IConflictResolutionResult<TThreadsafe>>> DeleteAll(IEnumerable<TThreadsafe> entities);
+        IObservable<IEnumerable<IConflictResolutionResult<TThreadsafe>>> DeleteAll(IEnumerable<TDto> entities);
 
         IObservable<Unit> Delete(long id);
 
-        IObservable<IEnumerable<IConflictResolutionResult<TThreadsafe>>> BatchUpdate(IEnumerable<TThreadsafe> entities);
+        IObservable<IEnumerable<IConflictResolutionResult<TThreadsafe>>> BatchUpdate(IEnumerable<TDto> entities);
     }
 }

@@ -11,12 +11,12 @@ using Toggl.PrimeRadiant.Models;
 namespace Toggl.Foundation.DataSources
 {
     public sealed class ClientsDataSource
-        : DataSource<IThreadSafeClient, IDatabaseClient>, IClientsSource
+        : DataSource<IThreadSafeClient, IDatabaseClient, ClientDto>, IClientsSource
     {
         private readonly IIdProvider idProvider;
         private readonly ITimeService timeService;
 
-        public ClientsDataSource(IIdProvider idProvider, IRepository<IDatabaseClient> repository, ITimeService timeService)
+        public ClientsDataSource(IIdProvider idProvider, IRepository<IDatabaseClient, ClientDto> repository, ITimeService timeService)
             : base(repository)
         {
             Ensure.Argument.IsNotNull(idProvider, nameof(idProvider));
@@ -28,13 +28,15 @@ namespace Toggl.Foundation.DataSources
 
         public IObservable<IThreadSafeClient> Create(string name, long workspaceId)
         {
-            var client = new Client(
-                idProvider.GetNextIdentifier(),
-                workspaceId,
-                name,
-                timeService.CurrentDateTime,
-                SyncStatus.SyncNeeded
-            );
+            var client = new ClientDto(
+                id: idProvider.GetNextIdentifier(),
+                workspaceId: workspaceId,
+                name: name,
+                at: timeService.CurrentDateTime,
+                syncStatus: SyncStatus.SyncNeeded,
+                serverDeletedAt: null,
+                isDeleted: false,
+                lastSyncErrorMessage: null);
             return Create(client);
         }
 
@@ -44,7 +46,7 @@ namespace Toggl.Foundation.DataSources
         protected override IThreadSafeClient Convert(IDatabaseClient entity)
             => Client.From(entity);
 
-        protected override ConflictResolutionMode ResolveConflicts(IDatabaseClient first, IDatabaseClient second)
+        protected override ConflictResolutionMode ResolveConflicts(IDatabaseClient first, ClientDto second)
             => Resolver.ForClients.Resolve(first, second);
     }
 }

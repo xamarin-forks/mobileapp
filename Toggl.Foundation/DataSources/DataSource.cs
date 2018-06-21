@@ -12,11 +12,12 @@ using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.DataSources
 {
-    public abstract class DataSource<TThreadsafe, TDatabase> : BaseDataSource<TThreadsafe, TDatabase>, IDataSource<TThreadsafe, TDatabase>
+    public abstract class DataSource<TThreadsafe, TDatabase, TDto> : BaseDataSource<TThreadsafe, TDatabase, TDto>, IDataSource<TThreadsafe, TDatabase, TDto>
+        where TDto : IIdentifiable
         where TDatabase : IDatabaseModel
         where TThreadsafe : TDatabase, IThreadSafeModel, IIdentifiable
     {
-        protected DataSource(IRepository<TDatabase> repository)
+        protected DataSource(IRepository<TDatabase, TDto> repository)
             : base(repository)
         {
         }
@@ -30,25 +31,25 @@ namespace Toggl.Foundation.DataSources
         public virtual IObservable<IEnumerable<TThreadsafe>> GetAll(Func<TDatabase, bool> predicate)
             => Repository.GetAll(predicate).Select(entities => entities.Select(Convert));
 
-        public virtual IObservable<IEnumerable<IConflictResolutionResult<TThreadsafe>>> DeleteAll(IEnumerable<TThreadsafe> entities)
+        public virtual IObservable<IEnumerable<IConflictResolutionResult<TThreadsafe>>> DeleteAll(IEnumerable<TDto> entities)
             => Repository.BatchUpdate(convertEntitiesForBatchUpdate(entities), safeAlwaysDelete)
                          .ToThreadSafeResult(Convert);
 
         public virtual IObservable<Unit> Delete(long id)
             => Repository.Delete(id);
 
-        public virtual IObservable<IEnumerable<IConflictResolutionResult<TThreadsafe>>> BatchUpdate(IEnumerable<TThreadsafe> entities)
+        public virtual IObservable<IEnumerable<IConflictResolutionResult<TThreadsafe>>> BatchUpdate(IEnumerable<TDto> entities)
             => Repository.BatchUpdate(
                     convertEntitiesForBatchUpdate(entities),
                     ResolveConflicts,
                     RivalsResolver)
                 .ToThreadSafeResult(Convert);
 
-        private IEnumerable<(long, TDatabase)> convertEntitiesForBatchUpdate(
-            IEnumerable<TThreadsafe> entities)
-            => entities.Select(entity => (entity.Id, (TDatabase)entity));
+        private IEnumerable<(long, TDto)> convertEntitiesForBatchUpdate(
+            IEnumerable<TDto> entities)
+            => entities.Select(entity => (entity.Id, entity));
 
-        private static ConflictResolutionMode safeAlwaysDelete(TDatabase old, TDatabase now)
+        private static ConflictResolutionMode safeAlwaysDelete(TDatabase old, TDto now)
             => old == null ? ConflictResolutionMode.Ignore : ConflictResolutionMode.Delete;
     }
 }

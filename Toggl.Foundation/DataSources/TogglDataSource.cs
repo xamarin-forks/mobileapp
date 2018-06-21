@@ -80,8 +80,8 @@ namespace Toggl.Foundation.DataSources
         public IPreferencesSource Preferences { get; }
         public IProjectsSource Projects { get; }
         public ITimeEntriesSource TimeEntries { get; }
-        public IDataSource<IThreadSafeWorkspace, IDatabaseWorkspace> Workspaces { get; }
-        public IDataSource<IThreadSafeWorkspaceFeatureCollection, IDatabaseWorkspaceFeatureCollection> WorkspaceFeatures { get; }
+        public IDataSource<IThreadSafeWorkspace, IDatabaseWorkspace, WorkspaceDto> Workspaces { get; }
+        public IDataSource<IThreadSafeWorkspaceFeatureCollection, IDatabaseWorkspaceFeatureCollection, WorkspaceFeatureCollectionDto> WorkspaceFeatures { get; }
 
         public ISyncManager SyncManager { get; }
 
@@ -123,7 +123,7 @@ namespace Toggl.Foundation.DataSources
                 .Do(_ => shortcutCreator.OnLogout())
                 .FirstAsync();
 
-        private IObservable<bool> hasUnsyncedData<TModel>(IRepository<TModel> repository)
+        private IObservable<bool> hasUnsyncedData<TModel, TDto>(IRepository<TModel, TDto> repository)
             where TModel : IDatabaseSyncable
             => repository
                 .GetAll(entity => entity.SyncStatus != SyncStatus.InSync)

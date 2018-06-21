@@ -7,9 +7,9 @@ using Toggl.PrimeRadiant.Models;
 namespace Toggl.Foundation.DataSources
 {
     public sealed class TasksDataSource
-        : DataSource<IThreadSafeTask, IDatabaseTask>, ITasksSource
+        : DataSource<IThreadSafeTask, IDatabaseTask, TaskDto>, ITasksSource
     {
-        public TasksDataSource(IRepository<IDatabaseTask> repository)
+        public TasksDataSource(IRepository<IDatabaseTask, TaskDto> repository)
             : base(repository)
         {
         }
@@ -17,7 +17,7 @@ namespace Toggl.Foundation.DataSources
         protected override IThreadSafeTask Convert(IDatabaseTask entity)
             => Task.From(entity);
 
-        protected override ConflictResolutionMode ResolveConflicts(IDatabaseTask first, IDatabaseTask second)
+        protected override ConflictResolutionMode ResolveConflicts(IDatabaseTask first, TaskDto second)
             => Resolver.ForTasks.Resolve(first, second);
     }
 }
