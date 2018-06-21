@@ -8,16 +8,16 @@ namespace Toggl.Foundation
 {
     public static class IRepositoryExtensions
     {
-        public static IObservable<TModel> Update<TModel>(this IRepository<TModel> repository, TModel entity)
-            where TModel : IIdentifiable, IDatabaseSyncable
+        public static IObservable<TModel> Update<TModel, TDto>(this IRepository<TModel, TDto> repository, TDto entity)
+            where TDto : IIdentifiable
             => repository.Update(entity.Id, entity);
 
-        public static IObservable<IConflictResolutionResult<TModel>> UpdateWithConflictResolution<TModel>(
-            this IRepository<TModel> repository,
+        public static IObservable<IConflictResolutionResult<TModel>> UpdateWithConflictResolution<TModel, TDto>(
+            this IRepository<TModel, TDto> repository,
             long id,
-            TModel entity,
-            Func<TModel, TModel, ConflictResolutionMode> conflictResolution,
-            IRivalsResolver<TModel> rivalsResolver = null)
+            TDto entity,
+            Func<TModel, TDto, ConflictResolutionMode> conflictResolution,
+            IRivalsResolver<TModel, TDto> rivalsResolver = null)
             => repository
                 .BatchUpdate(new[] { (id, entity) }, conflictResolution, rivalsResolver)
                 .SingleAsync()
