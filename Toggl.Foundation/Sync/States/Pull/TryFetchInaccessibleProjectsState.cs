@@ -59,7 +59,7 @@ namespace Toggl.Foundation.Sync.States.Pull
                     workspaceId: projectsToFetch.Key,
                     projectIds: projectsToFetch.Select(p => p.Id).ToArray())
                 .SelectMany(CommonFunctions.Identity)
-                .Select(Project.Clean)
+                .Select(ProjectDto.Clean)
                 .SelectMany(dataSource.Update)
                 .ToList()
                 .SelectMany(projectsWhichWereNotFetched(projectsToFetch))
