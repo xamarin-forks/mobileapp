@@ -21,6 +21,7 @@ using Toggl.Foundation.Services;
 using Toggl.Foundation.Sync;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
+using Toggl.PrimeRadiant;
 using Toggl.PrimeRadiant.Settings;
 using Toggl.Ultrawave.Network;
 using static Toggl.Multivac.Extensions.CommonFunctions;
@@ -352,12 +353,12 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             New<DateFormat> dateFormat = default(New<DateFormat>), 
             New<TimeFormat> timeFormat = default(New<TimeFormat>))
         {
-            var preferencesDto = new EditPreferencesDTO
-            {
-                DurationFormat = durationFormat,
-                DateFormat = dateFormat,
-                TimeOfDayFormat = timeFormat
-            };
+            var preferences = await dataSource.Preferences.Get();
+            var preferencesDto = PreferencesDto.From(
+                preferences,
+                durationFormat: durationFormat,
+                dateFormat: dateFormat,
+                timeOfDayFormat: timeFormat);
 
             await dataSource.Preferences.Update(preferencesDto);
             dataSource.SyncManager.PushSync();
