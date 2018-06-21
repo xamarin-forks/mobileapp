@@ -45,19 +45,12 @@ namespace Toggl.Foundation.Interactors
                 .Do(_ => dataSource.SyncManager.PushSync())
                 .Track(analyticsService.TimeEntryStarted, TimeEntryStartOrigin.ContinueMostRecent);
 
-        private IThreadSafeTimeEntry newTimeEntry(IThreadSafeTimeEntry timeEntry)
-            => TimeEntry.Builder
-                        .Create(idProvider.GetNextIdentifier())
-                        .SetTagIds(timeEntry.TagIds)
-                        .SetUserId(timeEntry.UserId)
-                        .SetTaskId(timeEntry.TaskId)
-                        .SetBillable(timeEntry.Billable)
-                        .SetProjectId(timeEntry.ProjectId)
-                        .SetAt(timeService.CurrentDateTime)
-                        .SetSyncStatus(SyncStatus.SyncNeeded)
-                        .SetDescription(timeEntry.Description)
-                        .SetStart(timeService.CurrentDateTime)
-                        .SetWorkspaceId(timeEntry.WorkspaceId)
-                        .Build();
+        private TimeEntryDto newTimeEntry(IThreadSafeTimeEntry timeEntry)
+            => TimeEntryDto.From<IThreadSafeTimeEntry>(
+                timeEntry,
+                id: idProvider.GetNextIdentifier(),
+                start: timeService.CurrentDateTime,
+                syncStatus: SyncStatus.SyncNeeded,
+                at: timeService.CurrentDateTime);
     }
 }

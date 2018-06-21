@@ -8,6 +8,7 @@ using Toggl.Multivac;
 using Toggl.PrimeRadiant;
 using Toggl.Foundation.Models;
 using Toggl.Foundation.Models.Interfaces;
+using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.Interactors
 {
@@ -33,9 +34,9 @@ namespace Toggl.Foundation.Interactors
                 .ToList();
         }
 
-        private IObservable<SyncFailureItem> getUnsyncedItems<TThreadsafe, TDatabase>(
-            IDataSource<TThreadsafe, TDatabase> source)
-            where TDatabase : IDatabaseSyncable
+        private IObservable<SyncFailureItem> getUnsyncedItems<TThreadsafe, TDatabase, TDto>(
+            IDataSource<TThreadsafe, TDatabase, TDto> source)
+            where TDatabase : IDatabaseSyncable, IDatabaseModel
             where TThreadsafe : TDatabase, IThreadSafeModel
         {
             return source

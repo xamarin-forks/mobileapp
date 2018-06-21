@@ -63,25 +63,24 @@ namespace Toggl.Foundation.Interactors
         public IObservable<IThreadSafeTimeEntry> Execute()
             => dataSource.User.Current
                 .FirstAsync()
-                .Select(userFromPrototype)
+                .Select(user => new TimeEntryDto(
+                    id: idProvider.GetNextIdentifier(),
+                    serverDeletedAt: null,
+                    at: timeService.CurrentDateTime,
+                    workspaceId: prototype.WorkspaceId,
+                    projectId: prototype.ProjectId,
+                    taskId: prototype.TaskId,
+                    billable: prototype.IsBillable,
+                    start: startTime,
+                    duration: (long?)duration?.TotalSeconds,
+                    description: prototype.Description,
+                    tagIds: prototype.TagIds,
+                    userId: user.Id,
+                    syncStatus: SyncStatus.SyncNeeded,
+                    isDeleted: false,
+                    lastSyncErrorMessage: null))
                 .SelectMany(dataSource.TimeEntries.Create)
                 .Do(_ => dataSource.SyncManager.PushSync())
                 .Track(analyticsService.TimeEntryStarted, origin);
-
-        private TimeEntry userFromPrototype(IThreadSafeUser user)
-            => idProvider.GetNextIdentifier()
-                .Apply(TimeEntry.Builder.Create)
-                .SetUserId(user.Id)
-                .SetTagIds(prototype.TagIds)
-                .SetTaskId(prototype.TaskId)
-                .SetStart(startTime)
-                .SetDuration(duration)
-                .SetBillable(prototype.IsBillable)
-                .SetProjectId(prototype.ProjectId)
-                .SetDescription(prototype.Description)
-                .SetWorkspaceId(prototype.WorkspaceId)
-                .SetAt(timeService.CurrentDateTime)
-                .SetSyncStatus(SyncStatus.SyncNeeded)
-                .Build();
     }
 }
