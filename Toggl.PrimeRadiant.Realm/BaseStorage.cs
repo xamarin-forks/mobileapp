@@ -5,21 +5,20 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Toggl.Multivac;
-using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant.Exceptions;
 
 namespace Toggl.PrimeRadiant.Realm
 {
-    internal abstract class BaseStorage<TModel>
+    internal abstract class BaseStorage<TDatabaseModel, TDto>
     {
-        protected IRealmAdapter<TModel> Adapter { get; }
+        protected IRealmAdapter<TDatabaseModel, TDto> Adapter { get; }
 
-        protected BaseStorage(IRealmAdapter<TModel> adapter)
+        protected BaseStorage(IRealmAdapter<TDatabaseModel, TDto> adapter)
         {
             Adapter = adapter;
         }
 
-        public IObservable<TModel> Update(long id, TModel entity)
+        public IObservable<TDatabaseModel> Update(long id, TDto entity)
         {
             Ensure.Argument.IsNotNull(entity, nameof(entity));
 
@@ -33,14 +32,14 @@ namespace Toggl.PrimeRadiant.Realm
                 return Unit.Default;
             });
 
-        public IObservable<IEnumerable<TModel>> GetAll(Func<TModel, bool> predicate)
+        public IObservable<IEnumerable<TDatabaseModel>> GetAll(Func<TDatabaseModel, bool> predicate)
         {
             Ensure.Argument.IsNotNull(predicate, nameof(predicate));
 
             return CreateObservable(() => Adapter.GetAll().Where(predicate));
         }
 
-        public IObservable<IEnumerable<TModel>> GetAll()
+        public IObservable<IEnumerable<TDatabaseModel>> GetAll()
             => CreateObservable(() => Adapter.GetAll());
 
         protected static IObservable<T> CreateObservable<T>(Func<T> getFunction)
@@ -55,7 +54,7 @@ namespace Toggl.PrimeRadiant.Realm
                 }
                 catch (InvalidOperationException ex)
                 {
-                    observer.OnError(new DatabaseOperationException<TModel>(ex));
+                    observer.OnError(new DatabaseOperationException<TDatabaseModel>(ex));
                 }
                 catch (Exception ex)
                 {

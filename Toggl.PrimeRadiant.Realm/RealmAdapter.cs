@@ -8,28 +8,28 @@ using Toggl.PrimeRadiant.Realm.Models;
 
 namespace Toggl.PrimeRadiant.Realm
 {
-    internal interface IRealmAdapter<TModel>
+    internal interface IRealmAdapter<TDatabaseModel, TDto>
     {
-        IQueryable<TModel> GetAll();
+        IQueryable<TDatabaseModel> GetAll();
 
-        TModel Get(long id);
+        TDatabaseModel Get(long id);
 
         void Delete(long id);
 
-        TModel Create(TModel entity);
+        TDatabaseModel Create(TDto entity);
 
-        TModel Update(long id, TModel entity);
+        TDatabaseModel Update(long id, TDto entity);
 
-        IEnumerable<IConflictResolutionResult<TModel>> BatchUpdate(
-            IEnumerable<(long Id, TModel Entity)> batch,
-            Func<TModel, TModel, ConflictResolutionMode> conflictResolution,
-            IRivalsResolver<TModel> rivalsResolver);
+        IEnumerable<IConflictResolutionResult<TDatabaseModel>> BatchUpdate(
+            IEnumerable<(long Id, TDto Entity)> batch,
+            Func<TDatabaseModel, TDto, ConflictResolutionMode> conflictResolution,
+            IRivalsResolver<TDatabaseModel, TDto> rivalsResolver);
     }
 
-    internal sealed class RealmAdapter<TRealmEntity, TModel> : IRealmAdapter<TModel>
-        where TRealmEntity : RealmObject, TModel, IUpdatesFrom<TModel>
+    internal sealed class RealmAdapter<TRealmEntity, TModel, TDto> : IRealmAdapter<TModel, TDto>
+        where TRealmEntity : RealmObject, TModel, IUpdatesFrom<TDto>
     {
-        private readonly Func<TModel, Realms.Realm, TRealmEntity> clone;
+        private readonly Func<TDto, Realms.Realm, TRealmEntity> clone;
 
         private readonly Func<long, Expression<Func<TRealmEntity, bool>>> matchEntity;
 
@@ -39,7 +39,7 @@ namespace Toggl.PrimeRadiant.Realm
 
         public RealmAdapter(
             Func<Realms.Realm> getRealmInstance,
-            Func<TModel, Realms.Realm, TRealmEntity> clone,
+            Func<TDto, Realms.Realm, TRealmEntity> clone,
             Func<long, Expression<Func<TRealmEntity, bool>>> matchEntity,
             Func<TRealmEntity, long> getId)
         {
@@ -60,14 +60,14 @@ namespace Toggl.PrimeRadiant.Realm
         public TModel Get(long id)
             => getRealmInstance().All<TRealmEntity>().Single(matchEntity(id));
 
-        public TModel Create(TModel entity)
+        public TModel Create(TDto entity)
         {
             Ensure.Argument.IsNotNull(entity, nameof(entity));
 
             return doTransaction(realm => addRealmEntity(entity, realm));
         }
 
-        public TModel Update(long id, TModel entity)
+        public TModel Update(long id, TDto entity)
         {
             Ensure.Argument.IsNotNull(entity, nameof(entity));
 
@@ -75,9 +75,9 @@ namespace Toggl.PrimeRadiant.Realm
         }
 
         public IEnumerable<IConflictResolutionResult<TModel>> BatchUpdate(
-            IEnumerable<(long Id, TModel Entity)> batch,
-            Func<TModel, TModel, ConflictResolutionMode> conflictResolution,
-            IRivalsResolver<TModel> rivalsResolver)
+            IEnumerable<(long Id, TDto Entity)> batch,
+            Func<TModel, TDto, ConflictResolutionMode> conflictResolution,
+            IRivalsResolver<TModel, TDto> rivalsResolver)
         {
             Ensure.Argument.IsNotNull(batch, nameof(batch));
             Ensure.Argument.IsNotNull(matchEntity, nameof(matchEntity));
@@ -120,7 +120,7 @@ namespace Toggl.PrimeRadiant.Realm
             doModyfingTransaction(id, (realm, realmEntity) => realm.Remove(realmEntity));
         }
 
-        private TRealmEntity addRealmEntity(TModel entity, Realms.Realm realm)
+        private TRealmEntity addRealmEntity(TDto entity, Realms.Realm realm)
         {
             var converted = entity as TRealmEntity ?? clone(entity, realm);
             if (converted is IModifiableId modifiable)
@@ -150,7 +150,7 @@ namespace Toggl.PrimeRadiant.Realm
             }
         }
 
-        private IConflictResolutionResult<TModel> resolveEntity(Realms.Realm realm, long oldId, TRealmEntity old, TModel entity, ConflictResolutionMode resolveMode)
+        private IConflictResolutionResult<TModel> resolveEntity(Realms.Realm realm, long oldId, TRealmEntity old, TDto entity, ConflictResolutionMode resolveMode)
         {
             switch (resolveMode)
             {
@@ -190,7 +190,7 @@ namespace Toggl.PrimeRadiant.Realm
         private void resolvePotentialRivals(
             Realms.Realm realm,
             TRealmEntity entity,
-            IRivalsResolver<TModel> resolver,
+            IRivalsResolver<TModel, TDto> resolver,
             List<IConflictResolutionResult<TModel>> results)
         {
             var rival = (TRealmEntity)realm.All<TRealmEntity>().SingleOrDefault(resolver.AreRivals(entity));

@@ -7,21 +7,23 @@ using Realms;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant.Exceptions;
+using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.PrimeRadiant.Realm
 {
-    internal sealed class SingleObjectStorage<TModel> : BaseStorage<TModel>, ISingleObjectStorage<TModel>
-        where TModel : IDatabaseSyncable
+    internal sealed class SingleObjectStorage<TModel, TDto>
+        : BaseStorage<TModel, TDto>, ISingleObjectStorage<TModel, TDto>
+        where TModel : IDatabaseModel
     {
         private const int fakeId = 0;
 
-        public SingleObjectStorage(IRealmAdapter<TModel> adapter)
+        public SingleObjectStorage(IRealmAdapter<TModel, TDto> adapter)
             : base(adapter) { }
 
         public IObservable<TModel> GetById(long _)
             => Single();
 
-        public IObservable<TModel> Create(TModel entity)
+        public IObservable<TModel> Create(TDto entity)
         {
             Ensure.Argument.IsNotNull(entity, nameof(entity));
 
@@ -37,9 +39,9 @@ namespace Toggl.PrimeRadiant.Realm
         }
 
         public IObservable<IEnumerable<IConflictResolutionResult<TModel>>> BatchUpdate(
-            IEnumerable<(long Id, TModel Entity)> entities,
-            Func<TModel, TModel, ConflictResolutionMode> conflictResolution,
-            IRivalsResolver<TModel> rivalsResolver = null)
+            IEnumerable<(long Id, TDto Entity)> entities,
+            Func<TModel, TDto, ConflictResolutionMode> conflictResolution,
+            IRivalsResolver<TModel, TDto> rivalsResolver = null)
             => CreateObservable(() =>
             {
                 var list = entities.ToList();
@@ -52,15 +54,15 @@ namespace Toggl.PrimeRadiant.Realm
         public IObservable<TModel> Single()
             => CreateObservable(() => Adapter.GetAll().Single());
 
-        public static SingleObjectStorage<TModel> For<TRealmEntity>(
-            Func<Realms.Realm> getRealmInstance, Func<TModel, Realms.Realm, TRealmEntity> convertToRealm)
-            where TRealmEntity : RealmObject, TModel, IUpdatesFrom<TModel>
-            => new SingleObjectStorage<TModel>(new RealmAdapter<TRealmEntity, TModel>(
+        public static SingleObjectStorage<TModel, TDto> For<TRealmEntity>(
+            Func<Realms.Realm> getRealmInstance, Func<TDto, Realms.Realm, TRealmEntity> convertToRealm)
+            where TRealmEntity : RealmObject, TModel, IUpdatesFrom<TDto>
+            => new SingleObjectStorage<TModel, TDto>(new RealmAdapter<TRealmEntity, TModel, TDto>(
                 getRealmInstance,
                 convertToRealm, _ => __ => true,
                 obj => fakeId));
 
-        public IObservable<TModel> Update(TModel entity)
+        public IObservable<TModel> Update(TDto entity)
             => Update(fakeId, entity);
 
         public IObservable<Unit> Delete()

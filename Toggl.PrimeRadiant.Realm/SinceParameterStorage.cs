@@ -8,7 +8,7 @@ namespace Toggl.PrimeRadiant.Realm
 {
     internal sealed class SinceParameterStorage : ISinceParameterRepository
     {
-        private readonly IRealmAdapter<IDatabaseSinceParameter> realmAdapter;
+        private readonly IRealmAdapter<IDatabaseSinceParameter, IDatabaseSinceParameter> realmAdapter;
 
         private readonly object storageAccess = new object();
 
@@ -23,7 +23,7 @@ namespace Toggl.PrimeRadiant.Realm
                 [typeof(IDatabaseWorkspace)] = 5
             };
 
-        public SinceParameterStorage(IRealmAdapter<IDatabaseSinceParameter> realmAdapter)
+        public SinceParameterStorage(IRealmAdapter<IDatabaseSinceParameter, IDatabaseSinceParameter> realmAdapter)
         {
             Ensure.Argument.IsNotNull(realmAdapter, nameof(realmAdapter));
 

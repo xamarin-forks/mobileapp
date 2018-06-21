@@ -6,15 +6,15 @@ namespace Toggl.PrimeRadiant
 {
     public interface ITogglDatabase
     {
-        ISingleObjectStorage<IDatabaseUser> User { get; }
-        IRepository<IDatabaseClient> Clients { get; }
-        IRepository<IDatabaseProject> Projects { get; }
-        ISingleObjectStorage<IDatabasePreferences> Preferences { get; }
-        IRepository<IDatabaseTag> Tags { get; }
-        IRepository<IDatabaseTask> Tasks { get; }
-        IRepository<IDatabaseTimeEntry> TimeEntries { get; }
-        IRepository<IDatabaseWorkspace> Workspaces { get; }
-        IRepository<IDatabaseWorkspaceFeatureCollection> WorkspaceFeatures { get; }
+        ISingleObjectStorage<IDatabaseUser, UserDto> User { get; }
+        IRepository<IDatabaseClient, ClientDto> Clients { get; }
+        IRepository<IDatabaseProject, ProjectDto> Projects { get; }
+        ISingleObjectStorage<IDatabasePreferences, PreferencesDto> Preferences { get; }
+        IRepository<IDatabaseTag, TagDto> Tags { get; }
+        IRepository<IDatabaseTask, TaskDto> Tasks { get; }
+        IRepository<IDatabaseTimeEntry, TimeEntryDto> TimeEntries { get; }
+        IRepository<IDatabaseWorkspace, WorkspaceDto> Workspaces { get; }
+        IRepository<IDatabaseWorkspaceFeatureCollection, WorkspaceFeatureCollectionDto> WorkspaceFeatures { get; }
         IIdProvider IdProvider { get; }
         ISinceParameterRepository SinceParameters { get; }
         IObservable<Unit> Clear();

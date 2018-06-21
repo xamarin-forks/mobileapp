@@ -9,12 +9,12 @@ using Toggl.PrimeRadiant.Exceptions;
 
 namespace Toggl.PrimeRadiant.Realm
 {
-    internal sealed class Repository<TModel> : BaseStorage<TModel>, IRepository<TModel>
+    internal sealed class Repository<TModel, TDto> : BaseStorage<TModel, TDto>, IRepository<TModel, TDto>
     {
-        public Repository(IRealmAdapter<TModel> adapter)
+        public Repository(IRealmAdapter<TModel, TDto> adapter)
             : base(adapter) { }
 
-        public IObservable<TModel> Create(TModel entity)
+        public IObservable<TModel> Create(TDto entity)
         {
             Ensure.Argument.IsNotNull(entity, nameof(entity));
 
@@ -24,9 +24,9 @@ namespace Toggl.PrimeRadiant.Realm
         }
         
         public IObservable<IEnumerable<IConflictResolutionResult<TModel>>> BatchUpdate(
-            IEnumerable<(long Id, TModel Entity)> entities,
-            Func<TModel, TModel, ConflictResolutionMode> conflictResolution,
-            IRivalsResolver<TModel> rivalsResolver = null)
+            IEnumerable<(long Id, TDto Entity)> entities,
+            Func<TModel, TDto, ConflictResolutionMode> conflictResolution,
+            IRivalsResolver<TModel, TDto> rivalsResolver = null)
         {
             Ensure.Argument.IsNotNull(entities, nameof(entities));
             Ensure.Argument.IsNotNull(conflictResolution, nameof(conflictResolution));
@@ -37,21 +37,21 @@ namespace Toggl.PrimeRadiant.Realm
         public IObservable<TModel> GetById(long id)
             => CreateObservable(() => Adapter.Get(id));
 
-        public static Repository<TModel> For<TRealmEntity>(
-            Func<Realms.Realm> getRealmInstance, Func<TModel, Realms.Realm, TRealmEntity> convertToRealm)
-            where TRealmEntity : RealmObject, IIdentifiable, TModel, IUpdatesFrom<TModel>
+        public static Repository<TModel, TDto> For<TRealmEntity>(
+            Func<Realms.Realm> getRealmInstance, Func<TDto, Realms.Realm, TRealmEntity> convertToRealm)
+            where TRealmEntity : RealmObject, IIdentifiable, TModel, IUpdatesFrom<TDto>
             => For(getRealmInstance, convertToRealm, matchById<TRealmEntity>, getId<TRealmEntity>);
 
-        public static Repository<TModel> For<TRealmEntity>(
+        public static Repository<TModel, TDto> For<TRealmEntity>(
             Func<Realms.Realm> getRealmInstance,
-            Func<TModel, Realms.Realm, TRealmEntity> convertToRealm,
+            Func<TDto, Realms.Realm, TRealmEntity> convertToRealm,
             Func<long, Expression<Func<TRealmEntity, bool>>> matchById,
             Func<TRealmEntity, long> getId)
-            where TRealmEntity : RealmObject, TModel, IUpdatesFrom<TModel>
-            => new Repository<TModel>(new RealmAdapter<TRealmEntity, TModel>(getRealmInstance, convertToRealm, matchById, getId));
+            where TRealmEntity : RealmObject, TModel, IUpdatesFrom<TDto>
+            => new Repository<TModel, TDto>(new RealmAdapter<TRealmEntity, TModel, TDto>(getRealmInstance, convertToRealm, matchById, getId));
 
         private static Expression<Func<TRealmEntity, bool>> matchById<TRealmEntity>(long id)
-            where TRealmEntity : RealmObject, IIdentifiable, TModel, IUpdatesFrom<TModel>
+            where TRealmEntity : RealmObject, IIdentifiable, TModel, IUpdatesFrom<TDto>
             => x => x.Id == id;
 
         private static long getId<TRealmEntity>(TRealmEntity entity)

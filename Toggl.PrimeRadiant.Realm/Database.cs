@@ -17,15 +17,15 @@ namespace Toggl.PrimeRadiant.Realm
             realmConfiguration = createRealmConfiguration();
             IdProvider = new IdProvider(getRealmInstance);
             SinceParameters = createSinceParameterRepository();
-            Tags = Repository<IDatabaseTag>.For(getRealmInstance, (tag, realm) => new RealmTag(tag, realm));
-            Tasks = Repository<IDatabaseTask>.For(getRealmInstance, (task, realm) => new RealmTask(task, realm));
-            User = SingleObjectStorage<IDatabaseUser>.For(getRealmInstance, (user, realm) => new RealmUser(user, realm));
-            Clients = Repository<IDatabaseClient>.For(getRealmInstance, (client, realm) => new RealmClient(client, realm));
-            Preferences = SingleObjectStorage<IDatabasePreferences>.For(getRealmInstance, (preferences, realm) => new RealmPreferences(preferences, realm));
-            Projects = Repository<IDatabaseProject>.For(getRealmInstance, (project, realm) => new RealmProject(project, realm));
-            TimeEntries = Repository<IDatabaseTimeEntry>.For(getRealmInstance, (timeEntry, realm) => new RealmTimeEntry(timeEntry, realm));
-            Workspaces = Repository<IDatabaseWorkspace>.For(getRealmInstance, (workspace, realm) => new RealmWorkspace(workspace, realm));
-            WorkspaceFeatures = Repository<IDatabaseWorkspaceFeatureCollection>.For(
+            Tags = Repository<IDatabaseTag, TagDto>.For(getRealmInstance, (tag, realm) => new RealmTag(tag, realm));
+            Tasks = Repository<IDatabaseTask, TaskDto>.For(getRealmInstance, (task, realm) => new RealmTask(task, realm));
+            User = SingleObjectStorage<IDatabaseUser, UserDto>.For(getRealmInstance, (user, realm) => new RealmUser(user, realm));
+            Clients = Repository<IDatabaseClient, ClientDto>.For(getRealmInstance, (client, realm) => new RealmClient(client, realm));
+            Preferences = SingleObjectStorage<IDatabasePreferences, PreferencesDto>.For(getRealmInstance, (preferences, realm) => new RealmPreferences(preferences, realm));
+            Projects = Repository<IDatabaseProject, ProjectDto>.For(getRealmInstance, (project, realm) => new RealmProject(project, realm));
+            TimeEntries = Repository<IDatabaseTimeEntry, TimeEntryDto>.For(getRealmInstance, (timeEntry, realm) => new RealmTimeEntry(timeEntry, realm));
+            Workspaces = Repository<IDatabaseWorkspace, WorkspaceDto>.For(getRealmInstance, (workspace, realm) => new RealmWorkspace(workspace, realm));
+            WorkspaceFeatures = Repository<IDatabaseWorkspaceFeatureCollection, WorkspaceFeatureCollectionDto>.For(
                 getRealmInstance,
                 (collection, realm) => new RealmWorkspaceFeatureCollection(collection, realm),
                 id => x => x.WorkspaceId == id,
@@ -34,15 +34,15 @@ namespace Toggl.PrimeRadiant.Realm
 
         public IIdProvider IdProvider { get; }
         public ISinceParameterRepository SinceParameters { get; }
-        public IRepository<IDatabaseTag> Tags { get; }
-        public IRepository<IDatabaseTask> Tasks { get; }
-        public IRepository<IDatabaseClient> Clients { get; }
-        public ISingleObjectStorage<IDatabasePreferences> Preferences { get; }
-        public IRepository<IDatabaseProject> Projects { get; }
-        public ISingleObjectStorage<IDatabaseUser> User { get; }
-        public IRepository<IDatabaseTimeEntry> TimeEntries { get; }
-        public IRepository<IDatabaseWorkspace> Workspaces { get; }
-        public IRepository<IDatabaseWorkspaceFeatureCollection> WorkspaceFeatures { get; }
+        public IRepository<IDatabaseTag, TagDto> Tags { get; }
+        public IRepository<IDatabaseTask, TaskDto> Tasks { get; }
+        public IRepository<IDatabaseClient, ClientDto> Clients { get; }
+        public ISingleObjectStorage<IDatabasePreferences, PreferencesDto> Preferences { get; }
+        public IRepository<IDatabaseProject, ProjectDto> Projects { get; }
+        public ISingleObjectStorage<IDatabaseUser, UserDto> User { get; }
+        public IRepository<IDatabaseTimeEntry, TimeEntryDto> TimeEntries { get; }
+        public IRepository<IDatabaseWorkspace, WorkspaceDto> Workspaces { get; }
+        public IRepository<IDatabaseWorkspaceFeatureCollection, WorkspaceFeatureCollectionDto> WorkspaceFeatures { get; }
 
         public IObservable<Unit> Clear() =>
             Observable.Start(() =>
@@ -62,7 +62,7 @@ namespace Toggl.PrimeRadiant.Realm
         private ISinceParameterRepository createSinceParameterRepository()
         {
             var sinceParametersRealmAdapter =
-                new RealmAdapter<RealmSinceParameter, IDatabaseSinceParameter>(
+                new RealmAdapter<RealmSinceParameter, IDatabaseSinceParameter, IDatabaseSinceParameter>(
                     getRealmInstance,
                     (parameter, realm) => new RealmSinceParameter(parameter),
                     id => entity => entity.Id == id,
