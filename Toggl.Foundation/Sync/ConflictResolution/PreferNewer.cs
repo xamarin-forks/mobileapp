@@ -6,8 +6,9 @@ using Toggl.Multivac.Models;
 
 namespace Toggl.Foundation.Sync.ConflictResolution
 {
-    internal sealed class PreferNewer<T> : IConflictResolver<T>
+    internal sealed class PreferNewer<T, TDto> : IConflictResolver<T, TDto>
         where T : class, ILastChangedDatable, IDatabaseSyncable
+        where TDto : ILastChangedDatable
     {
         public TimeSpan MarginOfError { get; }
 
@@ -23,7 +24,7 @@ namespace Toggl.Foundation.Sync.ConflictResolution
             MarginOfError = marginOfError;
         }
 
-        public ConflictResolutionMode Resolve(T localEntity, T serverEntity)
+        public ConflictResolutionMode Resolve(T localEntity, TDto serverEntity)
         {
             Ensure.Argument.IsNotNull(serverEntity, nameof(serverEntity));
 

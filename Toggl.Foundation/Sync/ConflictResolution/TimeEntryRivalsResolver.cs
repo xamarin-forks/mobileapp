@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Toggl.Foundation.Models;
 using Toggl.Multivac.Extensions;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
@@ -10,7 +9,7 @@ using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.Sync.ConflictResolution
 {
-    internal sealed class TimeEntryRivalsResolver : IRivalsResolver<IDatabaseTimeEntry>
+    internal sealed class TimeEntryRivalsResolver : IRivalsResolver<IDatabaseTimeEntry, TimeEntryDto>
     {
         private ITimeService timeService;
 
@@ -29,12 +28,12 @@ namespace Toggl.Foundation.Sync.ConflictResolution
             return potentialRival => potentialRival.Duration == null && potentialRival.Id != entity.Id;
         }
 
-        public (IDatabaseTimeEntry FixedEntity, IDatabaseTimeEntry FixedRival) FixRivals<TDatabaseObject>(
+        public (TimeEntryDto FixedEntity, TimeEntryDto FixedRival) FixRivals<TDatabaseObject>(
             IDatabaseTimeEntry entity, IDatabaseTimeEntry rival, IQueryable<TDatabaseObject> allTimeEntries)
             where TDatabaseObject : IDatabaseTimeEntry
-            => rival.At < entity.At ? (entity, stop(rival, allTimeEntries)) : (stop(entity, allTimeEntries), rival);
+            => rival.At < entity.At ? (TimeEntryDto.From(entity), stop(rival, allTimeEntries)) : (stop(entity, allTimeEntries), TimeEntryDto.From(rival));
 
-        private IDatabaseTimeEntry stop<TDatabaseObject>(IDatabaseTimeEntry toBeStopped, IQueryable<TDatabaseObject> allTimeEntries)
+        private TimeEntryDto stop<TDatabaseObject>(IDatabaseTimeEntry toBeStopped, IQueryable<TDatabaseObject> allTimeEntries)
             where TDatabaseObject : IDatabaseTimeEntry
         {
             var timeEntriesStartingAfter = (IEnumerable<IDatabaseTimeEntry>)allTimeEntries
@@ -44,8 +43,13 @@ namespace Toggl.Foundation.Sync.ConflictResolution
                 .Where(start => start != default(DateTimeOffset))
                 .DefaultIfEmpty(timeService.CurrentDateTime)
                 .Min();
-            long duration = (long)(stopTime - toBeStopped.Start).TotalSeconds; // truncates towards zero (floor)
-            return new TimeEntry(toBeStopped, duration);
+            var duration = (long)(stopTime - toBeStopped.Start).TotalSeconds; // truncates towards zero (floor)
+
+            return TimeEntryDto.From<IDatabaseTimeEntry>(
+                toBeStopped,
+                duration: duration,
+                syncStatus: SyncStatus.SyncNeeded,
+                at: timeService.CurrentDateTime);
         }
 
         private Expression<Func<TDatabaseObject, bool>> startsAfter<TDatabaseObject>(DateTimeOffset start)

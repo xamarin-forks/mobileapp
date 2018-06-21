@@ -4,10 +4,10 @@ using static Toggl.PrimeRadiant.ConflictResolutionMode;
 
 namespace Toggl.Foundation.Sync.ConflictResolution
 {
-    internal sealed class AlwaysOverwrite<T> : IConflictResolver<T>
+    internal sealed class AlwaysOverwrite<T, TDto> : IConflictResolver<T, TDto>
         where T : class
     {
-        public ConflictResolutionMode Resolve(T localEntity, T serverEntity)
+        public ConflictResolutionMode Resolve(T localEntity, TDto serverEntity)
         {
             Ensure.Argument.IsNotNull(serverEntity, nameof(serverEntity));
 

@@ -4,11 +4,11 @@ using System.Linq.Expressions;
 
 namespace Toggl.PrimeRadiant
 {
-    public interface IRivalsResolver<TModel>
+    public interface IRivalsResolver<TModel, TDto>
     {
         bool CanHaveRival(TModel entity);
         Expression<Func<TModel, bool>> AreRivals(TModel entity);
-        (TModel FixedEntity, TModel FixedRival) FixRivals<TRealmObject>(TModel entity, TModel rival, IQueryable<TRealmObject> allEntities)
+        (TDto FixedEntity, TDto FixedRival) FixRivals<TRealmObject>(TModel entity, TModel rival, IQueryable<TRealmObject> allEntities)
             where TRealmObject : TModel;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Toggl.Foundation.Sync.ConflictResolution
 {
-    internal interface IConflictResolver<T>
+    internal interface IConflictResolver<T, TDto>
     {
-        ConflictResolutionMode Resolve(T localEntity, T serverEntity);
+        ConflictResolutionMode Resolve(T localEntity, TDto serverEntity);
     }
 }
