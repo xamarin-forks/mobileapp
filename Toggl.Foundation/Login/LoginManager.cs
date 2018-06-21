@@ -72,7 +72,7 @@ namespace Toggl.Foundation.Login
             return database
                 .Clear()
                 .SelectMany(_ => apiFactory.CreateApiWith(credentials).User.Get())
-                .Select(User.Clean)
+                .Select(UserDto.Clean)
                 .SelectMany(database.User.Create)
                 .Select(dataSourceFromUser)
                 .Do(shortcutCreator.OnLogin)
@@ -98,7 +98,7 @@ namespace Toggl.Foundation.Login
             return database
                 .Clear()
                 .SelectMany(_ => signUp(email, password, termsAccepted, countryId))
-                .Select(User.Clean)
+                .Select(UserDto.Clean)
                 .SelectMany(database.User.Create)
                 .Select(dataSourceFromUser)
                 .Do(shortcutCreator.OnLogin)
@@ -142,7 +142,7 @@ namespace Toggl.Foundation.Login
                 .Select(email => Credentials.WithPassword(email, password))
                 .Select(apiFactory.CreateApiWith)
                 .SelectMany(api => api.User.Get())
-                .Select(User.Clean)
+                .Select(UserDto.Clean)
                 .SelectMany(database.User.Update)
                 .Select(dataSourceFromUser)
                 .Do(shortcutCreator.OnLogin);
@@ -162,7 +162,7 @@ namespace Toggl.Foundation.Login
             return Observable
                 .Return(apiFactory.CreateApiWith(credentials))
                 .SelectMany(api => api.User.GetWithGoogle())
-                .Select(User.Clean)
+                .Select(UserDto.Clean)
                 .SelectMany(database.User.Create)
                 .Select(dataSourceFromUser)
                 .Do(shortcutCreator.OnLogin)
@@ -188,7 +188,7 @@ namespace Toggl.Foundation.Login
             return Observable
                 .Return(googleToken)
                 .SelectMany(apiFactory.CreateApiWith(Credentials.None).User.SignUpWithGoogle)
-                .Select(User.Clean)
+                .Select(UserDto.Clean)
                 .SelectMany(database.User.Create)
                 .Select(dataSourceFromUser)
                 .Do(shortcutCreator.OnLogin)
