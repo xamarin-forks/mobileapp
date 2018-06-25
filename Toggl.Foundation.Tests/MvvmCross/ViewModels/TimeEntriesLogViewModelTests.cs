@@ -13,6 +13,7 @@ using Toggl.Foundation.Models;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Foundation.Tests.Generators;
+using Toggl.Foundation.Tests.Mocks;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant.Models;
@@ -128,13 +129,16 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                         var observable = dateTimes
                             .Select(newDateWithGenerator(monthsGenerator, year))
-                            .Select(d => TimeEntry.Builder
-                                    .Create(-1)
-                                    .SetUserId(-2)
-                                    .SetWorkspaceId(-3)
-                                    .SetStart(d)
-                                    .SetDescription("")
-                                    .SetAt(now).Build())
+                            .Select(d =>
+                                new MockTimeEntry
+                                {
+                                    Id = -1,
+                                    UserId = -2,
+                                    WorkspaceId = -3,
+                                    Start = d,
+                                    Description = "",
+                                    At = now
+                                })
                             .Apply(Observable.Return);
 
                         InteractorFactory.GetAllNonDeletedTimeEntries().Execute().Returns(observable);
@@ -163,27 +167,30 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             protected Subject<EntityUpdate<IThreadSafeTimeEntry>> TimeEntryUpdatedSubject = new Subject<EntityUpdate<IThreadSafeTimeEntry>>();
             protected Subject<long> TimeEntryDeletedSubject = new Subject<long>();
             protected IThreadSafeTimeEntry NewTimeEntry =
-                TimeEntry.Builder.Create(21)
-                         .SetUserId(10)
-                         .SetWorkspaceId(12)
-                         .SetDescription("")
-                         .SetAt(now)
-                         .SetStart(now)
-                         .Build();
+                new MockTimeEntry
+                {
+                    Id = 21,
+                    UserId = 10,
+                    WorkspaceId = 12,
+                    Description = "",
+                    At = now,
+                    Start = now
+                };
 
             protected TimeEntryDataSourceObservableTest()
             {
                 var startTime = now.AddHours(-2);
 
                 var observable = Enumerable.Range(1, InitialAmountOfTimeEntries)
-                    .Select(i => TimeEntry.Builder.Create(i))
-                    .Select(builder => builder
-                        .SetStart(startTime.AddHours(builder.Id * 2))
-                        .SetUserId(11)
-                        .SetWorkspaceId(12)
-                        .SetDescription("")
-                        .SetAt(now)
-                        .Build())
+                    .Select(i => new MockTimeEntry
+                    {
+                        Id = i,
+                        Start = startTime.AddHours(i * 2),
+                        UserId = 11,
+                        WorkspaceId = 12,
+                        Description = "",
+                        At = now
+                    })
                   .Select(te => te.With((long)TimeSpan.FromHours(te.Id * 2 + 2).TotalSeconds))
                   .Apply(Observable.Return);
 

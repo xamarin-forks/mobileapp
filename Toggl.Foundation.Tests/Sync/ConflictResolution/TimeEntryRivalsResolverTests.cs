@@ -4,8 +4,6 @@ using FluentAssertions;
 using FsCheck;
 using FsCheck.Xunit;
 using NSubstitute;
-using Toggl.Foundation.Models;
-using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.Sync.ConflictResolution;
 using Toggl.Foundation.Tests.Mocks;
 using Toggl.PrimeRadiant;
@@ -21,7 +19,7 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
 
         private static readonly DateTimeOffset arbitraryTime = new DateTimeOffset(2017, 9, 1, 12, 0, 0, TimeSpan.Zero);
 
-        private readonly IQueryable<IThreadSafeTimeEntry> timeEntries = new EnumerableQuery<IThreadSafeTimeEntry>(new[]
+        private readonly IQueryable<MockTimeEntry> timeEntries = new EnumerableQuery<MockTimeEntry>(new[]
         {
             new MockTimeEntry { Id = 10, Start = arbitraryTime, Duration = (long)TimeSpan.FromHours(2).TotalSeconds, SyncStatus = SyncStatus.InSync },
             new MockTimeEntry { Id = 11, Start = arbitraryTime.AddDays(5), Duration = (long)TimeSpan.FromDays(1).TotalSeconds, SyncStatus = SyncStatus.InSync },
@@ -86,8 +84,8 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
             DateTimeOffset now = (startA > startB ? startA : startB).AddHours(5);
             timeService.CurrentDateTime.Returns(now);
 
-            var (fixedEntityA, fixedRivalB) = resolver.FixRivals(a, b, timeEntries);
-            var (fixedEntityB, fixedRivalA) = resolver.FixRivals(b, a, timeEntries);
+            var (fixedEntityA, fixedRivalB) = resolver.FixRivals<MockTimeEntry>(a, b, timeEntries);
+            var (fixedEntityB, fixedRivalA) = resolver.FixRivals<MockTimeEntry>(b, a, timeEntries);
 
             fixedEntityA.Duration.Should().NotBeNull();
             fixedRivalA.Duration.Should().NotBeNull();
@@ -101,7 +99,7 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
             var a = new MockTimeEntry { Id = 1, Duration = null, At = arbitraryTime.AddDays(10), SyncStatus = SyncStatus.InSync };
             var b = new MockTimeEntry { Id = 2, Duration = null, At = arbitraryTime.AddDays(11), SyncStatus = SyncStatus.InSync };
 
-            var (fixedA, fixedB) = resolver.FixRivals(a, b, timeEntries);
+            var (fixedA, fixedB) = resolver.FixRivals<MockTimeEntry>(a, b, timeEntries);
 
             fixedA.SyncStatus.Should().Be(SyncStatus.SyncNeeded);
             fixedB.SyncStatus.Should().Be(SyncStatus.InSync);
@@ -113,7 +111,7 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
             var a = new MockTimeEntry { Id = 1, Duration = null, At = arbitraryTime.AddDays(10), Start = arbitraryTime.AddDays(12), SyncStatus = SyncStatus.InSync };
             var b = new MockTimeEntry { Id = 2, Duration = null, At = arbitraryTime.AddDays(11), Start = arbitraryTime.AddDays(13), SyncStatus = SyncStatus.InSync };
 
-            var (fixedA, _) = resolver.FixRivals(a, b, timeEntries);
+            var (fixedA, _) = resolver.FixRivals<MockTimeEntry>(a, b, timeEntries);
 
             fixedA.Duration.Should().Be((long)TimeSpan.FromDays(3).TotalSeconds);
         }
@@ -126,7 +124,7 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
             var a = new MockTimeEntry { Id = 1, Duration = null, At = arbitraryTime.AddDays(21), Start = arbitraryTime.AddDays(20), SyncStatus = SyncStatus.InSync };
             var b = new MockTimeEntry { Id = 2, Duration = null, At = arbitraryTime.AddDays(22), Start = arbitraryTime.AddDays(21), SyncStatus = SyncStatus.InSync };
 
-            var (fixedA, _) = resolver.FixRivals(a, b, timeEntries);
+            var (fixedA, _) = resolver.FixRivals<MockTimeEntry>(a, b, timeEntries);
 
             fixedA.Duration.Should().Be((long)TimeSpan.FromDays(5).TotalSeconds);
         }

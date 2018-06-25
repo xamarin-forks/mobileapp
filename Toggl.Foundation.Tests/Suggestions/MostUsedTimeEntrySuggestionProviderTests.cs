@@ -9,6 +9,7 @@ using FsCheck.Xunit;
 using NSubstitute;
 using Toggl.Foundation.Suggestions;
 using Toggl.Foundation.Tests.Generators;
+using Toggl.Foundation.Tests.Mocks;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
 using Toggl.PrimeRadiant.Models;
@@ -57,20 +58,19 @@ namespace Toggl.Foundation.Tests.Suggestions
         public sealed class TheGetSuggestionsMethod : MostUsedTimeEntrySuggestionProviderTest
         {
             private IEnumerable<IDatabaseTimeEntry> getTimeEntries(params int[] numberOfRepetitions)
-            {
-                var builder = TimeEntry.Builder.Create(21)
-                    .SetUserId(10)
-                    .SetWorkspaceId(12)
-                    .SetAt(Now)
-                    .SetStart(Now);
-
-                return Enumerable.Range(0, numberOfRepetitions.Length)
+                => Enumerable.Range(0, numberOfRepetitions.Length)
                     .SelectMany(index => Enumerable
                         .Range(0, numberOfRepetitions[index])
-                        .Select(_ => builder
-                            .SetDescription($"te{index}")
-                            .Build()));
-            }
+                        .Select(i =>
+                            new MockTimeEntry
+                            {
+                                Id = 21,
+                                UserId = 10,
+                                WorkspaceId = 12,
+                                At = Now,
+                                Start = Now,
+                                Description = $"te{index}"
+                            }));
 
             [Fact, LogIfTooSlow]
             public async Task ReturnsEmptyObservableIfThereAreNoTimeEntries()
@@ -110,7 +110,7 @@ namespace Toggl.Foundation.Tests.Suggestions
                 Database.TimeEntries
                         .GetAll(Arg.Any<Func<IDatabaseTimeEntry, bool>>())
                         .Returns(Observable.Return(timeEntries));
-                
+
                 var suggestions = await Provider.GetSuggestions().ToList();
 
                 suggestions.Should().OnlyContain(suggestion => expectedDescriptions.Contains(suggestion.Description));
@@ -119,14 +119,16 @@ namespace Toggl.Foundation.Tests.Suggestions
             [Fact, LogIfTooSlow]
             public async Task DoesNotReturnTimeEntriesWithoutDescription()
             {
-                var builder = TimeEntry.Builder.Create(12)
-                                       .SetUserId(9)
-                                       .SetWorkspaceId(2)
-                                       .SetAt(Now)
-                                       .SetStart(Now)
-                                       .SetDescription("");
                 var emptyTimeEntries = Enumerable.Range(20, 0)
-                    .Select(_ => builder.Build());
+                    .Select(_ => new MockTimeEntry
+                    {
+                        Id = 12,
+                        UserId = 9,
+                        WorkspaceId = 2,
+                        At = Now,
+                        Start = Now,
+                        Description = ""
+                    });
                 var timeEntries = new List<IDatabaseTimeEntry>(emptyTimeEntries);
                 timeEntries.AddRange(getTimeEntries(1, 2, 3, 4, 5));
                 Database.TimeEntries

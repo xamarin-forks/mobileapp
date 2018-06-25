@@ -16,6 +16,7 @@ using Xunit;
 using TimeEntry = Toggl.Foundation.Models.TimeEntry;
 using ITimeEntryPrototype = Toggl.Foundation.Models.ITimeEntryPrototype;
 using Toggl.Foundation.Models.Interfaces;
+using Toggl.Foundation.Tests.Mocks;
 
 namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 {
@@ -118,15 +119,17 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             private Suggestion createSuggestion(int index) => createSuggestion($"te{index}", 0, 0);
 
             private Suggestion createSuggestion(string description, long taskId, long projectId) => new Suggestion(
-                TimeEntry.Builder.Create(0)
-                    .SetDescription(description)
-                    .SetStart(DateTimeOffset.UtcNow)
-                    .SetAt(DateTimeOffset.UtcNow)
-                    .SetTaskId(taskId)
-                    .SetProjectId(projectId)
-                    .SetWorkspaceId(11)
-                    .SetUserId(12)
-                    .Build()
+                new MockTimeEntry
+                {
+                    Id = 0,
+                    Description = description,
+                    Start = DateTimeOffset.UtcNow,
+                    At = DateTimeOffset.UtcNow,
+                    TaskId = taskId,
+                    ProjectId = projectId,
+                    WorkspaceId = 11,
+                    UserId = 12
+                }
             );
 
             private Recorded<Notification<Suggestion>> createRecorded(int ticks, Suggestion suggestion)

@@ -18,6 +18,7 @@ using Toggl.Foundation.Tests.Generators;
 using Toggl.PrimeRadiant.Models;
 using Toggl.Foundation.Analytics;
 using Toggl.Foundation.Interactors;
+using Toggl.Foundation.Tests.Mocks;
 using Xunit;
 using static Toggl.Foundation.Helper.Constants;
 using static Toggl.Multivac.Extensions.StringExtensions;
@@ -39,19 +40,22 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
             protected void ConfigureEditedTimeEntry(DateTimeOffset now, bool isRunning = false)
             {
-                var te = TimeEntry.Builder.Create(Id)
-                    .SetDescription("Something")
-                    .SetStart(now.AddHours(-2))
-                    .SetAt(now.AddHours(-2))
-                    .SetWorkspaceId(11)
-                    .SetUserId(12)
-                    .SetProjectId(13)
-                    .SetTaskId(14);
+                var te = new MockTimeEntry
+                {
+                    Id = Id,
+                    Description = "Something",
+                    Start = now.AddHours(-2),
+                    At = now.AddHours(-2),
+                    WorkspaceId = 11,
+                    UserId = 12,
+                    ProjectId = 13,
+                    TaskId = 14
+                };
 
                 if (!isRunning)
-                    te = te.SetDuration((long)Duration.TotalSeconds);
+                    te.Duration = (long)Duration.TotalSeconds;
 
-                TheTimeEntry = te.Build();
+                TheTimeEntry = te;
                 var observable = Observable.Return(TheTimeEntry);
 
                 DataSource.TimeEntries.GetById(Arg.Is(Id)).Returns(observable);

@@ -52,7 +52,7 @@ namespace Toggl.Foundation.Tests.Mocks
 
         public string Description { get; set; }
 
-        public IEnumerable<long> TagIds { get; set; }
+        public IEnumerable<long> TagIds { get; set; } = new List<long>();
 
         public DateTimeOffset At { get; set; }
 

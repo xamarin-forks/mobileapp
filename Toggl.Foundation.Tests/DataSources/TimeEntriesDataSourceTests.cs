@@ -44,15 +44,16 @@ namespace Toggl.Foundation.Tests.DataSources
             protected static DateTimeOffset Now { get; } = new DateTimeOffset(2018, 05, 14, 18, 00, 00, TimeSpan.Zero);
 
             protected IThreadSafeTimeEntry TimeEntry { get; } =
-                Models.TimeEntry.Builder
-                    .Create(CurrentRunningId)
-                    .SetUserId(UserId)
-                    .SetDescription("")
-                    .SetWorkspaceId(WorkspaceId)
-                    .SetSyncStatus(SyncStatus.InSync)
-                    .SetAt(Now.AddDays(-1))
-                    .SetStart(Now.AddHours(-2))
-                    .Build();
+                new MockTimeEntry
+                    {
+                        Id = CurrentRunningId,
+                        UserId = UserId,
+                        Description = "",
+                        WorkspaceId = WorkspaceId,
+                        SyncStatus = SyncStatus.InSync,
+                        At = Now.AddDays(-1),
+                        Start = Now.AddHours(-2)
+                    };
 
             protected IRepository<IDatabaseTimeEntry, TimeEntryDto> Repository { get; } = Substitute.For<IRepository<IDatabaseTimeEntry, TimeEntryDto>>();
 
@@ -275,14 +276,16 @@ namespace Toggl.Foundation.Tests.DataSources
             [Fact, LogIfTooSlow]
             public void PropagatesErrorIfUpdateFails()
             {
-                var timeEntry = Models.TimeEntry.Builder.Create(12)
-                      .SetStart(Now)
-                      .SetSyncStatus(SyncStatus.InSync)
-                      .SetDescription("")
-                      .SetUserId(11)
-                      .SetWorkspaceId(10)
-                      .SetAt(Now)
-                      .Build();
+                var timeEntry = new MockTimeEntry
+                {
+                    Id = 12,
+                    Start = Now,
+                    SyncStatus = SyncStatus.InSync,
+                    Description = "",
+                    UserId = 11,
+                    WorkspaceId = 10,
+                    At = Now
+                };
 
                 var timeEntryObservable = Observable.Return(timeEntry);
                 var errorObservable = Observable.Throw<IDatabaseTimeEntry>(new DatabaseOperationException<IDatabaseTimeEntry>(new Exception()));
