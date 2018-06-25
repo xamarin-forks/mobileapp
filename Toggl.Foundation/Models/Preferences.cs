@@ -45,12 +45,6 @@ namespace Toggl.Foundation.Models
             return new Preferences(entity, entity.SyncStatus, entity.LastSyncErrorMessage, entity.IsDeleted);
         }
 
-        public static Preferences Clean(IPreferences entity)
-            => new Preferences(entity, SyncStatus.InSync, null);
-
-        public static Preferences Unsyncable(IPreferences entity, string errorMessage)
-            => new Preferences(entity, SyncStatus.SyncFailed, errorMessage);
-
         public static Preferences DefaultPreferences { get; } =
             new Preferences(
                 TimeFormat.FromLocalizedTimeFormat("H:mm"),

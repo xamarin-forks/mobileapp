@@ -1,6 +1,5 @@
 ﻿using System;
 using Toggl.Foundation.Models.Interfaces;
-using Toggl.Multivac;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
 using Toggl.PrimeRadiant.Models;
@@ -42,14 +41,5 @@ namespace Toggl.Foundation.Models
             var workspace = entity.Workspace == null ? null : Models.Workspace.From(entity.Workspace);
             return new Client(entity, entity.SyncStatus, entity.LastSyncErrorMessage, entity.IsDeleted, workspace);
         }
-
-        public static Client Clean(IClient entity)
-            => new Client(entity, SyncStatus.InSync, null);
-
-        public static Client Dirty(IClient entity)
-            => new Client(entity, SyncStatus.SyncNeeded, null);
-
-        public static Client Unsyncable(IClient entity, string errorMessage)
-            => new Client(entity, SyncStatus.SyncFailed, errorMessage);
     }
 }

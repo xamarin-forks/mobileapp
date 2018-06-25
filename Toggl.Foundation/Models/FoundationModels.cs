@@ -252,6 +252,8 @@ namespace Toggl.Foundation.Models
 
     internal partial class WorkspaceFeatureCollection : IThreadSafeWorkspaceFeatureCollection
     {
+        public long Id => WorkspaceId;
+
         public long WorkspaceId { get; }
 
         public IEnumerable<IWorkspaceFeature> Features { get; }
