@@ -79,11 +79,11 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                     return false;
 
                 if (IsSuggestingProjects)
-                    return !Suggestions.Any(c => c.Any(s => s is ProjectSuggestion pS && pS.ProjectName == CurrentQuery))
+                    return Suggestions.None(c => c.Any(s => s is ProjectSuggestion pS && pS.ProjectName == CurrentQuery))
                            && CurrentQuery.LengthInBytes() <= MaxProjectNameLengthInBytes;
 
                 if (IsSuggestingTags)
-                    return !Suggestions.Any(c => c.Any(s => s is TagSuggestion tS && tS.Name == CurrentQuery))
+                    return Suggestions.None(c => c.Any(s => s is TagSuggestion tS && tS.Name == CurrentQuery))
                            && CurrentQuery.LengthInBytes() <= MaxTagNameLengthInBytes;
 
                 return false;
@@ -638,7 +638,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             var currentDuration = DurationParameter.WithStartAndDuration(StartTime, Duration);
 
             var selectedDuration = await navigationService
-                .Navigate<EditDurationViewModel, EditDurationParameters, DurationParameter>(new EditDurationParameters(currentDuration))
+                .Navigate<EditDurationViewModel, EditDurationParameters, DurationParameter>(new EditDurationParameters(currentDuration, isStartingNewEntry: true))
                 .ConfigureAwait(false);
 
             StartTime = selectedDuration.Start;

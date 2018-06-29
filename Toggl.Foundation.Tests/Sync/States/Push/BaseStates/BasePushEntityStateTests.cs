@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using FluentAssertions;
 using NSubstitute;
+using Toggl.Foundation.Analytics;
+using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.Sync;
 using Toggl.Foundation.Sync.States.Push;
 using Toggl.Foundation.Tests.Helpers;
@@ -106,8 +109,33 @@ namespace Toggl.Foundation.Tests.Sync.States.Push.BaseStates
 
         protected abstract BasePushEntityState<IThreadSafeTestModel, IDatabaseTestModel> CreateState();
 
+        protected abstract PushSyncOperation Operation { get; }
+
         protected abstract void PrepareApiCallFunctionToThrow(Exception e);
 
         protected abstract void PrepareDatabaseOperationToThrow(Exception e);
+
+        public static IEnumerable<object[]> EntityTypes
+            => new[]
+            {
+                new[] { typeof(IThreadSafeWorkspaceTestModel) },
+                new[] { typeof(IThreadSafeUserTestModel) },
+                new[] { typeof(IThreadSafeWorkspaceFeatureTestModel) },
+                new[] { typeof(IThreadSafePreferencesTestModel) },
+                new[] { typeof(IThreadSafeTagTestModel) },
+                new[] { typeof(IThreadSafeClientTestModel) },
+                new[] { typeof(IThreadSafeProjectTestModel) },
+                new[] { typeof(IThreadSafeTaskTestModel) },
+                new[] { typeof(IThreadSafeTimeEntryTestModel) },
+            };
+
+        protected static IAnalyticsEvent<string> TestSyncAnalyticsExtensionsSearchStrategy(Type entityType, IAnalyticsService analyticsService)
+        {
+            var testAnalyticsService = (ITestAnalyticsService)analyticsService;
+
+            return typeof(IThreadSafeTestModel).IsAssignableFrom(entityType)
+                ? testAnalyticsService.TestEvent
+                : SyncAnalyticsExtensions.DefaultSyncAnalyticsExtensionsSearchStrategy(entityType, analyticsService);
+        }
     }
 }

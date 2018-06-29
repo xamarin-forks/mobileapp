@@ -80,7 +80,14 @@ namespace Toggl.Foundation.Interactors
                     isDeleted: false,
                     lastSyncErrorMessage: null))
                 .SelectMany(dataSource.TimeEntries.Create)
+                .Do(notifyOfNewTimeEntryIfPossible)
                 .Do(_ => dataSource.SyncManager.PushSync())
-                .Track(analyticsService.TimeEntryStarted, origin);
+                .Track(StartTimeEntryEvent.With(origin), analyticsService);
+
+        private void notifyOfNewTimeEntryIfPossible(IThreadSafeTimeEntry timeEntry)
+        {
+            if (dataSource.TimeEntries is TimeEntriesDataSource timeEntriesDataSource)
+                timeEntriesDataSource.OnTimeEntryStarted(timeEntry, origin);
+        }
     }
 }

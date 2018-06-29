@@ -11,6 +11,11 @@ namespace Toggl.Foundation.DataSources
     public interface ITimeEntriesSource
         : IObservableDataSource<IThreadSafeTimeEntry, IDatabaseTimeEntry, TimeEntryDto>
     {
+        IObservable<IThreadSafeTimeEntry> TimeEntryStarted { get; }
+        IObservable<IThreadSafeTimeEntry> TimeEntryStopped { get; }
+        IObservable<IThreadSafeTimeEntry> TimeEntryContinued { get; }
+        IObservable<IThreadSafeTimeEntry> SuggestionStarted { get; }
+
         IObservable<IThreadSafeTimeEntry> CurrentlyRunningTimeEntry { get; }
 
         IObservable<bool> IsEmpty { get; }

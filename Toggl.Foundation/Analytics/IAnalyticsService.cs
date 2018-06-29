@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Toggl.Foundation.Sync;
 
 namespace Toggl.Foundation.Analytics
 {
@@ -31,6 +32,14 @@ namespace Toggl.Foundation.Analytics
 
         IAnalyticsEvent<TimeEntryStartOrigin> TimeEntryStarted { get; }
 
+        IAnalyticsEvent AppWasRated { get; }
+      
+        IAnalyticsEvent RatingViewWasShown { get; }
+      
+        IAnalyticsEvent<bool> UserFinishedRatingViewFirstStep { get; }
+      
+        IAnalyticsEvent<RatingViewSecondStepOutcome> UserFinishedRatingViewSecondStep { get; }
+
         IAnalyticsEvent DeleteTimeEntry { get; }
 
         IAnalyticsEvent<string> ApplicationShortcut { get; }
@@ -55,6 +64,28 @@ namespace Toggl.Foundation.Analytics
 
         IAnalyticsEvent<StartViewTapSource> StartViewTapped { get; }
 
+        IAnalyticsEvent<string> WorkspaceSyncError { get; }
+
+        IAnalyticsEvent<string> UserSyncError { get; }
+
+        IAnalyticsEvent<string> WorkspaceFeaturesSyncError { get; }
+
+        IAnalyticsEvent<string> PreferencesSyncError { get; }
+
+        IAnalyticsEvent<string> TagsSyncError { get; }
+
+        IAnalyticsEvent<string> ClientsSyncError { get; }
+
+        IAnalyticsEvent<string> ProjectsSyncError { get; }
+
+        IAnalyticsEvent<string> TasksSyncError { get; }
+
+        IAnalyticsEvent<string> TimeEntrySyncError { get; }
+
+        IAnalyticsEvent<PushSyncOperation, string> EntitySynced { get; }
+
+        IAnalyticsEvent<string, string> EntitySyncStatus { get; }
+
         IAnalyticsEvent NoDefaultWorkspace { get; }
 
         IAnalyticsEvent<string, string> HandledException { get; }
@@ -62,5 +93,7 @@ namespace Toggl.Foundation.Analytics
         void Track(string eventName, Dictionary<string, string> parameters = null);
 
         void Track(Exception exception);
+
+        void Track(ITrackableEvent trackableEvent);
     }
 }
