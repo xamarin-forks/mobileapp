@@ -20,7 +20,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
 {
     public sealed class CreateEntityStateTests : BasePushEntityStateTests
     {
-        private readonly ICreatingApiClient<ITestModel> api 
+        private readonly ICreatingApiClient<ITestModel> api
             = Substitute.For<ICreatingApiClient<ITestModel>>();
 
         private readonly IBaseDataSource<IThreadSafeTestModel, IDatabaseTestModel> dataSource;
@@ -134,7 +134,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         {
             var exception = new Exception("SomeRandomMessage");
             var entity = (IThreadSafeTestModel)Substitute.For(new[] { entityType }, new object[0]);
-            var state = new CreateEntityState<ITestModel, IThreadSafeTestModel>(api, dataSource, analyticsService, _ => null);
+            var state = new CreateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>(api, dataSource, analyticsService, _ => null);
             var expectedMessage = $"{Create}:{exception.Message}";
             var analyticsEvent = entity.GetType().ToSyncErrorAnalyticsEvent(analyticsService);
             PrepareApiCallFunctionToThrow(exception);
@@ -143,7 +143,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
 
             analyticsEvent.Received().Track(expectedMessage);
         }
-            
+
         protected override BasePushEntityState<IThreadSafeTestModel, IDatabaseTestModel> CreateState()
             => new CreateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>(api, dataSource, analyticsService, TestModel.From);
 

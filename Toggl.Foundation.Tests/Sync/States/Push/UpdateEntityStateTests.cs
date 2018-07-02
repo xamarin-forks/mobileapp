@@ -176,7 +176,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         [Fact, LogIfTooSlow]
         public void TracksEntitySyncStatusInCaseOfSuccess()
         {
-            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel>)CreateState();
+            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>)CreateState();
             var at = new DateTimeOffset(2017, 9, 1, 12, 34, 56, TimeSpan.Zero);
             var entity = new TestModel { Id = 1, At = at, SyncStatus = SyncStatus.SyncNeeded };
             var serverEntity = new TestModel { Id = 2, At = at, SyncStatus = SyncStatus.SyncNeeded };
@@ -201,7 +201,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         [Fact, LogIfTooSlow]
         public void TracksEntitySyncedInCaseOfSuccess()
         {
-            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel>)CreateState();
+            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>)CreateState();
             var at = new DateTimeOffset(2017, 9, 1, 12, 34, 56, TimeSpan.Zero);
             var entity = new TestModel { Id = 1, At = at, SyncStatus = SyncStatus.SyncNeeded };
             var serverEntity = new TestModel { Id = 2, At = at, SyncStatus = SyncStatus.SyncNeeded };
@@ -225,7 +225,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         public void TracksEntitySyncStatusInCaseOfFailure()
         {
             var exception = new Exception();
-            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel>)CreateState();
+            var state = (UpdateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>)CreateState();
             var at = new DateTimeOffset(2017, 9, 1, 12, 34, 56, TimeSpan.Zero);
             var entity = new TestModel { Id = 1, At = at, SyncStatus = SyncStatus.SyncNeeded };
             var serverEntity = new TestModel { Id = 2, At = at, SyncStatus = SyncStatus.SyncNeeded };
@@ -246,7 +246,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         {
             var exception = new Exception("SomeRandomMessage");
             var entity = (IThreadSafeTestModel)Substitute.For(new[] { entityType }, new object[0]);
-            var state = new UpdateEntityState<ITestModel, IThreadSafeTestModel>(api, dataSource, analyticsService, _ => null);
+            var state = new UpdateEntityState<ITestModel, IThreadSafeTestModel, IDatabaseTestModel>(api, dataSource, analyticsService, _ => null);
             var expectedMessage = $"{Update}:{exception.Message}";
             var analyticsEvent = entity.GetType().ToSyncErrorAnalyticsEvent(analyticsService);
             PrepareApiCallFunctionToThrow(exception);

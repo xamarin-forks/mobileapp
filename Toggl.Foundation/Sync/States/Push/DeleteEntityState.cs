@@ -27,7 +27,7 @@ namespace Toggl.Foundation.Sync.States.Push
 
         public DeleteEntityState(
             IDeletingApiClient<TModel> api,
-            IDataSource<TThreadsafeModel, TDatabaseModel, TDto> dataSource)
+            IDataSource<TThreadsafeModel, TDatabaseModel, TDto> dataSource,
             IAnalyticsService analyticsService)
             : base(dataSource, analyticsService)
         {

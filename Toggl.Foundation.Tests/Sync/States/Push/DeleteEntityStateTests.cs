@@ -18,7 +18,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
 {
     public sealed class DeleteEntityStateTests : BasePushEntityStateTests
     {
-        private readonly ITestAnalyticsService analyticsService 
+        private readonly ITestAnalyticsService analyticsService
             = Substitute.For<ITestAnalyticsService>();
 
         private readonly IDeletingApiClient<ITestModel> api
@@ -144,7 +144,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
         {
             var exception = new Exception("SomeRandomMessage");
             var entity = (IThreadSafeTestModel)Substitute.For(new[] { entityType }, new object[0]);
-            var state = new DeleteEntityState<ITestModel, IDatabaseTestModel, IThreadSafeTestModel>(api, dataSource, analyticsService);
+            var state = new DeleteEntityState<ITestModel, IDatabaseTestModel, IThreadSafeTestModel, IDatabaseTestModel>(api, dataSource, analyticsService);
             var expectedMessage = $"{Delete}:{exception.Message}";
             var analyticsEvent = entity.GetType().ToSyncErrorAnalyticsEvent(analyticsService);
             PrepareApiCallFunctionToThrow(exception);
