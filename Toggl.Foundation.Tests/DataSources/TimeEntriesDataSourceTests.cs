@@ -328,7 +328,8 @@ namespace Toggl.Foundation.Tests.DataSources
                     StartTime = Now,
                     Description = "Some description",
                     IsBillable = true,
-                    ProjectId = ProjectId
+                    ProjectId = ProjectId,
+                    TagIds = Array.Empty<long>()
                 };
                 prepareBatchUpdate();
                 var timeEntry = Models.TimeEntry.From(await InteractorFactory.CreateTimeEntry(prototype).Execute());

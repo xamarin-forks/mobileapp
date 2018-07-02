@@ -48,7 +48,8 @@ namespace Toggl.Foundation.Tests.Interactors
                     Description = description,
                     IsBillable = billable,
                     ProjectId = projectId,
-                    Duration = duration
+                    Duration = duration,
+                    TagIds = Array.Empty<long>()
                 };
 
             protected BaseCreateTimeEntryInteractorTest()
