@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Toggl.Multivac;
 using Toggl.Multivac.Models;
 
 namespace Toggl.PrimeRadiant.DTOs
