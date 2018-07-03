@@ -102,7 +102,7 @@ namespace Toggl.Foundation.DataSources
         public IObservable<IThreadSafeTimeEntry> Update(EditTimeEntryDto dto)
             => GetById(dto.Id)
                 .Select(timeEntry =>
-                    TimeEntryDto.From<IThreadSafeTimeEntry>(
+                    TimeEntryDto.From(
                         timeEntry,
                         description: dto.Description,
                         duration: dto.StopTime.HasValue ? (long?)(dto.StopTime.Value - dto.StartTime).TotalSeconds : null,
@@ -112,9 +112,6 @@ namespace Toggl.Foundation.DataSources
                         billable: dto.Billable,
                         projectId: dto.ProjectId,
                         workspaceId: dto.WorkspaceId,
-                        userId: timeEntry.UserId,
-                        isDeleted: timeEntry.IsDeleted,
-                        serverDeletedAt: timeEntry.ServerDeletedAt,
                         at: timeService.CurrentDateTime,
                         syncStatus: SyncStatus.SyncNeeded))
                 .SelectMany(Update);

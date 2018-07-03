@@ -47,7 +47,7 @@ namespace Toggl.Foundation.Interactors
                 .Track(StartTimeEntryEvent.With(TimeEntryStartOrigin.ContinueMostRecent), analyticsService);
 
         private TimeEntryDto newTimeEntry(IThreadSafeTimeEntry timeEntry)
-            => TimeEntryDto.From<IThreadSafeTimeEntry>(
+            => TimeEntryDto.From(
                 timeEntry,
                 id: idProvider.GetNextIdentifier(),
                 start: timeService.CurrentDateTime,

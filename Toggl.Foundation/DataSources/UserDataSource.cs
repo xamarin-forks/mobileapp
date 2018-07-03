@@ -35,7 +35,7 @@ namespace Toggl.Foundation.DataSources
                 .SelectMany(Update);
 
         public UserDto updatedUser(IThreadSafeUser existing, EditUserDTO dto)
-            => UserDto.From<IThreadSafeUser>(
+            => UserDto.From(
                 existing,
                 beginningOfWeek: dto.BeginningOfWeek,
                 syncStatus: SyncStatus.SyncNeeded,

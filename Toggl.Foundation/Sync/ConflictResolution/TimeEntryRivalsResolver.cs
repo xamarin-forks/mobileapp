@@ -46,7 +46,7 @@ namespace Toggl.Foundation.Sync.ConflictResolution
                 .Min();
             var duration = (long)(stopTime - toBeStopped.Start).TotalSeconds; // truncates towards zero (floor)
 
-            return TimeEntryDto.From<IDatabaseTimeEntry>(
+            return TimeEntryDto.From(
                 toBeStopped,
                 duration: duration,
                 syncStatus: SyncStatus.SyncNeeded,
