@@ -63,7 +63,7 @@ namespace Toggl.PrimeRadiant.Realm
         private ISinceParameterRepository createSinceParameterRepository()
         {
             var sinceParametersRealmAdapter =
-                new RealmAdapter<RealmSinceParameter, IDatabaseSinceParameter, IDatabaseSinceParameter>(
+                new RealmAdapter<RealmSinceParameter, IDatabaseSinceParameter, SinceParameterDto>(
                     getRealmInstance,
                     (parameter, realm) => new RealmSinceParameter(parameter),
                     id => entity => entity.Id == id,

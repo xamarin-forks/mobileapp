@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 using Toggl.PrimeRadiant.Realm;
 using Toggl.PrimeRadiant.Tests.Realm;
@@ -16,13 +17,13 @@ namespace Toggl.PrimeRadiant.Tests
 
         public abstract class BaseSinceParametersStorageTest
         {
-            protected GenericTestAdapter<IDatabaseSinceParameter> TestAdapter { get; }
+            protected GenericTestAdapter<IDatabaseSinceParameter, SinceParameterDto> TestAdapter { get; }
 
             private readonly ISinceParameterRepository repository;
 
             protected BaseSinceParametersStorageTest()
             {
-                TestAdapter = new GenericTestAdapter<IDatabaseSinceParameter>();
+                TestAdapter = new GenericTestAdapter<IDatabaseSinceParameter, SinceParameterDto>();
                 repository = new SinceParameterStorage(TestAdapter);
             }
 

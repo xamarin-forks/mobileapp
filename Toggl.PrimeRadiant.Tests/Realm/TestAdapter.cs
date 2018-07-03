@@ -6,8 +6,21 @@ using Toggl.PrimeRadiant.Realm;
 
 namespace Toggl.PrimeRadiant.Tests.Realm
 {
-    public class GenericTestAdapter<T> : IRealmAdapter<T, T>
+    public class GenericTestAdapter<T> : GenericTestAdapter<T, T>
         where T : class, IIdentifiable
+    {
+        public GenericTestAdapter() { }
+
+        public GenericTestAdapter(Func<long, Predicate<T>> matchById)
+            : base(matchById)
+        {
+        }
+    }
+
+    public class GenericTestAdapter<T, TDto> : IRealmAdapter<T, TDto>
+        where T : class, IIdentifiable
+        where TDto : T
+
     {
         private readonly List<T> list = new List<T>();
         private readonly Func<long, Predicate<T>> matchById;
@@ -25,7 +38,7 @@ namespace Toggl.PrimeRadiant.Tests.Realm
         public T Get(long id)
             => list.Single(entity => matchById(id)(entity));
 
-        public T Create(T entity)
+        public T Create(TDto entity)
         {
             if (list.Find(matchById(entity.Id)) != null)
                 throw new InvalidOperationException();
@@ -35,7 +48,7 @@ namespace Toggl.PrimeRadiant.Tests.Realm
             return entity;
         }
 
-        public T Update(long id, T entity)
+        public T Update(long id, TDto entity)
         {
             var index = list.FindIndex(matchById(id));
 
@@ -60,9 +73,9 @@ namespace Toggl.PrimeRadiant.Tests.Realm
         }
 
         public IEnumerable<IConflictResolutionResult<T>> BatchUpdate(
-            IEnumerable<(long Id, T Entity)> entities,
-            Func<T, T, ConflictResolutionMode> conflictResolution,
-            IRivalsResolver<T, T> resolver)
+            IEnumerable<(long Id, TDto Entity)> entities,
+            Func<T, TDto, ConflictResolutionMode> conflictResolution,
+            IRivalsResolver<T, TDto> resolver)
         {
             throw new NotImplementedException();
         }
@@ -71,7 +84,6 @@ namespace Toggl.PrimeRadiant.Tests.Realm
     public sealed class TestAdapter : GenericTestAdapter<TestModel>
     {
         public TestAdapter()
-            : base()
         {
         }
 
