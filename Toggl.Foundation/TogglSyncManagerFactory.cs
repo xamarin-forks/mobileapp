@@ -5,7 +5,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Toggl.Foundation.Analytics;
 using Toggl.Foundation.DataSources;
-using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Extensions;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.Sync;
@@ -50,7 +49,7 @@ namespace Toggl.Foundation
         }
 
         public static void ConfigureTransitions(
-            TransitionHandlerProvider transitions,
+            ITransitionConfigurator transitions,
             ITogglDatabase database,
             ITogglApi api,
             ITogglDataSource dataSource,
@@ -66,7 +65,7 @@ namespace Toggl.Foundation
         }
 
         private static void configurePullTransitions(
-            TransitionHandlerProvider transitions,
+            ITransitionConfigurator transitions,
             ITogglDatabase database,
             ITogglApi api,
             ITogglDataSource dataSource,
@@ -182,7 +181,7 @@ namespace Toggl.Foundation
         }
 
         private static void configurePushTransitions(
-            TransitionHandlerProvider transitions,
+            ITransitionConfigurator transitions,
             ITogglApi api,
             ITogglDataSource dataSource,
             IAnalyticsService analyticsService,
@@ -201,7 +200,7 @@ namespace Toggl.Foundation
         }
 
         private static IStateResult configurePush<TModel, TDatabase, TThreadsafe, TDto>(
-            TransitionHandlerProvider transitions,
+            ITransitionConfigurator transitions,
             IStateResult entryPoint,
             IDataSource<TThreadsafe, TDatabase, TDto> dataSource,
             IAnalyticsService analyticsService,
@@ -269,7 +268,7 @@ namespace Toggl.Foundation
         }
 
         private static IStateResult configureCreateOnlyPush<TModel, TDatabase, TThreadsafe, TDto>(
-            TransitionHandlerProvider transitions,
+            ITransitionConfigurator transitions,
             IStateResult entryPoint,
             IDataSource<TThreadsafe, TDatabase, TDto> dataSource,
             IAnalyticsService analyticsService,
@@ -321,7 +320,7 @@ namespace Toggl.Foundation
         }
 
         private static IStateResult configurePushSingleton<TModel, TThreadsafe, TDto>(
-            TransitionHandlerProvider transitions,
+            ITransitionConfigurator transitions,
             IStateResult entryPoint,
             ISingletonDataSource<TThreadsafe, TDto> dataSource,
             IAnalyticsService analyticsService,
