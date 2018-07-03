@@ -6,7 +6,7 @@ namespace Toggl.PrimeRadiant
 {
     public struct WorkspaceDto : IWorkspace, IDatabaseSyncable
     {
-        public WorkspaceDto(
+        private WorkspaceDto(
             long id,
             DateTimeOffset? serverDeletedAt,
             DateTimeOffset at,
@@ -46,7 +46,11 @@ namespace Toggl.PrimeRadiant
             LastSyncErrorMessage = lastSyncErrorMessage;
         }
 
-        public static WorkspaceDto From(
+        public static WorkspaceDto Clean(IWorkspace entity) => createFrom(entity, SyncStatus.InSync);
+
+        public static WorkspaceDto Unsyncable(IWorkspace entity, string errorMessage) => createFrom(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
+
+        private static WorkspaceDto createFrom(
             IWorkspace entity,
             SyncStatus syncStatus,
             bool isDeleted = false,
@@ -85,10 +89,6 @@ namespace Toggl.PrimeRadiant
             syncStatus: syncStatus,
             isDeleted: isDeleted,
             lastSyncErrorMessage: lastSyncErrorMessage);
-
-        public static WorkspaceDto Clean(IWorkspace entity) => From(entity, SyncStatus.InSync);
-
-        public static WorkspaceDto Unsyncable(IWorkspace entity, string errorMessage) => From(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
 
         public long Id { get; }
         public DateTimeOffset? ServerDeletedAt { get; }

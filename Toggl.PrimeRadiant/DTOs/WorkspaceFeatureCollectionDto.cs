@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Toggl.Multivac;
 using Toggl.Multivac.Models;
 
@@ -14,13 +15,10 @@ namespace Toggl.PrimeRadiant
             Features = features;
         }
 
-        public static WorkspaceFeatureCollectionDto From(
-            IWorkspaceFeatureCollection entity,
-            New<long> workspaceId = default(New<long>),
-            New<IEnumerable<IWorkspaceFeature>> features = default(New<IEnumerable<IWorkspaceFeature>>))
-        => new WorkspaceFeatureCollectionDto(
-            workspaceId: workspaceId.ValueOr(entity.WorkspaceId),
-            features: features.ValueOr(entity.Features));
+        public static WorkspaceFeatureCollectionDto Clean(IWorkspaceFeatureCollection entity)
+            => new WorkspaceFeatureCollectionDto(
+                workspaceId: entity.WorkspaceId,
+                features: entity.Features);
 
         public long Id => WorkspaceId;
         public long WorkspaceId { get; }

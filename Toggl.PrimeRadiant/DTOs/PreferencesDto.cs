@@ -5,7 +5,7 @@ namespace Toggl.PrimeRadiant
 {
     public struct PreferencesDto : IPreferences, IDatabaseSyncable, IIdentifiable
     {
-        public PreferencesDto(
+        private PreferencesDto(
             TimeFormat timeOfDayFormat,
             DateFormat dateFormat,
             DurationFormat durationFormat,
@@ -22,24 +22,6 @@ namespace Toggl.PrimeRadiant
             IsDeleted = isDeleted;
             LastSyncErrorMessage = lastSyncErrorMessage;
         }
-
-        public static PreferencesDto From(
-            IPreferences entity,
-            SyncStatus syncStatus,
-            bool isDeleted = false,
-            string lastSyncErrorMessage = null,
-            New<TimeFormat> timeOfDayFormat = default(New<TimeFormat>),
-            New<DateFormat> dateFormat = default(New<DateFormat>),
-            New<DurationFormat> durationFormat = default(New<DurationFormat>),
-            New<bool> collapseTimeEntries = default(New<bool>))
-        => new PreferencesDto(
-            timeOfDayFormat: timeOfDayFormat.ValueOr(entity.TimeOfDayFormat),
-            dateFormat: dateFormat.ValueOr(entity.DateFormat),
-            durationFormat: durationFormat.ValueOr(entity.DurationFormat),
-            collapseTimeEntries: collapseTimeEntries.ValueOr(entity.CollapseTimeEntries),
-            syncStatus: syncStatus,
-            isDeleted: isDeleted,
-            lastSyncErrorMessage: lastSyncErrorMessage);
 
         public static PreferencesDto From<T>(
             T entity,
@@ -60,9 +42,25 @@ namespace Toggl.PrimeRadiant
             isDeleted: isDeleted.ValueOr(entity.IsDeleted),
             lastSyncErrorMessage: lastSyncErrorMessage.ValueOr(entity.LastSyncErrorMessage));
 
-        public static PreferencesDto Clean(IPreferences entity) => From(entity, SyncStatus.InSync);
+        public static PreferencesDto Clean(IPreferences entity)
+            => createFrom(entity, SyncStatus.InSync);
 
-        public static PreferencesDto Unsyncable(IPreferences entity, string errorMessage) => From(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
+        public static PreferencesDto Unsyncable(IPreferences entity, string errorMessage)
+            => createFrom(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
+
+        private static PreferencesDto createFrom(
+            IPreferences entity,
+            SyncStatus syncStatus,
+            bool isDeleted = false,
+            string lastSyncErrorMessage = null)
+            => new PreferencesDto(
+                timeOfDayFormat: entity.TimeOfDayFormat,
+                dateFormat: entity.DateFormat,
+                durationFormat: entity.DurationFormat,
+                collapseTimeEntries: entity.CollapseTimeEntries,
+                syncStatus: syncStatus,
+                isDeleted: isDeleted,
+                lastSyncErrorMessage: lastSyncErrorMessage);
 
         public long Id => 0;
         public TimeFormat TimeOfDayFormat { get; }

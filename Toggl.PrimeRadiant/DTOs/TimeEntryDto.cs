@@ -41,40 +41,6 @@ namespace Toggl.PrimeRadiant
             LastSyncErrorMessage = lastSyncErrorMessage;
         }
 
-        public static TimeEntryDto From(
-            ITimeEntry entity,
-            SyncStatus syncStatus,
-            bool isDeleted = false,
-            string lastSyncErrorMessage = null,
-            New<long> id = default(New<long>),
-            New<DateTimeOffset?> serverDeletedAt = default(New<DateTimeOffset?>),
-            New<DateTimeOffset> at = default(New<DateTimeOffset>),
-            New<long> workspaceId = default(New<long>),
-            New<long?> projectId = default(New<long?>),
-            New<long?> taskId = default(New<long?>),
-            New<bool> billable = default(New<bool>),
-            New<DateTimeOffset> start = default(New<DateTimeOffset>),
-            New<long?> duration = default(New<long?>),
-            New<string> description = default(New<string>),
-            New<IEnumerable<long>> tagIds = default(New<IEnumerable<long>>),
-            New<long> userId = default(New<long>))
-        => new TimeEntryDto(
-            id: id.ValueOr(entity.Id),
-            serverDeletedAt: serverDeletedAt.ValueOr(entity.ServerDeletedAt),
-            at: at.ValueOr(entity.At),
-            workspaceId: workspaceId.ValueOr(entity.WorkspaceId),
-            projectId: projectId.ValueOr(entity.ProjectId),
-            taskId: taskId.ValueOr(entity.TaskId),
-            billable: billable.ValueOr(entity.Billable),
-            start: start.ValueOr(entity.Start),
-            duration: duration.ValueOr(entity.Duration),
-            description: description.ValueOr(entity.Description),
-            tagIds: tagIds.ValueOr(entity.TagIds),
-            userId: userId.ValueOr(entity.UserId),
-            syncStatus: syncStatus,
-            isDeleted: isDeleted,
-            lastSyncErrorMessage: lastSyncErrorMessage);
-
         public static TimeEntryDto From<T>(
             T entity,
             New<long> id = default(New<long>),
@@ -110,14 +76,35 @@ namespace Toggl.PrimeRadiant
             isDeleted: isDeleted.ValueOr(entity.IsDeleted),
             lastSyncErrorMessage: lastSyncErrorMessage.ValueOr(entity.LastSyncErrorMessage));
 
-        public static TimeEntryDto Clean(ITimeEntry entity) => From(entity, SyncStatus.InSync);
+        public static TimeEntryDto Clean(ITimeEntry entity) => createFrom(entity, SyncStatus.InSync);
 
-        public static TimeEntryDto Dirty(ITimeEntry entity) => From(entity, SyncStatus.SyncNeeded);
+        public static TimeEntryDto Dirty(ITimeEntry entity) => createFrom(entity, SyncStatus.SyncNeeded);
 
-        public static TimeEntryDto DirtyDeleted(ITimeEntry entity) => From(entity, SyncStatus.SyncNeeded, isDeleted: true);
+        public static TimeEntryDto DirtyDeleted(ITimeEntry entity) => createFrom(entity, SyncStatus.SyncNeeded, isDeleted: true);
 
-        public static TimeEntryDto Unsyncable(ITimeEntry entity, string errorMessage) => From(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
+        public static TimeEntryDto Unsyncable(ITimeEntry entity, string errorMessage) => createFrom(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
 
+        private static TimeEntryDto createFrom(
+            ITimeEntry entity,
+            SyncStatus syncStatus,
+            bool isDeleted = false,
+            string lastSyncErrorMessage = null)
+        => new TimeEntryDto(
+            id: entity.Id,
+            serverDeletedAt: entity.ServerDeletedAt,
+            at: entity.At,
+            workspaceId: entity.WorkspaceId,
+            projectId: entity.ProjectId,
+            taskId: entity.TaskId,
+            billable: entity.Billable,
+            start: entity.Start,
+            duration: entity.Duration,
+            description: entity.Description,
+            tagIds: entity.TagIds,
+            userId: entity.UserId,
+            syncStatus: syncStatus,
+            isDeleted: isDeleted,
+            lastSyncErrorMessage: lastSyncErrorMessage);
         public long Id { get; }
         public DateTimeOffset? ServerDeletedAt { get; }
         public DateTimeOffset At { get; }

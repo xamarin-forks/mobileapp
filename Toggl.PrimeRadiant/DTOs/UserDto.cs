@@ -6,7 +6,7 @@ namespace Toggl.PrimeRadiant
 {
     public struct UserDto : IUser, IDatabaseSyncable
     {
-        public UserDto(
+        private UserDto(
             long id,
             string apiToken,
             DateTimeOffset at,
@@ -33,34 +33,6 @@ namespace Toggl.PrimeRadiant
             IsDeleted = isDeleted;
             LastSyncErrorMessage = lastSyncErrorMessage;
         }
-
-        public static UserDto From(
-            IUser entity,
-            SyncStatus syncStatus,
-            bool isDeleted = false,
-            string lastSyncErrorMessage = null,
-            New<long> id = default(New<long>),
-            New<string> apiToken = default(New<string>),
-            New<DateTimeOffset> at = default(New<DateTimeOffset>),
-            New<long?> defaultWorkspaceId = default(New<long?>),
-            New<Email> email = default(New<Email>),
-            New<string> fullname = default(New<string>),
-            New<BeginningOfWeek> beginningOfWeek = default(New<BeginningOfWeek>),
-            New<string> language = default(New<string>),
-            New<string> imageUrl = default(New<string>))
-        => new UserDto(
-            id: id.ValueOr(entity.Id),
-            apiToken: apiToken.ValueOr(entity.ApiToken),
-            at: at.ValueOr(entity.At),
-            defaultWorkspaceId: defaultWorkspaceId.ValueOr(entity.DefaultWorkspaceId),
-            email: email.ValueOr(entity.Email),
-            fullname: fullname.ValueOr(entity.Fullname),
-            beginningOfWeek: beginningOfWeek.ValueOr(entity.BeginningOfWeek),
-            language: language.ValueOr(entity.Language),
-            imageUrl: imageUrl.ValueOr(entity.ImageUrl),
-            syncStatus: syncStatus,
-            isDeleted: isDeleted,
-            lastSyncErrorMessage: lastSyncErrorMessage);
 
         public static UserDto From<T>(
             T entity,
@@ -91,9 +63,30 @@ namespace Toggl.PrimeRadiant
             isDeleted: isDeleted.ValueOr(entity.IsDeleted),
             lastSyncErrorMessage: lastSyncErrorMessage.ValueOr(entity.LastSyncErrorMessage));
 
-        public static UserDto Clean(IUser entity) => From(entity, SyncStatus.InSync);
+        public static UserDto Clean(IUser entity)
+            => createFrom(entity, SyncStatus.InSync);
 
-        public static UserDto Unsyncable(IUser entity, string errorMessage) => From(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
+        public static UserDto Unsyncable(IUser entity, string errorMessage)
+            => createFrom(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
+
+        private static UserDto createFrom(
+            IUser entity,
+            SyncStatus syncStatus,
+            bool isDeleted = false,
+            string lastSyncErrorMessage = null)
+            => new UserDto(
+                id: entity.Id,
+                apiToken: entity.ApiToken,
+                at: entity.At,
+                defaultWorkspaceId: entity.DefaultWorkspaceId,
+                email: entity.Email,
+                fullname: entity.Fullname,
+                beginningOfWeek: entity.BeginningOfWeek,
+                language: entity.Language,
+                imageUrl: entity.ImageUrl,
+                syncStatus: syncStatus,
+                isDeleted: isDeleted,
+                lastSyncErrorMessage: lastSyncErrorMessage);
 
         public long Id { get; }
         public string ApiToken { get; }

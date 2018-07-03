@@ -91,7 +91,7 @@ namespace Toggl.Foundation
 
             var persistWorkspaceFeatures =
                 new PersistListState<IWorkspaceFeatureCollection, IDatabaseWorkspaceFeatureCollection, IThreadSafeWorkspaceFeatureCollection, WorkspaceFeatureCollectionDto>(
-                        dataSource.WorkspaceFeatures, collection => WorkspaceFeatureCollectionDto.From(collection))
+                        dataSource.WorkspaceFeatures, WorkspaceFeatureCollectionDto.Clean)
                     .CatchApiExceptions();
 
             var persistUser =
