@@ -31,11 +31,7 @@ namespace Toggl.Foundation.DataSources
                 id: id,
                 workspaceId: workspaceId,
                 name: name,
-                serverDeletedAt: null,
-                at: timeService.CurrentDateTime,
-                syncStatus: SyncStatus.SyncNeeded,
-                isDeleted: false,
-                lastSyncErrorMessage: null);
+                at: timeService.CurrentDateTime);
 
             return Create(dto);
         }

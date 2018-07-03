@@ -32,11 +32,7 @@ namespace Toggl.Foundation.DataSources
                 id: idProvider.GetNextIdentifier(),
                 workspaceId: workspaceId,
                 name: name,
-                at: timeService.CurrentDateTime,
-                syncStatus: SyncStatus.SyncNeeded,
-                serverDeletedAt: null,
-                isDeleted: false,
-                lastSyncErrorMessage: null);
+                at: timeService.CurrentDateTime);
             return Create(client);
         }
 

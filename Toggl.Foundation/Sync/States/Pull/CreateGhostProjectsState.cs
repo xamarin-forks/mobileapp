@@ -62,18 +62,9 @@ namespace Toggl.Foundation.Sync.States.Pull
                 color: Color.NoProject,
                 at: default(DateTimeOffset),
                 syncStatus: SyncStatus.RefetchingNeeded,
-                serverDeletedAt: null,
                 clientId: null,
                 isPrivate: true,
-                billable: false,
-                template: null,
-                autoEstimates: null,
-                estimatedHours: null,
-                rate: null,
-                currency: null,
-                actualHours: null,
-                isDeleted: false,
-                lastSyncErrorMessage: null);
+                billable: false);
 
             return dataSource.Create(ghost);
         }

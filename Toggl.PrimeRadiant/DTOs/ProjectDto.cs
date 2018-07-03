@@ -8,7 +8,6 @@ namespace Toggl.PrimeRadiant
     {
         public ProjectDto(
             long id,
-            DateTimeOffset? serverDeletedAt,
             DateTimeOffset at,
             long workspaceId,
             long? clientId,
@@ -16,16 +15,17 @@ namespace Toggl.PrimeRadiant
             bool isPrivate,
             bool active,
             string color,
-            bool? billable,
-            bool? template,
-            bool? autoEstimates,
-            long? estimatedHours,
-            double? rate,
-            string currency,
-            int? actualHours,
-            SyncStatus syncStatus,
-            bool isDeleted,
-            string lastSyncErrorMessage)
+            bool? billable = null,
+            bool? template = null,
+            bool? autoEstimates = null,
+            long? estimatedHours = null,
+            double? rate = null,
+            string currency = null,
+            int? actualHours = null,
+            DateTimeOffset? serverDeletedAt = null,
+            SyncStatus syncStatus = SyncStatus.SyncNeeded,
+            bool isDeleted = false,
+            string lastSyncErrorMessage = null)
         {
             Id = id;
             ServerDeletedAt = serverDeletedAt;

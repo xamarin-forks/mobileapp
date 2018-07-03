@@ -9,7 +9,6 @@ namespace Toggl.PrimeRadiant
     {
         public TimeEntryDto(
             long id,
-            DateTimeOffset? serverDeletedAt,
             DateTimeOffset at,
             long workspaceId,
             long? projectId,
@@ -20,9 +19,10 @@ namespace Toggl.PrimeRadiant
             string description,
             IEnumerable<long> tagIds,
             long userId,
-            SyncStatus syncStatus,
-            bool isDeleted,
-            string lastSyncErrorMessage)
+            DateTimeOffset? serverDeletedAt = null,
+            SyncStatus syncStatus = SyncStatus.SyncNeeded,
+            bool isDeleted = false,
+            string lastSyncErrorMessage = null)
         {
             Id = id;
             ServerDeletedAt = serverDeletedAt;

@@ -8,13 +8,13 @@ namespace Toggl.PrimeRadiant
     {
         public ClientDto(
             long id,
-            DateTimeOffset? serverDeletedAt,
             DateTimeOffset at,
             long workspaceId,
             string name,
-            SyncStatus syncStatus,
-            bool isDeleted,
-            string lastSyncErrorMessage)
+            DateTimeOffset? serverDeletedAt = null,
+            SyncStatus syncStatus = SyncStatus.SyncNeeded,
+            bool isDeleted = false,
+            string lastSyncErrorMessage = null)
         {
             Id = id;
             ServerDeletedAt = serverDeletedAt;

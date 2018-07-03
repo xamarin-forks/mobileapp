@@ -35,18 +35,8 @@ namespace Toggl.Foundation.DataSources
                 billable: dto.Billable,
                 workspaceId: dto.WorkspaceId,
                 at: timeService.CurrentDateTime,
-                syncStatus: SyncStatus.SyncNeeded,
-                isDeleted: false,
-                lastSyncErrorMessage: null,
-                serverDeletedAt: null,
                 isPrivate: false,
-                active: true,
-                template: null,
-                autoEstimates: null,
-                estimatedHours: null,
-                rate: null,
-                currency: null,
-                actualHours: null);
+                active: true);
 
             return Create(project);
         }

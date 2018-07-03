@@ -65,7 +65,6 @@ namespace Toggl.Foundation.Interactors
                 .FirstAsync()
                 .Select(user => new TimeEntryDto(
                     id: idProvider.GetNextIdentifier(),
-                    serverDeletedAt: null,
                     at: timeService.CurrentDateTime,
                     workspaceId: prototype.WorkspaceId,
                     projectId: prototype.ProjectId,
@@ -75,10 +74,7 @@ namespace Toggl.Foundation.Interactors
                     duration: (long?)duration?.TotalSeconds,
                     description: prototype.Description,
                     tagIds: prototype.TagIds,
-                    userId: user.Id,
-                    syncStatus: SyncStatus.SyncNeeded,
-                    isDeleted: false,
-                    lastSyncErrorMessage: null))
+                    userId: user.Id))
                 .SelectMany(dataSource.TimeEntries.Create)
                 .Do(notifyOfNewTimeEntryIfPossible)
                 .Do(_ => dataSource.SyncManager.PushSync())
