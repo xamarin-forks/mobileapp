@@ -363,20 +363,9 @@ namespace Toggl.PrimeRadiant.Realm
         }
     }
 
-    internal partial class RealmWorkspaceFeature : IUpdatesFrom<WorkspaceFeatureDto>
+    internal partial class RealmWorkspaceFeature
     {
         public RealmWorkspaceFeature() { }
-
-        public RealmWorkspaceFeature(WorkspaceFeatureDto entity, Realms.Realm realm)
-        {
-            SetPropertiesFrom(entity, realm);
-        }
-
-        public void SetPropertiesFrom(WorkspaceFeatureDto entity, Realms.Realm realm)
-        {
-            FeatureId = entity.FeatureId;
-            Enabled = entity.Enabled;
-        }
     }
 
     internal partial class RealmWorkspaceFeatureCollection : IUpdatesFrom<WorkspaceFeatureCollectionDto>

@@ -47,32 +47,7 @@ namespace Toggl.PrimeRadiant
             isDeleted: isDeleted,
             lastSyncErrorMessage: lastSyncErrorMessage);
 
-        public static ClientDto From<T>(
-            T entity,
-            New<long> id = default(New<long>),
-            New<DateTimeOffset?> serverDeletedAt = default(New<DateTimeOffset?>),
-            New<DateTimeOffset> at = default(New<DateTimeOffset>),
-            New<long> workspaceId = default(New<long>),
-            New<string> name = default(New<string>),
-            New<SyncStatus> syncStatus = default(New<SyncStatus>),
-            New<bool> isDeleted = default(New<bool>),
-            New<string> lastSyncErrorMessage = default(New<string>))
-            where T : IClient, IDatabaseSyncable
-        => new ClientDto(
-            id: id.ValueOr(entity.Id),
-            serverDeletedAt: serverDeletedAt.ValueOr(entity.ServerDeletedAt),
-            at: at.ValueOr(entity.At),
-            workspaceId: workspaceId.ValueOr(entity.WorkspaceId),
-            name: name.ValueOr(entity.Name),
-            syncStatus: syncStatus.ValueOr(entity.SyncStatus),
-            isDeleted: isDeleted.ValueOr(entity.IsDeleted),
-            lastSyncErrorMessage: lastSyncErrorMessage.ValueOr(entity.LastSyncErrorMessage));
-
         public static ClientDto Clean(IClient entity) => From(entity, SyncStatus.InSync);
-
-        public static ClientDto Dirty(IClient entity) => From(entity, SyncStatus.SyncNeeded);
-
-        public static ClientDto DirtyDeleted(IClient entity) => From(entity, SyncStatus.SyncNeeded, isDeleted: true);
 
         public static ClientDto Unsyncable(IClient entity, string errorMessage) => From(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
 
@@ -144,10 +119,6 @@ namespace Toggl.PrimeRadiant
             lastSyncErrorMessage: lastSyncErrorMessage.ValueOr(entity.LastSyncErrorMessage));
 
         public static PreferencesDto Clean(IPreferences entity) => From(entity, SyncStatus.InSync);
-
-        public static PreferencesDto Dirty(IPreferences entity) => From(entity, SyncStatus.SyncNeeded);
-
-        public static PreferencesDto DirtyDeleted(IPreferences entity) => From(entity, SyncStatus.SyncNeeded, isDeleted: true);
 
         public static PreferencesDto Unsyncable(IPreferences entity, string errorMessage) => From(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
 
@@ -292,10 +263,6 @@ namespace Toggl.PrimeRadiant
 
         public static ProjectDto Clean(IProject entity) => From(entity, SyncStatus.InSync);
 
-        public static ProjectDto Dirty(IProject entity) => From(entity, SyncStatus.SyncNeeded);
-
-        public static ProjectDto DirtyDeleted(IProject entity) => From(entity, SyncStatus.SyncNeeded, isDeleted: true);
-
         public static ProjectDto Unsyncable(IProject entity, string errorMessage) => From(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
 
         public long Id { get; }
@@ -361,32 +328,7 @@ namespace Toggl.PrimeRadiant
             isDeleted: isDeleted,
             lastSyncErrorMessage: lastSyncErrorMessage);
 
-        public static TagDto From<T>(
-            T entity,
-            New<long> id = default(New<long>),
-            New<DateTimeOffset?> serverDeletedAt = default(New<DateTimeOffset?>),
-            New<DateTimeOffset> at = default(New<DateTimeOffset>),
-            New<long> workspaceId = default(New<long>),
-            New<string> name = default(New<string>),
-            New<SyncStatus> syncStatus = default(New<SyncStatus>),
-            New<bool> isDeleted = default(New<bool>),
-            New<string> lastSyncErrorMessage = default(New<string>))
-            where T : ITag, IDatabaseSyncable
-        => new TagDto(
-            id: id.ValueOr(entity.Id),
-            serverDeletedAt: serverDeletedAt.ValueOr(entity.ServerDeletedAt),
-            at: at.ValueOr(entity.At),
-            workspaceId: workspaceId.ValueOr(entity.WorkspaceId),
-            name: name.ValueOr(entity.Name),
-            syncStatus: syncStatus.ValueOr(entity.SyncStatus),
-            isDeleted: isDeleted.ValueOr(entity.IsDeleted),
-            lastSyncErrorMessage: lastSyncErrorMessage.ValueOr(entity.LastSyncErrorMessage));
-
         public static TagDto Clean(ITag entity) => From(entity, SyncStatus.InSync);
-
-        public static TagDto Dirty(ITag entity) => From(entity, SyncStatus.SyncNeeded);
-
-        public static TagDto DirtyDeleted(ITag entity) => From(entity, SyncStatus.SyncNeeded, isDeleted: true);
 
         public static TagDto Unsyncable(ITag entity, string errorMessage) => From(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
 
@@ -458,42 +400,7 @@ namespace Toggl.PrimeRadiant
             isDeleted: isDeleted,
             lastSyncErrorMessage: lastSyncErrorMessage);
 
-        public static TaskDto From<T>(
-            T entity,
-            New<long> id = default(New<long>),
-            New<string> name = default(New<string>),
-            New<DateTimeOffset> at = default(New<DateTimeOffset>),
-            New<long> projectId = default(New<long>),
-            New<long> workspaceId = default(New<long>),
-            New<long?> userId = default(New<long?>),
-            New<long> estimatedSeconds = default(New<long>),
-            New<bool> active = default(New<bool>),
-            New<long> trackedSeconds = default(New<long>),
-            New<SyncStatus> syncStatus = default(New<SyncStatus>),
-            New<bool> isDeleted = default(New<bool>),
-            New<string> lastSyncErrorMessage = default(New<string>))
-            where T : ITask, IDatabaseSyncable
-        => new TaskDto(
-            id: id.ValueOr(entity.Id),
-            name: name.ValueOr(entity.Name),
-            at: at.ValueOr(entity.At),
-            projectId: projectId.ValueOr(entity.ProjectId),
-            workspaceId: workspaceId.ValueOr(entity.WorkspaceId),
-            userId: userId.ValueOr(entity.UserId),
-            estimatedSeconds: estimatedSeconds.ValueOr(entity.EstimatedSeconds),
-            active: active.ValueOr(entity.Active),
-            trackedSeconds: trackedSeconds.ValueOr(entity.TrackedSeconds),
-            syncStatus: syncStatus.ValueOr(entity.SyncStatus),
-            isDeleted: isDeleted.ValueOr(entity.IsDeleted),
-            lastSyncErrorMessage: lastSyncErrorMessage.ValueOr(entity.LastSyncErrorMessage));
-
         public static TaskDto Clean(ITask entity) => From(entity, SyncStatus.InSync);
-
-        public static TaskDto Dirty(ITask entity) => From(entity, SyncStatus.SyncNeeded);
-
-        public static TaskDto DirtyDeleted(ITask entity) => From(entity, SyncStatus.SyncNeeded, isDeleted: true);
-
-        public static TaskDto Unsyncable(ITask entity, string errorMessage) => From(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
 
         public long Id { get; }
         public string Name { get; }
@@ -728,10 +635,6 @@ namespace Toggl.PrimeRadiant
 
         public static UserDto Clean(IUser entity) => From(entity, SyncStatus.InSync);
 
-        public static UserDto Dirty(IUser entity) => From(entity, SyncStatus.SyncNeeded);
-
-        public static UserDto DirtyDeleted(IUser entity) => From(entity, SyncStatus.SyncNeeded, isDeleted: true);
-
         public static UserDto Unsyncable(IUser entity, string errorMessage) => From(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
 
         public long Id { get; }
@@ -830,52 +733,7 @@ namespace Toggl.PrimeRadiant
             isDeleted: isDeleted,
             lastSyncErrorMessage: lastSyncErrorMessage);
 
-        public static WorkspaceDto From<T>(
-            T entity,
-            New<long> id = default(New<long>),
-            New<DateTimeOffset?> serverDeletedAt = default(New<DateTimeOffset?>),
-            New<DateTimeOffset> at = default(New<DateTimeOffset>),
-            New<string> name = default(New<string>),
-            New<bool> admin = default(New<bool>),
-            New<DateTimeOffset?> suspendedAt = default(New<DateTimeOffset?>),
-            New<double?> defaultHourlyRate = default(New<double?>),
-            New<string> defaultCurrency = default(New<string>),
-            New<bool> onlyAdminsMayCreateProjects = default(New<bool>),
-            New<bool> onlyAdminsSeeBillableRates = default(New<bool>),
-            New<bool> onlyAdminsSeeTeamDashboard = default(New<bool>),
-            New<bool> projectsBillableByDefault = default(New<bool>),
-            New<int> rounding = default(New<int>),
-            New<int> roundingMinutes = default(New<int>),
-            New<string> logoUrl = default(New<string>),
-            New<SyncStatus> syncStatus = default(New<SyncStatus>),
-            New<bool> isDeleted = default(New<bool>),
-            New<string> lastSyncErrorMessage = default(New<string>))
-            where T : IWorkspace, IDatabaseSyncable
-        => new WorkspaceDto(
-            id: id.ValueOr(entity.Id),
-            serverDeletedAt: serverDeletedAt.ValueOr(entity.ServerDeletedAt),
-            at: at.ValueOr(entity.At),
-            name: name.ValueOr(entity.Name),
-            admin: admin.ValueOr(entity.Admin),
-            suspendedAt: suspendedAt.ValueOr(entity.SuspendedAt),
-            defaultHourlyRate: defaultHourlyRate.ValueOr(entity.DefaultHourlyRate),
-            defaultCurrency: defaultCurrency.ValueOr(entity.DefaultCurrency),
-            onlyAdminsMayCreateProjects: onlyAdminsMayCreateProjects.ValueOr(entity.OnlyAdminsMayCreateProjects),
-            onlyAdminsSeeBillableRates: onlyAdminsSeeBillableRates.ValueOr(entity.OnlyAdminsSeeBillableRates),
-            onlyAdminsSeeTeamDashboard: onlyAdminsSeeTeamDashboard.ValueOr(entity.OnlyAdminsSeeTeamDashboard),
-            projectsBillableByDefault: projectsBillableByDefault.ValueOr(entity.ProjectsBillableByDefault),
-            rounding: rounding.ValueOr(entity.Rounding),
-            roundingMinutes: roundingMinutes.ValueOr(entity.RoundingMinutes),
-            logoUrl: logoUrl.ValueOr(entity.LogoUrl),
-            syncStatus: syncStatus.ValueOr(entity.SyncStatus),
-            isDeleted: isDeleted.ValueOr(entity.IsDeleted),
-            lastSyncErrorMessage: lastSyncErrorMessage.ValueOr(entity.LastSyncErrorMessage));
-
         public static WorkspaceDto Clean(IWorkspace entity) => From(entity, SyncStatus.InSync);
-
-        public static WorkspaceDto Dirty(IWorkspace entity) => From(entity, SyncStatus.SyncNeeded);
-
-        public static WorkspaceDto DirtyDeleted(IWorkspace entity) => From(entity, SyncStatus.SyncNeeded, isDeleted: true);
 
         public static WorkspaceDto Unsyncable(IWorkspace entity, string errorMessage) => From(entity, SyncStatus.SyncFailed, lastSyncErrorMessage: errorMessage);
 
@@ -899,31 +757,9 @@ namespace Toggl.PrimeRadiant
         public string LastSyncErrorMessage { get; }
     }
 
-    public struct WorkspaceFeatureDto : IWorkspaceFeature
-    {
-        public WorkspaceFeatureDto(
-            WorkspaceFeatureId featureId,
-            bool enabled)
-        {
-            FeatureId = featureId;
-            Enabled = enabled;
-        }
-
-        public static WorkspaceFeatureDto From(
-            IWorkspaceFeature entity,
-            New<WorkspaceFeatureId> featureId = default(New<WorkspaceFeatureId>),
-            New<bool> enabled = default(New<bool>))
-        => new WorkspaceFeatureDto(
-            featureId: featureId.ValueOr(entity.FeatureId),
-            enabled: enabled.ValueOr(entity.Enabled));
-
-        public WorkspaceFeatureId FeatureId { get; }
-        public bool Enabled { get; }
-    }
-
     public struct WorkspaceFeatureCollectionDto : IWorkspaceFeatureCollection, IIdentifiable
     {
-        public WorkspaceFeatureCollectionDto(
+        private WorkspaceFeatureCollectionDto(
             long workspaceId,
             IEnumerable<IWorkspaceFeature> features)
         {
