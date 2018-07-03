@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Linq;
+using System.Reactive.Subjects;
+using Toggl.Foundation.Analytics;
+using Toggl.Foundation.DTOs;
+using Toggl.Foundation.Exceptions;
+using Toggl.Foundation.Extensions;
 using Toggl.Foundation.Models;
+using Toggl.Foundation.Models.Interfaces;
+using Toggl.Foundation.Sync.ConflictResolution;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant;
 using Toggl.PrimeRadiant.Models;
-using Toggl.Foundation.DTOs;
-using Toggl.Foundation.Exceptions;
-using Toggl.Foundation.Models.Interfaces;
-using Toggl.Foundation.Sync.ConflictResolution;
-using System.Reactive.Subjects;
-using Toggl.Foundation.Analytics;
 
 namespace Toggl.Foundation.DataSources
 {
@@ -79,11 +80,13 @@ namespace Toggl.Foundation.DataSources
         }
 
         public override IObservable<IThreadSafeTimeEntry> Create(TimeEntryDto entity)
-            => Repository.UpdateWithConflictResolution(entity.Id, entity, alwaysCreate, RivalsResolver)
-                .OfType<CreateResult<IDatabaseTimeEntry>>()
-                .Select(result => result.Entity)
-                .Select(Convert)
-                .Do(CreatedSubject.OnNext);
+            => Repository.BatchUpdate(new[] { (entity.Id, entity) }, alwaysCreate, RivalsResolver)
+                .ToThreadSafeResult(Convert)
+                .SelectMany(CommonFunctions.Identity)
+                .Do(HandleConflictResolutionResult)
+                .OfType<CreateResult<IThreadSafeTimeEntry>>()
+                .FirstAsync()
+                .Select(result => result.Entity);
 
         public IObservable<IThreadSafeTimeEntry> Stop(DateTimeOffset stopTime)
             => GetAll(te => te.IsDeleted == false && te.Duration == null)
