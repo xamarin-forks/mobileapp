@@ -11,7 +11,7 @@ using Toggl.Ultrawave.Network;
 using Xunit;
 using FsCheck;
 using FsCheck.Xunit;
-using Toggl.Foundation.DataSources.Interfaces;
+using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Sync.States.Push;
 
 namespace Toggl.Foundation.Tests.Sync.States

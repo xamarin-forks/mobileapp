@@ -8,6 +8,7 @@ using Toggl.Foundation.Models.Interfaces;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.Interactors

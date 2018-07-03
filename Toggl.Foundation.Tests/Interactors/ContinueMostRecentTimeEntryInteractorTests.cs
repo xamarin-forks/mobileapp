@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -7,9 +6,9 @@ using FluentAssertions;
 using NSubstitute;
 using Toggl.Foundation.Analytics;
 using Toggl.Foundation.Interactors;
-using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.Tests.Generators;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 using Xunit;
 

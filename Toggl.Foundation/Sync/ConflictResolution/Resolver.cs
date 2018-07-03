@@ -1,5 +1,6 @@
 ﻿using System;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.Sync.ConflictResolution

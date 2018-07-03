@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Toggl.Multivac;
 using Toggl.Multivac.Models;
 
-namespace Toggl.PrimeRadiant
+namespace Toggl.PrimeRadiant.DTOs
 {
     public struct TimeEntryDto : ITimeEntry, IDatabaseSyncable
     {
@@ -105,6 +105,7 @@ namespace Toggl.PrimeRadiant
             syncStatus: syncStatus,
             isDeleted: isDeleted,
             lastSyncErrorMessage: lastSyncErrorMessage);
+
         public long Id { get; }
         public DateTimeOffset? ServerDeletedAt { get; }
         public DateTimeOffset At { get; }

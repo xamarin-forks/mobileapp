@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using Toggl.Foundation.Analytics;
 using Toggl.Foundation.DataSources;
+using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Extensions;
 using Toggl.Foundation.Helper;
 using Toggl.Foundation.Models;
@@ -11,6 +12,7 @@ using Toggl.Multivac;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
 using Toggl.Multivac.Extensions;
+using Toggl.PrimeRadiant.DTOs;
 using static Toggl.Multivac.Extensions.CommonFunctions;
 
 namespace Toggl.Foundation.Sync.States.Pull

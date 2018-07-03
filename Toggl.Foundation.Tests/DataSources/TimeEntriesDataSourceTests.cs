@@ -7,6 +7,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Toggl.Foundation.DataSources;
+using Toggl.Foundation.DataSources;
 using Toggl.Foundation.DTOs;
 using Toggl.Foundation.Exceptions;
 using Toggl.Foundation.Models;
@@ -16,6 +17,7 @@ using Toggl.Foundation.Tests.Mocks;
 using Toggl.Multivac.Extensions;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Exceptions;
 using Toggl.PrimeRadiant.Models;
 using Xunit;
@@ -193,7 +195,7 @@ namespace Toggl.Foundation.Tests.DataSources
                     .Returns(callInfo =>
                         Observable
                              .Return(result)
-                             .Select(x => x.Where(callInfo.Arg<Func<IThreadSafeTimeEntry, bool>>())));
+                             .Select(x => x.Where(timeEntry => callInfo.Arg<Func<IDatabaseTimeEntry, bool>>()(timeEntry))));
 
                 var timeEntries = await InteractorFactory.GetAllNonDeletedTimeEntries().Execute()
                     .Select(tes => tes.Where(x => x.Id > 10));

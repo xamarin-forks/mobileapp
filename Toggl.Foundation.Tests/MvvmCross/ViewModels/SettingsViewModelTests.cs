@@ -13,12 +13,11 @@ using Toggl.Foundation.DTOs;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Foundation.MvvmCross.ViewModels;
-using Toggl.Foundation.Services;
 using Toggl.Foundation.Sync;
 using Toggl.Foundation.Tests.Generators;
 using Toggl.Foundation.Tests.Mocks;
 using Toggl.Multivac;
-using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Xunit;
 
 namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
@@ -153,7 +152,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 foreach (var state in statuses.Get)
                 {
                     observer.Messages.Clear();
-                    
+
                     ProgressSubject.OnNext(state);
 
                     var isRunningSync = observer.Messages.Single().Value.Value;
@@ -173,7 +172,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 {
                     if (state == SyncProgress.Unknown)
                         continue;
-                    
+
                     observer.Messages.Clear();
 
                     ProgressSubject.OnNext(state);
@@ -242,7 +241,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 observer.Messages.Single();
             }
-            
+
             [Fact, LogIfTooSlow]
             public async Task CallsLogoutOnTheDataSource()
             {
@@ -391,7 +390,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
             [Fact, LogIfTooSlow]
             public async Task CallsTheSelectWorkspaceViewModel()
-            {   
+            {
                 await ViewModel.PickDefaultWorkspace();
 
                 await NavigationService.Received()

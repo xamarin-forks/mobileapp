@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.PrimeRadiant

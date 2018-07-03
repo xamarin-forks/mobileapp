@@ -9,6 +9,7 @@ using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.Suggestions;
 using Toggl.Foundation.Tests.Mocks;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 using Xunit;
 using ITimeEntryPrototype = Toggl.Foundation.Models.ITimeEntryPrototype;

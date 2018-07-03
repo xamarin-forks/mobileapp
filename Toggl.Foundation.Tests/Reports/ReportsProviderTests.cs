@@ -9,10 +9,10 @@ using NSubstitute;
 using Toggl.Foundation.Helper;
 using Toggl.Foundation.Reports;
 using Toggl.Foundation.Tests.Generators;
-using Toggl.Multivac.Extensions;
 using Toggl.Multivac.Models;
 using Toggl.Multivac.Models.Reports;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 using Toggl.Ultrawave;
 using Toggl.Ultrawave.ApiClients;
@@ -76,7 +76,7 @@ namespace Toggl.Foundation.Tests.Reports
             {
                 ProjectsSummaryApi
                     .GetByWorkspace(Arg.Any<long>(), Arg.Any<DateTimeOffset>(), Arg.Any<DateTimeOffset>())
-                    .Returns(Observable.Return(apiProjectsSummary)); 
+                    .Returns(Observable.Return(apiProjectsSummary));
             }
 
             [Property]
@@ -118,7 +118,7 @@ namespace Toggl.Foundation.Tests.Reports
             {
                 var actualProjectIds = projectIds.Get.Select(i => (long)i.Get).Distinct().ToArray();
                 if (actualProjectIds.Length < 2) return;
-                
+
                 var projectsInDb = actualProjectIds.Where((i, id) => i % 2 == 0).ToArray();
                 var projectsInApi = actualProjectIds.Where((i, id) => i % 2 != 0).ToArray();
                 var summaries = getSummaryList(actualProjectIds);
@@ -130,13 +130,13 @@ namespace Toggl.Foundation.Tests.Reports
 
                 lists.Should().HaveCount(1);
             }
-            
+
             [Property(MaxTest = 10, StartSize = 10, EndSize = 20)]
             public void ReturnsOnlyOneListIfItUsesTheMemoryCache(NonEmptyArray<NonNegativeInt> projectIds)
             {
                 var actualProjectIds = projectIds.Get.Select(i => (long)i.Get).Distinct().ToArray();
                 if (actualProjectIds.Length < 2) return;
-                
+
                 var projectsInDb = actualProjectIds.Where((i, id) => i % 2 == 0).ToArray();
                 var projectsInApi = actualProjectIds.Where((i, id) => i % 2 != 0).ToArray();
                 var summaries = getSummaryList(actualProjectIds);
@@ -267,7 +267,7 @@ namespace Toggl.Foundation.Tests.Reports
                     .Search(Arg.Any<long>(), Arg.Any<long[]>())
                     .Returns(Observable.Return(projects));
             }
-            
+
             private bool ensureExpectedIdsAreReturned(long[] actual, long[] expected)
             {
                 if (actual.Length != expected.Length) return false;

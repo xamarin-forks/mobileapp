@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Reactive;
-using Toggl.Foundation.DataSources.Interfaces;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.Reports;
 using Toggl.Foundation.Sync;
-using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.DataSources

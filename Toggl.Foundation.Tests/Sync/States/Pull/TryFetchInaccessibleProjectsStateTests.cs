@@ -13,6 +13,7 @@ using Toggl.Foundation.Sync.States.Pull;
 using Toggl.Foundation.Tests.Mocks;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 using Toggl.Ultrawave.ApiClients;
 using Xunit;
@@ -180,7 +181,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Pull
             await dataSource.Received()
                 .Update(Arg.Is<ProjectDto>(project => project.Id == 4 && project.SyncStatus == SyncStatus.InSync));
         }
-                
+
 
         private void setStoredProjects(params IThreadSafeProject[] projects)
         {

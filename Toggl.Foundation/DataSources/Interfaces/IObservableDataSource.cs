@@ -2,7 +2,7 @@
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.PrimeRadiant.Models;
 
-namespace Toggl.Foundation.DataSources.Interfaces
+namespace Toggl.Foundation.DataSources
 {
     public interface IObservableDataSource<TThreadsafe, out TDatabase, TDto>
         : IDataSource<TThreadsafe, TDatabase, TDto>
@@ -10,9 +10,9 @@ namespace Toggl.Foundation.DataSources.Interfaces
         where TThreadsafe : IThreadSafeModel, TDatabase
     {
         IObservable<TThreadsafe> Created { get; }
-        
+
         IObservable<EntityUpdate<TThreadsafe>> Updated { get; }
-        
+
         IObservable<long> Deleted { get; }
     }
 }

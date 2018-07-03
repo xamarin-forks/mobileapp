@@ -3,7 +3,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using FluentAssertions;
 using NSubstitute;
-using Toggl.Foundation.DataSources.Interfaces;
+using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Sync.States.Push;
 using Toggl.PrimeRadiant;
 using Xunit;

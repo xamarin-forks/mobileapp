@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using Toggl.Foundation.DataSources.Interfaces;
+using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.Reports;
 using Toggl.Foundation.Services;
@@ -11,6 +11,7 @@ using Toggl.Foundation.Sync;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 using Toggl.Ultrawave;
 

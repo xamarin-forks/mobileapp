@@ -15,6 +15,7 @@ using Toggl.Foundation.Tests.Helpers;
 using Toggl.Foundation.Tests.Sync;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 using Xunit;
 using Toggl.Ultrawave.Exceptions;

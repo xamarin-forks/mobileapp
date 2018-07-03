@@ -1,11 +1,9 @@
-﻿using System;
-using System.Reactive.Linq;
+﻿using System.Reactive.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
 using NSubstitute;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.Tests.Mocks;
-using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Xunit;
 
 namespace Toggl.Foundation.Tests.Interactors
@@ -13,14 +11,14 @@ namespace Toggl.Foundation.Tests.Interactors
     public sealed class DeleteTimeEntryInteractorTests : BaseInteractorTests
     {
         private readonly MockTimeEntry timeEntry;
-        
+
         public DeleteTimeEntryInteractorTests()
         {
             timeEntry = new MockTimeEntry
             {
                 Id = 12
             };
-            
+
             DataSource.TimeEntries.GetById(timeEntry.Id)
                 .Returns(Observable.Return(timeEntry));
             DataSource.TimeEntries.Update(Arg.Any<TimeEntryDto>())

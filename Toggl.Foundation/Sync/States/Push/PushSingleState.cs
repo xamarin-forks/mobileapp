@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reactive.Linq;
-using Toggl.Foundation.DataSources.Interfaces;
+using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.Sync.States.Push.Interfaces;
 using Toggl.Multivac;

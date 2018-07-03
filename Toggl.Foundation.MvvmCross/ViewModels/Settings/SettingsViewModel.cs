@@ -22,6 +22,7 @@ using Toggl.Foundation.Sync;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Settings;
 using Toggl.Ultrawave.Network;
 using static Toggl.Multivac.Extensions.CommonFunctions;

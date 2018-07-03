@@ -7,7 +7,7 @@ using NSubstitute;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Tests.Generators;
 using Toggl.PrimeRadiant;
-using Toggl.PrimeRadiant.Models;
+using Toggl.PrimeRadiant.DTOs;
 using Xunit;
 
 namespace Toggl.Foundation.Tests.DataSources

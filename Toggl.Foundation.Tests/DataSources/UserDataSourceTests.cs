@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using FluentAssertions;
 using NSubstitute;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Tests.Generators;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 using Xunit;
 

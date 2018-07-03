@@ -2,7 +2,7 @@
 using Toggl.Multivac;
 using Toggl.Multivac.Models;
 
-namespace Toggl.PrimeRadiant
+namespace Toggl.PrimeRadiant.DTOs
 {
     public struct WorkspaceDto : IWorkspace, IDatabaseSyncable
     {

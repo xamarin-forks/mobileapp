@@ -2,7 +2,7 @@
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.PrimeRadiant;
 
-namespace Toggl.Foundation.DataSources.Interfaces
+namespace Toggl.Foundation.DataSources
 {
     public interface IBaseDataSource<T, TDto>
         where T : IThreadSafeModel

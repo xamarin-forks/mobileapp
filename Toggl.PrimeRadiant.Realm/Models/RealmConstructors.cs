@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Realms;
 using Toggl.Multivac.Extensions;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 using Toggl.PrimeRadiant.Realm.Models;
 

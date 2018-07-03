@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Reactive.Linq;
 using Toggl.Foundation.DataSources;
+using Toggl.Foundation.DataSources;
 using Toggl.Multivac;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.Sync.States

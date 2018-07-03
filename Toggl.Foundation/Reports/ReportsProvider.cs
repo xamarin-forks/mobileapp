@@ -9,6 +9,7 @@ using Toggl.Multivac.Extensions;
 using Toggl.Multivac.Models;
 using Toggl.Multivac.Models.Reports;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 using Toggl.Ultrawave;
 using Toggl.Ultrawave.ApiClients;

@@ -4,13 +4,13 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FsCheck.Experimental;
 using NSubstitute;
 using NSubstitute.Core;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.Tests.Mocks;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Models;
 using Xunit;
 
@@ -65,7 +65,7 @@ namespace Toggl.Foundation.Tests.DataSources
         }
 
         private IObservable<IEnumerable<IConflictResolutionResult<IDatabaseTimeEntry>>> batchUpdateResult(CallInfo info)
-        { 
+        {
             var conflictFn =
                 info.Arg<Func<IDatabaseTimeEntry, TimeEntryDto, ConflictResolutionMode>>();
 

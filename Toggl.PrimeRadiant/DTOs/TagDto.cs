@@ -1,7 +1,7 @@
 ﻿using System;
 using Toggl.Multivac.Models;
 
-namespace Toggl.PrimeRadiant
+namespace Toggl.PrimeRadiant.DTOs
 {
     public struct TagDto : ITag, IDatabaseSyncable
     {

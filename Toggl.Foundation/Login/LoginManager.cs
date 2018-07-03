@@ -4,17 +4,15 @@ using System.Reactive.Linq;
 using Toggl.Foundation.Analytics;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Extensions;
-using Toggl.Foundation.Models;
 using Toggl.Foundation.Shortcuts;
 using Toggl.Multivac;
-using Toggl.Multivac.Extensions;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.DTOs;
 using Toggl.PrimeRadiant.Settings;
 using Toggl.Ultrawave;
 using Toggl.Ultrawave.Exceptions;
 using Toggl.Ultrawave.Network;
-using Math = System.Math;
 
 namespace Toggl.Foundation.Login
 {

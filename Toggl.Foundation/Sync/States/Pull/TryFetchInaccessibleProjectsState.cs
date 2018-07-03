@@ -10,6 +10,7 @@ using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant;
 using Toggl.Ultrawave.ApiClients;
 using System.Collections.Generic;
+using Toggl.PrimeRadiant.DTOs;
 
 namespace Toggl.Foundation.Sync.States.Pull
 {
