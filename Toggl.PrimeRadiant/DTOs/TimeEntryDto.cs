@@ -7,6 +7,22 @@ namespace Toggl.PrimeRadiant.DTOs
 {
     public struct TimeEntryDto : ITimeEntry, IDatabaseSyncable
     {
+        public long Id { get; }
+        public DateTimeOffset? ServerDeletedAt { get; }
+        public DateTimeOffset At { get; }
+        public long WorkspaceId { get; }
+        public long? ProjectId { get; }
+        public long? TaskId { get; }
+        public bool Billable { get; }
+        public DateTimeOffset Start { get; }
+        public long? Duration { get; }
+        public string Description { get; }
+        public IEnumerable<long> TagIds { get; }
+        public long UserId { get; }
+        public SyncStatus SyncStatus { get; }
+        public bool IsDeleted { get; }
+        public string LastSyncErrorMessage { get; }
+
         public TimeEntryDto(
             long id,
             DateTimeOffset at,
@@ -105,21 +121,5 @@ namespace Toggl.PrimeRadiant.DTOs
             syncStatus: syncStatus,
             isDeleted: isDeleted,
             lastSyncErrorMessage: lastSyncErrorMessage);
-
-        public long Id { get; }
-        public DateTimeOffset? ServerDeletedAt { get; }
-        public DateTimeOffset At { get; }
-        public long WorkspaceId { get; }
-        public long? ProjectId { get; }
-        public long? TaskId { get; }
-        public bool Billable { get; }
-        public DateTimeOffset Start { get; }
-        public long? Duration { get; }
-        public string Description { get; }
-        public IEnumerable<long> TagIds { get; }
-        public long UserId { get; }
-        public SyncStatus SyncStatus { get; }
-        public bool IsDeleted { get; }
-        public string LastSyncErrorMessage { get; }
     }
 }

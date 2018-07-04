@@ -5,6 +5,19 @@ namespace Toggl.PrimeRadiant.DTOs
 {
     public struct TaskDto : ITask, IDatabaseSyncable
     {
+        public long Id { get; }
+        public string Name { get; }
+        public DateTimeOffset At { get; }
+        public long ProjectId { get; }
+        public long WorkspaceId { get; }
+        public long? UserId { get; }
+        public long EstimatedSeconds { get; }
+        public bool Active { get; }
+        public long TrackedSeconds { get; }
+        public SyncStatus SyncStatus { get; }
+        public bool IsDeleted { get; }
+        public string LastSyncErrorMessage { get; }
+
         private TaskDto(
             long id,
             string name,
@@ -53,17 +66,5 @@ namespace Toggl.PrimeRadiant.DTOs
             syncStatus: syncStatus,
             isDeleted: isDeleted,
             lastSyncErrorMessage: lastSyncErrorMessage);
-        public long Id { get; }
-        public string Name { get; }
-        public DateTimeOffset At { get; }
-        public long ProjectId { get; }
-        public long WorkspaceId { get; }
-        public long? UserId { get; }
-        public long EstimatedSeconds { get; }
-        public bool Active { get; }
-        public long TrackedSeconds { get; }
-        public SyncStatus SyncStatus { get; }
-        public bool IsDeleted { get; }
-        public string LastSyncErrorMessage { get; }
     }
 }

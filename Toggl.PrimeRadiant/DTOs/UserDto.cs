@@ -6,6 +6,19 @@ namespace Toggl.PrimeRadiant.DTOs
 {
     public struct UserDto : IUser, IDatabaseSyncable
     {
+        public long Id { get; }
+        public string ApiToken { get; }
+        public DateTimeOffset At { get; }
+        public long? DefaultWorkspaceId { get; }
+        public Email Email { get; }
+        public string Fullname { get; }
+        public BeginningOfWeek BeginningOfWeek { get; }
+        public string Language { get; }
+        public string ImageUrl { get; }
+        public SyncStatus SyncStatus { get; }
+        public bool IsDeleted { get; }
+        public string LastSyncErrorMessage { get; }
+
         private UserDto(
             long id,
             string apiToken,
@@ -87,18 +100,5 @@ namespace Toggl.PrimeRadiant.DTOs
                 syncStatus: syncStatus,
                 isDeleted: isDeleted,
                 lastSyncErrorMessage: lastSyncErrorMessage);
-
-        public long Id { get; }
-        public string ApiToken { get; }
-        public DateTimeOffset At { get; }
-        public long? DefaultWorkspaceId { get; }
-        public Email Email { get; }
-        public string Fullname { get; }
-        public BeginningOfWeek BeginningOfWeek { get; }
-        public string Language { get; }
-        public string ImageUrl { get; }
-        public SyncStatus SyncStatus { get; }
-        public bool IsDeleted { get; }
-        public string LastSyncErrorMessage { get; }
     }
 }

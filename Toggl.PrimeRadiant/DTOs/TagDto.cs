@@ -5,6 +5,15 @@ namespace Toggl.PrimeRadiant.DTOs
 {
     public struct TagDto : ITag, IDatabaseSyncable
     {
+        public long Id { get; }
+        public DateTimeOffset? ServerDeletedAt { get; }
+        public DateTimeOffset At { get; }
+        public long WorkspaceId { get; }
+        public string Name { get; }
+        public SyncStatus SyncStatus { get; }
+        public bool IsDeleted { get; }
+        public string LastSyncErrorMessage { get; }
+
         public TagDto(
             long id,
             DateTimeOffset at,
@@ -43,14 +52,5 @@ namespace Toggl.PrimeRadiant.DTOs
                 syncStatus: syncStatus,
                 isDeleted: isDeleted,
                 lastSyncErrorMessage: lastSyncErrorMessage);
-
-        public long Id { get; }
-        public DateTimeOffset? ServerDeletedAt { get; }
-        public DateTimeOffset At { get; }
-        public long WorkspaceId { get; }
-        public string Name { get; }
-        public SyncStatus SyncStatus { get; }
-        public bool IsDeleted { get; }
-        public string LastSyncErrorMessage { get; }
     }
 }

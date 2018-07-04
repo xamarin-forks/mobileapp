@@ -6,6 +6,26 @@ namespace Toggl.PrimeRadiant.DTOs
 {
     public struct ProjectDto : IProject, IDatabaseSyncable
     {
+        public long Id { get; }
+        public DateTimeOffset? ServerDeletedAt { get; }
+        public DateTimeOffset At { get; }
+        public long WorkspaceId { get; }
+        public long? ClientId { get; }
+        public string Name { get; }
+        public bool IsPrivate { get; }
+        public bool Active { get; }
+        public string Color { get; }
+        public bool? Billable { get; }
+        public bool? Template { get; }
+        public bool? AutoEstimates { get; }
+        public long? EstimatedHours { get; }
+        public double? Rate { get; }
+        public string Currency { get; }
+        public int? ActualHours { get; }
+        public SyncStatus SyncStatus { get; }
+        public bool IsDeleted { get; }
+        public string LastSyncErrorMessage { get; }
+
         public ProjectDto(
             long id,
             DateTimeOffset at,
@@ -122,25 +142,5 @@ namespace Toggl.PrimeRadiant.DTOs
             syncStatus: syncStatus,
             isDeleted: isDeleted,
             lastSyncErrorMessage: lastSyncErrorMessage);
-
-        public long Id { get; }
-        public DateTimeOffset? ServerDeletedAt { get; }
-        public DateTimeOffset At { get; }
-        public long WorkspaceId { get; }
-        public long? ClientId { get; }
-        public string Name { get; }
-        public bool IsPrivate { get; }
-        public bool Active { get; }
-        public string Color { get; }
-        public bool? Billable { get; }
-        public bool? Template { get; }
-        public bool? AutoEstimates { get; }
-        public long? EstimatedHours { get; }
-        public double? Rate { get; }
-        public string Currency { get; }
-        public int? ActualHours { get; }
-        public SyncStatus SyncStatus { get; }
-        public bool IsDeleted { get; }
-        public string LastSyncErrorMessage { get; }
     }
 }

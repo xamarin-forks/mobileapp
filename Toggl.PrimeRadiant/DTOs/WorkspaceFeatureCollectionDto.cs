@@ -5,6 +5,10 @@ namespace Toggl.PrimeRadiant.DTOs
 {
     public struct WorkspaceFeatureCollectionDto : IWorkspaceFeatureCollection, IIdentifiable
     {
+        public long Id => WorkspaceId;
+        public long WorkspaceId { get; }
+        public IEnumerable<IWorkspaceFeature> Features { get; }
+
         private WorkspaceFeatureCollectionDto(
             long workspaceId,
             IEnumerable<IWorkspaceFeature> features)
@@ -17,9 +21,5 @@ namespace Toggl.PrimeRadiant.DTOs
             => new WorkspaceFeatureCollectionDto(
                 workspaceId: entity.WorkspaceId,
                 features: entity.Features);
-
-        public long Id => WorkspaceId;
-        public long WorkspaceId { get; }
-        public IEnumerable<IWorkspaceFeature> Features { get; }
     }
 }

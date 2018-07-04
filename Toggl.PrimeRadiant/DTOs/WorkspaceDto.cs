@@ -6,6 +6,25 @@ namespace Toggl.PrimeRadiant.DTOs
 {
     public struct WorkspaceDto : IWorkspace, IDatabaseSyncable
     {
+        public long Id { get; }
+        public DateTimeOffset? ServerDeletedAt { get; }
+        public DateTimeOffset At { get; }
+        public string Name { get; }
+        public bool Admin { get; }
+        public DateTimeOffset? SuspendedAt { get; }
+        public double? DefaultHourlyRate { get; }
+        public string DefaultCurrency { get; }
+        public bool OnlyAdminsMayCreateProjects { get; }
+        public bool OnlyAdminsSeeBillableRates { get; }
+        public bool OnlyAdminsSeeTeamDashboard { get; }
+        public bool ProjectsBillableByDefault { get; }
+        public int Rounding { get; }
+        public int RoundingMinutes { get; }
+        public string LogoUrl { get; }
+        public SyncStatus SyncStatus { get; }
+        public bool IsDeleted { get; }
+        public string LastSyncErrorMessage { get; }
+
         private WorkspaceDto(
             long id,
             DateTimeOffset? serverDeletedAt,
@@ -89,25 +108,5 @@ namespace Toggl.PrimeRadiant.DTOs
             syncStatus: syncStatus,
             isDeleted: isDeleted,
             lastSyncErrorMessage: lastSyncErrorMessage);
-
-        public long Id { get; }
-        public DateTimeOffset? ServerDeletedAt { get; }
-        public DateTimeOffset At { get; }
-        public string Name { get; }
-        public bool Admin { get; }
-        public DateTimeOffset? SuspendedAt { get; }
-        public double? DefaultHourlyRate { get; }
-        public string DefaultCurrency { get; }
-        public bool OnlyAdminsMayCreateProjects { get; }
-        public bool OnlyAdminsSeeBillableRates { get; }
-        public bool OnlyAdminsSeeTeamDashboard { get; }
-        public bool ProjectsBillableByDefault { get; }
-        public int Rounding { get; }
-        public int RoundingMinutes { get; }
-        public string LogoUrl { get; }
-        public SyncStatus SyncStatus { get; }
-        public bool IsDeleted { get; }
-        public string LastSyncErrorMessage { get; }
     }
-
 }

@@ -5,6 +5,15 @@ namespace Toggl.PrimeRadiant.DTOs
 {
     public struct PreferencesDto : IPreferences, IDatabaseSyncable, IIdentifiable
     {
+        public long Id => 0;
+        public TimeFormat TimeOfDayFormat { get; }
+        public DateFormat DateFormat { get; }
+        public DurationFormat DurationFormat { get; }
+        public bool CollapseTimeEntries { get; }
+        public SyncStatus SyncStatus { get; }
+        public bool IsDeleted { get; }
+        public string LastSyncErrorMessage { get; }
+
         private PreferencesDto(
             TimeFormat timeOfDayFormat,
             DateFormat dateFormat,
@@ -62,13 +71,5 @@ namespace Toggl.PrimeRadiant.DTOs
                 isDeleted: isDeleted,
                 lastSyncErrorMessage: lastSyncErrorMessage);
 
-        public long Id => 0;
-        public TimeFormat TimeOfDayFormat { get; }
-        public DateFormat DateFormat { get; }
-        public DurationFormat DurationFormat { get; }
-        public bool CollapseTimeEntries { get; }
-        public SyncStatus SyncStatus { get; }
-        public bool IsDeleted { get; }
-        public string LastSyncErrorMessage { get; }
     }
 }
