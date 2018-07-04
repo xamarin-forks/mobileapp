@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using Toggl.Foundation.DataSources;
-using Toggl.Foundation.Models;
+using Toggl.Foundation.Extensions;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant;
-using Toggl.Ultrawave.ApiClients;
-using System.Collections.Generic;
 using Toggl.PrimeRadiant.DTOs;
+using Toggl.Ultrawave.ApiClients;
+using Toggl.Ultrawave.Exceptions;
 
 namespace Toggl.Foundation.Sync.States.Pull
 {
@@ -25,6 +26,8 @@ namespace Toggl.Foundation.Sync.States.Pull
         public StateResult<IFetchObservables> FetchNext { get; } = new StateResult<IFetchObservables>();
 
         public StateResult<IFetchObservables> FinishedPersisting { get; } = new StateResult<IFetchObservables>();
+
+        public StateResult<ApiException> ErrorOccured { get; } = new StateResult<ApiException>();
 
         private DateTimeOffset yesterdayThisTime => timeService.CurrentDateTime.AddDays(-1);
 
@@ -46,7 +49,8 @@ namespace Toggl.Foundation.Sync.States.Pull
             => getProjectsWhichNeedsRefetching()
                 .SelectMany(projects => projects == null
                     ? Observable.Return(FinishedPersisting.Transition(fetch))
-                    : refetch(projects).Select(FetchNext.Transition(fetch)));
+                    : refetch(projects).Select(FetchNext.Transition(fetch)))
+                .OnErrorReturnResult(ErrorOccured);
 
         private IObservable<IGrouping<long, IThreadSafeProject>> getProjectsWhichNeedsRefetching()
             => dataSource.GetAll(project =>

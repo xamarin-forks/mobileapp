@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Linq;
 using Toggl.Foundation.DataSources;
+using Toggl.Foundation.Extensions;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Multivac;
-using Toggl.Multivac.Models;
-using Toggl.PrimeRadiant;
 using Toggl.PrimeRadiant.Models;
+using Toggl.Ultrawave.Exceptions;
 
 namespace Toggl.Foundation.Sync.States.Pull
 {
@@ -22,6 +21,8 @@ namespace Toggl.Foundation.Sync.States.Pull
         private readonly Func<TInterface, TDto> clean;
 
         public StateResult<IFetchObservables> FinishedPersisting { get; } = new StateResult<IFetchObservables>();
+
+        public StateResult<ApiException> ErrorOccured { get; } = new StateResult<ApiException>();
 
         public PersistListState(
             IDataSource<TThreadsafeInterface, TDatabaseInterface, TDto> dataSource,
@@ -39,7 +40,8 @@ namespace Toggl.Foundation.Sync.States.Pull
                 .SingleAsync()
                 .Select(toDtos)
                 .SelectMany(dataSource.BatchUpdate)
-                .Select(_ => FinishedPersisting.Transition(fetch));
+                .Select(_ => FinishedPersisting.Transition(fetch))
+                .OnErrorReturnResult(ErrorOccured);
 
         private IList<TDto> toDtos(IEnumerable<TInterface> entities)
             => entities?.Select(clean).ToList() ?? new List<TDto>();
