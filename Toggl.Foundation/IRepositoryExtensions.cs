@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
@@ -12,7 +12,7 @@ namespace Toggl.Foundation
             where TDto : IIdentifiable
             => repository.Update(entity.Id, entity);
 
-        public static IObservable<IConflictResolutionResult<TModel>> UpdateWithConflictResolution<TModel, TDto>(
+        public static IObservable<IEnumerable<IConflictResolutionResult<TModel>>> UpdateWithConflictResolution<TModel, TDto>(
             this IRepository<TModel, TDto> repository,
             long id,
             TDto entity,
@@ -20,7 +20,6 @@ namespace Toggl.Foundation
             IRivalsResolver<TModel, TDto> rivalsResolver = null)
             => repository
                 .BatchUpdate(new[] { (id, entity) }, conflictResolution, rivalsResolver)
-                .SingleAsync()
-                .Select(entities => entities.First());
+                .SingleAsync();
     }
 }

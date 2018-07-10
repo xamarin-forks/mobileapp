@@ -82,7 +82,7 @@ namespace Toggl.Foundation.DataSources
         }
 
         public override IObservable<IThreadSafeTimeEntry> Create(TimeEntryDto entity)
-            => Repository.BatchUpdate(new[] { (entity.Id, entity) }, alwaysCreate, RivalsResolver)
+            => Repository.UpdateWithConflictResolution(entity.Id, entity, alwaysCreate, RivalsResolver)
                 .ToThreadSafeResult(Convert)
                 .SelectMany(CommonFunctions.Identity)
                 .Do(HandleConflictResolutionResult)

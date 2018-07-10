@@ -37,9 +37,9 @@ namespace Toggl.Foundation.DataSources
         public virtual IObservable<TThreadsafe> Overwrite(TThreadsafe original, TDto entity)
             => Repository.Update(original.Id, entity).Select(Convert);
 
-        public virtual IObservable<IConflictResolutionResult<TThreadsafe>> OverwriteIfOriginalDidNotChange(TThreadsafe original, TDto entity)
+        public virtual IObservable<IEnumerable<IConflictResolutionResult<TThreadsafe>>> OverwriteIfOriginalDidNotChange(TThreadsafe original, TDto entity)
             => Repository.UpdateWithConflictResolution(original.Id, entity, ignoreIfChangedLocally(original), RivalsResolver)
-                .Select(result => result.ToThreadSafeResult(Convert));
+                .ToThreadSafeResult(Convert);
 
         private Func<TDatabase, TDto, ConflictResolutionMode> ignoreIfChangedLocally(TThreadsafe localEntity)
             => (currentLocal, serverEntity) => localEntity.DiffersFrom(currentLocal)

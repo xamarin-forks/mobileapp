@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Extensions;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Multivac;
+using Toggl.Multivac.Extensions;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
 using Toggl.PrimeRadiant.Models;
@@ -56,14 +58,16 @@ namespace Toggl.Foundation.DataSources
         public override IObservable<TThreadsafe> Overwrite(TThreadsafe original, TDto entity)
             => base.Overwrite(original, entity).Do(currentSubject.OnNext);
 
-        public override IObservable<IConflictResolutionResult<TThreadsafe>> OverwriteIfOriginalDidNotChange(
-            TThreadsafe original, TDto entity)
-            => base.OverwriteIfOriginalDidNotChange(original, entity).Do(handleConflictResolutionResult);
+        public override IObservable<IEnumerable<IConflictResolutionResult<TThreadsafe>>> OverwriteIfOriginalDidNotChange(TThreadsafe original, TDto entity)
+            => base.OverwriteIfOriginalDidNotChange(original, entity)
+                   .Do(results => results.Do(handleConflictResolutionResult));
 
         public virtual IObservable<IConflictResolutionResult<TThreadsafe>> UpdateWithConflictResolution(
             TDto entity)
             => Repository.UpdateWithConflictResolution(entity.Id, entity, ResolveConflicts, RivalsResolver)
-                .Select(result => result.ToThreadSafeResult(Convert))
+                .ToThreadSafeResult(Convert)
+                .SelectMany(CommonFunctions.Identity)
+                .SingleAsync()
                 .Do(handleConflictResolutionResult);
 
         private void handleConflictResolutionResult(IConflictResolutionResult<TThreadsafe> result)

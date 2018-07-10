@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using Toggl.Foundation.Analytics;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Extensions;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Multivac;
+using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant;
 using Toggl.Ultrawave.ApiClients;
 using static Toggl.Foundation.Sync.PushSyncOperation;
@@ -44,6 +46,8 @@ namespace Toggl.Foundation.Sync.States.Push
         public override IObservable<ITransition> Start(TThreadsafeModel entity)
             => update(entity)
                 .SelectMany(tryOverwrite(entity))
+                .SelectMany(CommonFunctions.Identity)
+                .SingleAsync()
                 .SelectMany(result => result is IgnoreResult<TThreadsafeModel>
                     ? entityChanged(entity)
                     : succeeded(extractFrom(result)))
@@ -59,7 +63,7 @@ namespace Toggl.Foundation.Sync.States.Push
         private IObservable<ITransition> entityChanged(TThreadsafeModel entity)
             => Observable.Return(EntityChanged.Transition(entity));
 
-        private Func<TModel, IObservable<IConflictResolutionResult<TThreadsafeModel>>> tryOverwrite(TThreadsafeModel entity)
+        private Func<TModel, IObservable<IEnumerable<IConflictResolutionResult<TThreadsafeModel>>>> tryOverwrite(TThreadsafeModel entity)
             => updatedEntity => dataSource.OverwriteIfOriginalDidNotChange(entity, clean(updatedEntity));
 
         private TThreadsafeModel extractFrom(IConflictResolutionResult<TThreadsafeModel> result)
