@@ -2,9 +2,9 @@
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using MvvmCross.Binding.Droid.BindingContext;
-using MvvmCross.Core.ViewModels;
+using MvvmCross.Commands;
 using MvvmCross.Droid.Support.V7.RecyclerView;
+using MvvmCross.Platforms.Android.Binding.BindingContext;
 using Toggl.Foundation.MvvmCross.ViewModels;
 
 namespace Toggl.Giskard.Views
@@ -15,6 +15,10 @@ namespace Toggl.Giskard.Views
         private bool continueClickOverloaded;
 
         public bool CanSync { get; set; }
+
+        public View ContinueBackground { get; private set; }
+        public View DeleteBackground { get; private set; }
+        public View ContentView { get; private set; }
 
         private IMvxAsyncCommand<TimeEntryViewModel> continueCommand;
         public IMvxAsyncCommand<TimeEntryViewModel> ContinueCommand 
@@ -34,6 +38,9 @@ namespace Toggl.Giskard.Views
         public MainRecyclerViewLogViewHolder(View itemView, IMvxAndroidBindingContext context)
             : base(itemView, context)
         {
+            ContinueBackground = itemView.FindViewById<View>(Resource.Id.MainLogBackgroundContinue);
+            DeleteBackground = itemView.FindViewById<View>(Resource.Id.MainLogBackgroundDelete);
+            ContentView = itemView.FindViewById<View>(Resource.Id.MainLogContentView);
         }
 
         public MainRecyclerViewLogViewHolder(IntPtr handle, JniHandleOwnership ownership)
