@@ -267,11 +267,6 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                     break;
             }
 
-            ratingViewExperiment
-                .RatingViewShouldBeVisible
-                .Subscribe(presentRatingViewIfNeeded)
-                .DisposedBy(disposeBag);
-
             onboardingStorage.StopButtonWasTappedBefore
                              .Subscribe(hasBeen => hasStopButtonEverBeenUsed = hasBeen)
                              .DisposedBy(disposeBag);
@@ -279,24 +274,24 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         private void presentRatingViewIfNeeded(bool shouldBevisible)
         {
-            if (!shouldBevisible) return;
+            //if (!shouldBevisible) return;
 
-            var wasShownMoreThanOnce = onboardingStorage.NumberOfTimesRatingViewWasShown() > 1;
-            if (wasShownMoreThanOnce) return;
+            //var wasShownMoreThanOnce = onboardingStorage.NumberOfTimesRatingViewWasShown() > 1;
+            //if (wasShownMoreThanOnce) return;
 
-            var lastOutcome = onboardingStorage.RatingViewOutcome();
-            if (lastOutcome != null)
-            {
-                var thereIsInteractionFormLastTime = lastOutcome != RatingViewOutcome.NoInteraction;
-                if (thereIsInteractionFormLastTime) return;
-            }
+            //var lastOutcome = onboardingStorage.RatingViewOutcome();
+            //if (lastOutcome != null)
+            //{
+            //    var thereIsInteractionFormLastTime = lastOutcome != RatingViewOutcome.NoInteraction;
+            //    if (thereIsInteractionFormLastTime) return;
+            //}
 
-            var lastOutcomeTime = onboardingStorage.RatingViewOutcomeTime();
-            if (lastOutcomeTime != null)
-            {
-                var oneDayHasNotPassedSinceLastTime = lastOutcomeTime + TimeSpan.FromHours(24) > timeService.CurrentDateTime;
-                if (oneDayHasNotPassedSinceLastTime && !wasShownMoreThanOnce) return;
-            }
+            //var lastOutcomeTime = onboardingStorage.RatingViewOutcomeTime();
+            //if (lastOutcomeTime != null)
+            //{
+            //    var oneDayHasNotPassedSinceLastTime = lastOutcomeTime + TimeSpan.FromHours(24) > timeService.CurrentDateTime;
+            //    if (oneDayHasNotPassedSinceLastTime && !wasShownMoreThanOnce) return;
+            //}
 
             navigationService.ChangePresentation(new ToggleRatingViewVisibilityHint());
             analyticsService.RatingViewWasShown.Track();
@@ -318,6 +313,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             base.ViewAppearing();
 
             IsInManualMode = userPreferences.IsManualModeEnabled;
+
+            presentRatingViewIfNeeded(true);
         }
 
         private void setRunningEntry(IThreadSafeTimeEntry timeEntry)
