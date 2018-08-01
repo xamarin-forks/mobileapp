@@ -9,25 +9,29 @@ namespace Toggl.Daneel.Extensions
 {
     public static partial class UIKitRxExtensions
     {
-        public static IObservable<Unit> Tapped(this UIButton button)
+        public static IObservable<Unit> Tap<T>(this Reactive<T> reactive)
+            where T : UIButton
             => Observable
-                .FromEventPattern(e => button.TouchUpInside += e, e => button.TouchUpInside -= e)
+                .FromEventPattern(e => reactive.Base.TouchUpInside += e, e => reactive.Base.TouchUpInside -= e)
                 .SelectUnit();
 
-        public static Action<string> BindTitle(this UIButton button)
-            => title => button.SetTitle(title, UIControlState.Normal);
+        public static Action<string> Title<T>(this Reactive<T> reactive)
+            where T : UIButton
+            => title => reactive.Base.SetTitle(title, UIControlState.Normal);
 
-        public static Action<UIColor> BindTitleColor(this UIButton button)
-            => color => button.SetTitleColor(color, UIControlState.Normal);
+        public static Action<UIColor> TitleColor<T>(this Reactive<T> reactive)
+            where T : UIButton
+            => color => reactive.Base.SetTitleColor(color, UIControlState.Normal);
 
-        public static Action<string> BindAnimatedTitle(this UIButton button)
+        public static Action<string> AnimatedTitle<T>(this Reactive<T> reactive)
+            where T : UIButton
             => title =>
             {
                 UIView.Transition(
-                    button,
+                    reactive.Base,
                     Animation.Timings.EnterTiming,
                     UIViewAnimationOptions.TransitionCrossDissolve,
-                    () => button.SetTitle(title, UIControlState.Normal),
+                    () => reactive.Base.SetTitle(title, UIControlState.Normal),
                     null
                 );
             };
