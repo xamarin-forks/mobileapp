@@ -9,6 +9,7 @@ using ObjCRuntime;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using UIKit;
 using static Toggl.Daneel.Extensions.UIKitRxExtensions;
+using static Toggl.Daneel.Extensions.NSObjectReactiveCompatibleExtensions;
 using static Toggl.Multivac.Extensions.CommonFunctions;
 
 namespace Toggl.Daneel
@@ -64,7 +65,7 @@ namespace Toggl.Daneel
         private void updateBindings()
         {
             this.Bind(DataContext.CtaTitle, CtaTitle.BindText());
-            this.Bind(DataContext.CtaButtonTitle, CtaButton.BindTitle());
+            this.Bind(DataContext.CtaButtonTitle, CtaButton.Rx().Title());
             this.Bind(
                 DataContext.Impression.Select(impression => impression.HasValue),
                 CtaView.BindIsVisibleWithFade());

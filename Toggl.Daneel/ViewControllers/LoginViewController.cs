@@ -13,6 +13,7 @@ using UIKit;
 using static Toggl.Daneel.Extensions.LoginSignupViewExtensions;
 using static Toggl.Daneel.Extensions.UIKitRxExtensions;
 using static Toggl.Daneel.Extensions.ViewExtensions;
+using static Toggl.Daneel.Extensions.NSObjectReactiveCompatibleExtensions;
 
 namespace Toggl.Daneel.ViewControllers
 {
@@ -40,7 +41,7 @@ namespace Toggl.Daneel.ViewControllers
             this.Bind(ViewModel.Password, PasswordTextField.BindText());
             this.Bind(EmailTextField.Text().Select(Email.From), ViewModel.SetEmail);
             this.Bind(PasswordTextField.Text().Select(Password.From), ViewModel.SetPassword);
-            this.Bind(ViewModel.IsLoading.Select(loginButtonTitle), LoginButton.BindAnimatedTitle());
+            this.Bind(ViewModel.IsLoading.Select(loginButtonTitle), LoginButton.Rx().AnimatedTitle());
 
             //Visibility
             this.Bind(ViewModel.HasError, ErrorLabel.BindAnimatedIsVisible());
@@ -59,14 +60,14 @@ namespace Toggl.Daneel.ViewControllers
 
             //Color
             this.Bind(ViewModel.HasError.Select(loginButtonTintColor), LoginButton.BindTintColor());
-            this.Bind(ViewModel.LoginEnabled.Select(loginButtonTitleColor), LoginButton.BindTitleColor());
+            this.Bind(ViewModel.LoginEnabled.Select(loginButtonTitleColor), LoginButton.Rx().TitleColor());
 
             //Animation
-            this.Bind(ViewModel.Shake, shakeTargets => 
+            this.Bind(ViewModel.Shake, shakeTargets =>
             {
                 if (shakeTargets.HasFlag(LoginViewModel.ShakeTargets.Email))
                     EmailTextField.Shake();
-                
+
                 if (shakeTargets.HasFlag(LoginViewModel.ShakeTargets.Password))
                     PasswordTextField.Shake();
             });
