@@ -36,7 +36,7 @@ In the case of `IEnumerable`, the getter of the `Text` property of every object 
 
 If we look at the `Where` extension methods, we can see the following signatures:
 
-```
+```C#
 IEnumerable<T> Where<T>(this IEnumerable<T> collection, Func<T, bool> predicate);
 IQueryable<T> Where<T>(this IQueryable<T> collection, Expression<Func<T, bool>> predicate);
 ```
@@ -59,7 +59,7 @@ The benefits for the programmer:
 
 When we write a query in terms of `IEnumerable`, we can expect the same output, regardless of the underlying data source.
 
-```
+```C#
 var data = source
     .Where(item => item.IsValid)
     .Select(item => item.Name)
@@ -115,7 +115,7 @@ Simply because with them, things can happen faster or even not happen at all.
 
 Take a look at these two snippets!
 
-```
+```C#
 var elders1 = people.Where(p => p.Age > 65).ToList();
 var elders2 = people.Where(p => 65 < p.Age).ToList();
 ```
@@ -123,7 +123,7 @@ var elders2 = people.Where(p => 65 < p.Age).ToList();
 Those are enumerables so the result is the same.
 However, if we try to do the same with Realm, things will go :boom:.
 
-```
+```C#
 var elders1 = realmInstance.All<Person>().Where(p => p.Age > 65).ToList();
 var elders2 = realmInstance.All<Person>().Where(p => 65 < p.Age).ToList();
 ```
@@ -134,7 +134,7 @@ As we can see, Realm decides on its own what kind of expression it will allow. S
 
 :heartpulse: Now, the most important thing about `IQueryables` in this context is the fact that Realm will see what we want by looking at the query and then transform this into its own operations under the hood to provide as fast a solution as possible. That means that 
 
-```
+```C#
 var eldersFast = realmInstance
     .All<Person>()
     .Where(p => p.Age > 65)
@@ -142,7 +142,7 @@ var eldersFast = realmInstance
 ```
 will work much faster than
 
-```
+```C#
 var eldersSlow = realmInstance
     .All<Person>()
     .ToList()
