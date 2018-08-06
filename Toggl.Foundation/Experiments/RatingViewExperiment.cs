@@ -40,12 +40,12 @@ namespace Toggl.Foundation.Experiments
 
         private bool dayCountPassed(RatingViewConfiguration ratingViewConfiguration)
         {
-            var firstOpened = onboardingStorage.GetFirstOpened();
-            if (firstOpened == null)
+            var firstOpenedAfterUpdate = onboardingStorage.GetFirstOpenedAfterUpdate();
+            if (firstOpenedAfterUpdate == null)
                 return false;
 
             var targetDayCount = ratingViewConfiguration.DayCount;
-            var actualDayCount = (timeService.CurrentDateTime - firstOpened.Value).TotalDays;
+            var actualDayCount = (timeService.CurrentDateTime - firstOpenedAfterUpdate.Value).TotalDays;
             return actualDayCount >= targetDayCount;
         }
 
