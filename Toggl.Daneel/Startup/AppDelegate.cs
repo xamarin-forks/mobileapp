@@ -14,6 +14,9 @@ using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Foundation.Services;
 using Toggl.Foundation.Shortcuts;
 using UIKit;
+using Toggl.PrimeRadiant.Settings;
+using Toggl.Foundation;
+
 
 #if USE_ANALYTICS
 using System.Linq;
@@ -27,6 +30,8 @@ namespace Toggl.Daneel
         private IAnalyticsService analyticsService;
         private IBackgroundService backgroundService;
         private IMvxNavigationService navigationService;
+        private IOnboardingStorage onboardingStorage;
+        private ITimeService timeService;
 
         public override UIWindow Window { get; set; }
 
@@ -61,7 +66,10 @@ namespace Toggl.Daneel
             analyticsService = Mvx.Resolve<IAnalyticsService>();
             backgroundService = Mvx.Resolve<IBackgroundService>();
             navigationService = Mvx.Resolve<IMvxNavigationService>();
+            onboardingStorage = Mvx.Resolve<IOnboardingStorage>();
+            timeService = Mvx.Resolve<ITimeService>();
             setupNavigationBar();
+            checkForUpdate();
         }
 
         #if USE_ANALYTICS
@@ -163,6 +171,15 @@ namespace Toggl.Daneel
                 Font = UIFont.SystemFontOfSize(14, UIFontWeight.Medium),
                 ForegroundColor = UIColor.Black
             };
+        }
+
+        private void checkForUpdate()
+        {
+            if (onboardingStorage.DidAppUpdate())
+            {
+                onboardingStorage.SetNewAppVersion();
+                onboardingStorage.SetFirstOpenedAfterUpdate(timeService.CurrentDateTime);
+            }
         }
     }
 }

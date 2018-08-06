@@ -11,10 +11,12 @@ namespace Toggl.PrimeRadiant.Settings
         private const string outdatedApiKey = "OutdatedApi";
         private const string outdatedClientKey = "OutdatedClient";
         private const string unauthorizedAccessKey = "UnauthorizedAccessForApiToken";
+        private const string lastAppVersionKey = "LastAppVersion";
 
         private const string userSignedUpUsingTheAppKey = "UserSignedUpUsingTheApp";
         private const string isNewUserKey = "IsNewUser";
         private const string lastAccessDateKey = "LastAccessDate";
+        private const string firstRunAfterUpdateDateKey = "FirstRunAfterUpdateDate";
         private const string firstAccessDateKey = "FirstAccessDate";
         private const string completedOnboardingKey = "CompletedOnboarding";
 
@@ -91,6 +93,11 @@ namespace Toggl.PrimeRadiant.Settings
             keyValueStorage.SetString(unauthorizedAccessKey, apiToken);
         }
 
+        public void SetNewAppVersion()
+        {
+            keyValueStorage.SetString(lastAppVersionKey, version.ToString());
+        }
+
         public bool IsClientOutdated()
             => isOutdated(outdatedClientKey);
 
@@ -99,6 +106,9 @@ namespace Toggl.PrimeRadiant.Settings
 
         public bool IsUnauthorized(string apiToken)
             => apiToken == keyValueStorage.GetString(unauthorizedAccessKey);
+
+        public bool DidAppUpdate()
+            => version != getStoredVersion(lastAppVersionKey);
 
         private bool isOutdated(string key)
         {
@@ -148,6 +158,11 @@ namespace Toggl.PrimeRadiant.Settings
                 keyValueStorage.SetString(firstAccessDateKey, dateTime.ToString());
         }
 
+        public void SetFirstOpenedAfterUpdate(DateTimeOffset dateTime)
+        {
+            keyValueStorage.SetString(firstRunAfterUpdateDateKey, dateTime.ToString());
+        }
+
         public void SetUserSignedUp()
         {
             userSignedUpUsingTheAppSubject.OnNext(true);
@@ -184,6 +199,16 @@ namespace Toggl.PrimeRadiant.Settings
         public DateTimeOffset? GetFirstOpened()
         {
             var dateString = keyValueStorage.GetString(firstAccessDateKey);
+
+            if (string.IsNullOrEmpty(dateString))
+                return null;
+
+            return DateTimeOffset.Parse(dateString);
+        }
+
+        public DateTimeOffset? GetFirstOpenedAfterUpdate()
+        {
+            var dateString = keyValueStorage.GetString(firstRunAfterUpdateDateKey);
 
             if (string.IsNullOrEmpty(dateString))
                 return null;
