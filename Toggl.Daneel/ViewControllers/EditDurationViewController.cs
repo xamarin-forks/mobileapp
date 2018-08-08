@@ -212,12 +212,12 @@ namespace Toggl.Daneel.ViewControllers
                 EndView.Rx().Tapped().Select(false)
             );
 
-            var dateComponentChanged = DatePicker.DateComponentChanged()
+            var dateComponentChanged = DatePicker.Rx().DateComponentChanged()
                 .WithLatestFrom(editingStart,
                     (_, isStart) => isStart ? EditTimeSource.BarrelStartDate : EditTimeSource.BarrelStopDate
                  );
 
-            var timeComponentChanged = DatePicker.TimeComponentChanged()
+            var timeComponentChanged = DatePicker.Rx().TimeComponentChanged()
                 .WithLatestFrom(editingStart,
                     (_, isStart) => isStart ? EditTimeSource.BarrelStartTime : EditTimeSource.BarrelStopTime
                  );
