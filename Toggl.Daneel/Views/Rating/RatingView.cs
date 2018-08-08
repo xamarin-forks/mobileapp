@@ -83,7 +83,7 @@ namespace Toggl.Daneel
                     .Impression
                     .Select(impression => impression.HasValue)
                     .Select(gotImpression => (nfloat)(gotImpression ? 289 : 262)),
-                heightConstraint.BindConstant());
+                heightConstraint.Rx().BindConstant());
 
             this.BindVoid(YesView.Tapped(), () => DataContext.RegisterImpression(true));
             this.BindVoid(NotReallyView.Tapped(), () => DataContext.RegisterImpression(false));
