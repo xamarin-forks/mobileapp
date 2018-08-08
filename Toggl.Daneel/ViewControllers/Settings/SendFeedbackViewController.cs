@@ -40,7 +40,7 @@ namespace Toggl.Daneel.ViewControllers.Settings
             var isLoading = ViewModel.IsLoading.AsDriver(false);
             this.Bind(isLoading.Invert(), SendButton.BindIsVisible());
             this.Bind(isLoading, IndicatorView.BindIsVisible());
-            this.Bind(isLoading, UIApplication.SharedApplication.BindNetworkActivityIndicatorVisible());
+            this.Bind(isLoading, UIApplication.SharedApplication.Rx().BindNetworkActivityIndicatorVisible());
         }
 
         public override void ViewWillAppear(bool animated)
