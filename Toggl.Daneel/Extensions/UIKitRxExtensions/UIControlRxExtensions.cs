@@ -5,7 +5,7 @@ namespace Toggl.Daneel.Extensions
 {
     public static partial class UIKitRxExtensions
     {
-        public static Action<bool> BindIsEnabled(this UIControl control)
-            => enabled => control.Enabled = enabled;
+        public static Action<bool> BindIsEnabled<T>(this Reactive<T> reactive) where T: UIControl
+            => enabled => reactive.Base.Enabled = enabled;
     }
 }
