@@ -9,7 +9,7 @@ namespace Toggl.Daneel.Extensions
         public static Action<string> BindText<T>(this Reactive<T> reactive) where T : UILabel
             => text => reactive.Base.Text = text;
 
-        public static Action<NSAttributedString> BindAttributedText<T>(this Reactive<T> reactive) where T : UILabel
+        public static Action<NSAttributedString> AttributedText<T>(this Reactive<T> reactive) where T : UILabel
             => text => reactive.Base.AttributedText = text;
     }
 }

@@ -5,7 +5,7 @@ namespace Toggl.Daneel.Extensions
 {
     public static partial class UIKitRxExtensions
     {
-        public static Action<bool> BindIsOn<T>(this Reactive<T> reactive) where T : UISwitch
+        public static Action<bool> IsOn<T>(this Reactive<T> reactive) where T : UISwitch
             => isOn => reactive.Base.SetState(isOn, true);
     }
 }

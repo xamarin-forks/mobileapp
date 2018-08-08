@@ -33,14 +33,14 @@ namespace Toggl.Daneel.ViewControllers.Settings
             this.Bind(SendButton.Rx().Tapped(), ViewModel.SendButtonTapped);
             SendButton.TouchUpInside += (sender, args) => { FeedbackTextView.ResignFirstResponder(); };
 
-            this.Bind(ViewModel.IsFeedbackEmpty, FeedbackPlaceholderTextView.Rx().BindIsVisible());
-            this.Bind(ViewModel.ErrorViewVisible, ErrorView.Rx().BindAnimatedIsVisible());
-            this.Bind(ViewModel.SendEnabled, SendButton.Rx().BindIsEnabled());
+            this.Bind(ViewModel.IsFeedbackEmpty, FeedbackPlaceholderTextView.Rx().IsVisible());
+            this.Bind(ViewModel.ErrorViewVisible, ErrorView.Rx().AnimatedIsVisible());
+            this.Bind(ViewModel.SendEnabled, SendButton.Rx().IsEnabled());
 
             var isLoading = ViewModel.IsLoading.AsDriver(false);
-            this.Bind(isLoading.Invert(), SendButton.Rx().BindIsVisible());
-            this.Bind(isLoading, IndicatorView.Rx().BindIsVisible());
-            this.Bind(isLoading, UIApplication.SharedApplication.Rx().BindNetworkActivityIndicatorVisible());
+            this.Bind(isLoading.Invert(), SendButton.Rx().IsVisible());
+            this.Bind(isLoading, IndicatorView.Rx().IsVisible());
+            this.Bind(isLoading, UIApplication.SharedApplication.Rx().NetworkActivityIndicatorVisible());
         }
 
         public override void ViewWillAppear(bool animated)

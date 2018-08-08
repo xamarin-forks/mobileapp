@@ -70,23 +70,23 @@ namespace Toggl.Daneel
                 DataContext.Impression
                     .Select(impression => impression.HasValue)
                     .Select(visible => new nfloat(visible ? 1.0 : 0.0)),
-                CtaView.Rx().BindAnimatedAlpha());
+                CtaView.Rx().AnimatedAlpha());
             this.Bind(
                 DataContext.CtaDescription.Select(attributedDescription),
-                CtaDescription.Rx().BindAttributedText());
+                CtaDescription.Rx().AttributedText());
             this.Bind(
                 DataContext
                     .Impression
                     .Select(impression => impression.HasValue)
                     .Select(Invert)
                     .Select(visible => new nfloat(visible ? 1.0 : 0.0)),
-                QuestionView.Rx().BindAnimatedAlpha());
+                QuestionView.Rx().AnimatedAlpha());
             this.Bind(
                 DataContext
                     .Impression
                     .Select(impression => impression.HasValue)
                     .Select(gotImpression => (nfloat)(gotImpression ? 289 : 262)),
-                heightConstraint.Rx().BindConstant());
+                heightConstraint.Rx().Constant());
 
             this.BindVoid(YesView.Rx().Tapped(), () => DataContext.RegisterImpression(true));
             this.BindVoid(NotReallyView.Rx().Tapped(), () => DataContext.RegisterImpression(false));

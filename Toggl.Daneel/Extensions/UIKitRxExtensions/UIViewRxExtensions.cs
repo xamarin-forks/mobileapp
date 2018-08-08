@@ -20,10 +20,10 @@ namespace Toggl.Daneel.Extensions
                 return Disposable.Create(() => reactive.Base.RemoveGestureRecognizer(gestureRecognizer));
             });
 
-        public static Action<bool> BindIsVisible<T>(this Reactive<T> reactive) where T: UIView
+        public static Action<bool> IsVisible<T>(this Reactive<T> reactive) where T: UIView
             => isVisible => reactive.Base.Hidden = !isVisible;
 
-        public static Action<nfloat> BindAnimatedAlpha<T>(this Reactive<T> reactive) where T : UIView
+        public static Action<nfloat> AnimatedAlpha<T>(this Reactive<T> reactive) where T : UIView
             => alpha =>
             {
                 AnimationExtensions.Animate(
@@ -35,10 +35,10 @@ namespace Toggl.Daneel.Extensions
                     });
             };
 
-        public static Action<UIColor> BindTintColor<T>(this Reactive<T> reactive) where T : UIView
+        public static Action<UIColor> TintColor<T>(this Reactive<T> reactive) where T : UIView
             => color => reactive.Base.TintColor = color;
 
-        public static Action<bool> BindAnimatedIsVisible<T>(this Reactive<T> reactive) where T : UIView
+        public static Action<bool> AnimatedIsVisible<T>(this Reactive<T> reactive) where T : UIView
             => isVisible =>
             {
                 reactive.Base.Transform = CGAffineTransform.MakeTranslation(0, 20);

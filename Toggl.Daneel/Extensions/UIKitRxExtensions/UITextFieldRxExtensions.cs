@@ -11,7 +11,7 @@ namespace Toggl.Daneel.Extensions
                 .FromEventPattern(handler => reactive.Base.EditingChanged += handler, handler => reactive.Base.EditingChanged -= handler)
                 .Select(_ => reactive.Base.Text);
         
-        public static Action<bool> BindSecureTextEntry<T>(this Reactive<T> reactive) where T : UITextField => isSecure =>
+        public static Action<bool> SecureTextEntry<T>(this Reactive<T> reactive) where T : UITextField => isSecure =>
         {
             reactive.Base.ResignFirstResponder();
             reactive.Base.SecureTextEntry = isSecure;

@@ -44,10 +44,10 @@ namespace Toggl.Daneel.ViewControllers
             this.Bind(ViewModel.IsLoading.Select(loginButtonTitle), LoginButton.Rx().AnimatedTitle());
 
             //Visibility
-            this.Bind(ViewModel.HasError, ErrorLabel.Rx().BindAnimatedIsVisible());
-            this.Bind(ViewModel.IsLoading.Select(loading => new nfloat(loading ? 1.0 : 0.0)), ActivityIndicator.Rx().BindAnimatedAlpha());
-            this.Bind(ViewModel.IsPasswordMasked.Skip(1), PasswordTextField.Rx().BindSecureTextEntry());
-            this.Bind(ViewModel.IsShowPasswordButtonVisible, ShowPasswordButton.Rx().BindIsVisible());
+            this.Bind(ViewModel.HasError, ErrorLabel.Rx().AnimatedIsVisible());
+            this.Bind(ViewModel.IsLoading.Select(loading => new nfloat(loading ? 1.0 : 0.0)), ActivityIndicator.Rx().AnimatedAlpha());
+            this.Bind(ViewModel.IsPasswordMasked.Skip(1), PasswordTextField.Rx().SecureTextEntry());
+            this.Bind(ViewModel.IsShowPasswordButtonVisible, ShowPasswordButton.Rx().IsVisible());
             this.Bind(PasswordTextField.FirstResponder, ViewModel.SetIsShowPasswordButtonVisible);
 
             //Commands
@@ -59,7 +59,7 @@ namespace Toggl.Daneel.ViewControllers
             this.BindVoid(ShowPasswordButton.Rx().Tapped(), ViewModel.TogglePasswordVisibility);
 
             //Color
-            this.Bind(ViewModel.HasError.Select(loginButtonTintColor), LoginButton.Rx().BindTintColor());
+            this.Bind(ViewModel.HasError.Select(loginButtonTintColor), LoginButton.Rx().TintColor());
             this.Bind(ViewModel.LoginEnabled.Select(loginButtonTitleColor), LoginButton.Rx().TitleColor());
 
             //Animation
