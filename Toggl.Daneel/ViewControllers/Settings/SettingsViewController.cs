@@ -38,9 +38,9 @@ namespace Toggl.Daneel.ViewControllers
             this.Bind(ViewModel.DurationFormat, DurationFormatLabel.Rx().BindText());
             this.Bind(ViewModel.IsRunningSync, SyncingView.BindIsVisible());
             this.Bind(ViewModel.DateFormat, DateFormatLabel.Rx().BindText());
-            this.Bind(ViewModel.IsManualModeEnabled, ManualModeSwitch.BindIsOn());
+            this.Bind(ViewModel.IsManualModeEnabled, ManualModeSwitch.Rx().BindIsOn());
             this.Bind(ViewModel.BeginningOfWeek, BeginningOfWeekLabel.Rx().BindText());
-            this.Bind(ViewModel.UseTwentyFourHourFormat, TwentyFourHourClockSwitch.BindIsOn());
+            this.Bind(ViewModel.UseTwentyFourHourFormat, TwentyFourHourClockSwitch.Rx().BindIsOn());
             this.BindVoid(ViewModel.LoggingOut, () =>
             {
                 LoggingOutView.Hidden = false;
