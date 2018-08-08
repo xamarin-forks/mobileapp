@@ -37,7 +37,7 @@ namespace Toggl.Daneel.ViewControllers
 
             //Text
             this.Bind(ViewModel.Email, EmailTextField.BindText());
-            this.Bind(ViewModel.ErrorMessage, ErrorLabel.BindText());
+            this.Bind(ViewModel.ErrorMessage, ErrorLabel.Rx().BindText());
             this.Bind(ViewModel.Password, PasswordTextField.BindText());
             this.Bind(EmailTextField.Text().Select(Email.From), ViewModel.SetEmail);
             this.Bind(PasswordTextField.Text().Select(Password.From), ViewModel.SetPassword);

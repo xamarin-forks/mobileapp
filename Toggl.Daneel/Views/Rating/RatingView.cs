@@ -64,14 +64,14 @@ namespace Toggl.Daneel
 
         private void updateBindings()
         {
-            this.Bind(DataContext.CtaTitle, CtaTitle.BindText());
+            this.Bind(DataContext.CtaTitle, CtaTitle.Rx().BindText());
             this.Bind(DataContext.CtaButtonTitle, CtaButton.Rx().Title());
             this.Bind(
                 DataContext.Impression.Select(impression => impression.HasValue),
                 CtaView.BindIsVisibleWithFade());
             this.Bind(
                 DataContext.CtaDescription.Select(attributedDescription),
-                CtaDescription.BindAttributedText());
+                CtaDescription.Rx().BindAttributedText());
             this.Bind(
                 DataContext
                     .Impression

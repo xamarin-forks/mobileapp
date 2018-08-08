@@ -32,14 +32,14 @@ namespace Toggl.Daneel.ViewControllers
             LoggingOutView.Hidden = true;
             SendFeedbackSuccessView.Hidden = true;
 
-            this.Bind(ViewModel.Email, EmailLabel.BindText());
+            this.Bind(ViewModel.Email, EmailLabel.Rx().BindText());
             this.Bind(ViewModel.IsSynced, SyncedView.BindIsVisible());
-            this.Bind(ViewModel.WorkspaceName, WorkspaceLabel.BindText());
-            this.Bind(ViewModel.DurationFormat, DurationFormatLabel.BindText());
+            this.Bind(ViewModel.WorkspaceName, WorkspaceLabel.Rx().BindText());
+            this.Bind(ViewModel.DurationFormat, DurationFormatLabel.Rx().BindText());
             this.Bind(ViewModel.IsRunningSync, SyncingView.BindIsVisible());
-            this.Bind(ViewModel.DateFormat, DateFormatLabel.BindText());
+            this.Bind(ViewModel.DateFormat, DateFormatLabel.Rx().BindText());
             this.Bind(ViewModel.IsManualModeEnabled, ManualModeSwitch.BindIsOn());
-            this.Bind(ViewModel.BeginningOfWeek, BeginningOfWeekLabel.BindText());
+            this.Bind(ViewModel.BeginningOfWeek, BeginningOfWeekLabel.Rx().BindText());
             this.Bind(ViewModel.UseTwentyFourHourFormat, TwentyFourHourClockSwitch.BindIsOn());
             this.BindVoid(ViewModel.LoggingOut, () =>
             {
