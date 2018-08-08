@@ -6,16 +6,16 @@ namespace Toggl.Daneel.Extensions
 {
     public static partial class UIKitRxExtensions
     {
-        public static IObservable<string> Text(this UITextField textField)
+        public static IObservable<string> Text<T>(this Reactive<T> reactive) where T: UITextField
             => Observable
-                .FromEventPattern(handler => textField.EditingChanged += handler, handler => textField.EditingChanged -= handler)
-                .Select(_ => textField.Text);
+                .FromEventPattern(handler => reactive.Base.EditingChanged += handler, handler => reactive.Base.EditingChanged -= handler)
+                .Select(_ => reactive.Base.Text);
         
-        public static Action<bool> BindSecureTextEntry(this UITextField textField) => isSecure =>
+        public static Action<bool> BindSecureTextEntry<T>(this Reactive<T> reactive) where T : UITextField => isSecure =>
         {
-            textField.ResignFirstResponder();
-            textField.SecureTextEntry = isSecure;
-            textField.BecomeFirstResponder();
+            reactive.Base.ResignFirstResponder();
+            reactive.Base.SecureTextEntry = isSecure;
+            reactive.Base.BecomeFirstResponder();
         };
     }
 }

@@ -39,14 +39,14 @@ namespace Toggl.Daneel.ViewControllers
             this.Bind(ViewModel.Email, EmailTextField.BindText());
             this.Bind(ViewModel.ErrorMessage, ErrorLabel.Rx().BindText());
             this.Bind(ViewModel.Password, PasswordTextField.BindText());
-            this.Bind(EmailTextField.Text().Select(Email.From), ViewModel.SetEmail);
-            this.Bind(PasswordTextField.Text().Select(Password.From), ViewModel.SetPassword);
+            this.Bind(EmailTextField.Rx().Text().Select(Email.From), ViewModel.SetEmail);
+            this.Bind(PasswordTextField.Rx().Text().Select(Password.From), ViewModel.SetPassword);
             this.Bind(ViewModel.IsLoading.Select(loginButtonTitle), LoginButton.Rx().AnimatedTitle());
 
             //Visibility
             this.Bind(ViewModel.HasError, ErrorLabel.BindAnimatedIsVisible());
             this.Bind(ViewModel.IsLoading, ActivityIndicator.BindIsVisibleWithFade());
-            this.Bind(ViewModel.IsPasswordMasked.Skip(1), PasswordTextField.BindSecureTextEntry());
+            this.Bind(ViewModel.IsPasswordMasked.Skip(1), PasswordTextField.Rx().BindSecureTextEntry());
             this.Bind(ViewModel.IsShowPasswordButtonVisible, ShowPasswordButton.BindIsVisible());
             this.Bind(PasswordTextField.FirstResponder, ViewModel.SetIsShowPasswordButtonVisible);
 
