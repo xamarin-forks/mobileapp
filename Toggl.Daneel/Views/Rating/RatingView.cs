@@ -67,8 +67,10 @@ namespace Toggl.Daneel
             this.Bind(DataContext.CtaTitle, CtaTitle.Rx().BindText());
             this.Bind(DataContext.CtaButtonTitle, CtaButton.Rx().Title());
             this.Bind(
-                DataContext.Impression.Select(impression => impression.HasValue),
-                CtaView.BindIsVisibleWithFade());
+                DataContext.Impression
+                    .Select(impression => impression.HasValue)
+                    .Select(visible => new nfloat(visible ? 1.0 : 0.0)),
+                CtaView.Rx().BindAnimatedAlpha());
             this.Bind(
                 DataContext.CtaDescription.Select(attributedDescription),
                 CtaDescription.Rx().BindAttributedText());
@@ -76,8 +78,9 @@ namespace Toggl.Daneel
                 DataContext
                     .Impression
                     .Select(impression => impression.HasValue)
-                    .Select(Invert),
-                QuestionView.BindIsVisibleWithFade());
+                    .Select(Invert)
+                    .Select(visible => new nfloat(visible ? 1.0 : 0.0)),
+                QuestionView.Rx().BindAnimatedAlpha());
             this.Bind(
                 DataContext
                     .Impression
@@ -85,11 +88,11 @@ namespace Toggl.Daneel
                     .Select(gotImpression => (nfloat)(gotImpression ? 289 : 262)),
                 heightConstraint.Rx().BindConstant());
 
-            this.BindVoid(YesView.Tapped(), () => DataContext.RegisterImpression(true));
-            this.BindVoid(NotReallyView.Tapped(), () => DataContext.RegisterImpression(false));
-            this.Bind(CtaButton.Tapped(), DataContext.PerformMainAction);
-            this.BindVoid(CtaButton.Tapped(), DataContext.Dismiss);
-            this.BindVoid(DismissButton.Tapped(), DataContext.Dismiss);
+            this.BindVoid(YesView.Rx().Tapped(), () => DataContext.RegisterImpression(true));
+            this.BindVoid(NotReallyView.Rx().Tapped(), () => DataContext.RegisterImpression(false));
+            this.Bind(CtaButton.Rx().Tapped(), DataContext.PerformMainAction);
+            this.BindVoid(CtaButton.Rx().Tapped(), DataContext.Dismiss);
+            this.BindVoid(DismissButton.Rx().Tapped(), DataContext.Dismiss);
         }
 
         public override void LayoutSubviews()

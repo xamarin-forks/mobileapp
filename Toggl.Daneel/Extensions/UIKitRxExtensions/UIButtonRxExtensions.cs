@@ -38,7 +38,7 @@ namespace Toggl.Daneel.Extensions
 
         public static void BindToAction<TInput, TOutput>(this UIButton button, RxAction<TInput, TOutput> action, Func<UIButton, TInput> transform)
         {
-            button.Tapped()
+            button.Rx().Tapped()
                 .Select(_ => transform(button))
                 .Subscribe(action.Inputs)
                 .DisposedBy(action.DisposeBag);

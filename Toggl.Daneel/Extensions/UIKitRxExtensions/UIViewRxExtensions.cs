@@ -10,47 +10,46 @@ namespace Toggl.Daneel.Extensions
 {
     public static partial class UIKitRxExtensions
     {
-        public static IObservable<Unit> Tapped(this UIView view)
+        public static IObservable<Unit> Tapped<T>(this Reactive<T> reactive) where T : UIView
             => Observable.Create<Unit>(observer =>
             {
                 var gestureRecognizer = new UITapGestureRecognizer(() => observer.OnNext(Unit.Default));
                 gestureRecognizer.ShouldRecognizeSimultaneously = (recognizer, otherRecognizer) => true;
-                view.AddGestureRecognizer(gestureRecognizer);
+                reactive.Base.AddGestureRecognizer(gestureRecognizer);
 
-                return Disposable.Create(() => view.RemoveGestureRecognizer(gestureRecognizer));
+                return Disposable.Create(() => reactive.Base.RemoveGestureRecognizer(gestureRecognizer));
             });
 
-        public static Action<bool> BindIsVisible(this UIView view)
-            => isVisible => view.Hidden = !isVisible;
+        public static Action<bool> BindIsVisible<T>(this Reactive<T> reactive) where T: UIView
+            => isVisible => reactive.Base.Hidden = !isVisible;
 
-        public static Action<bool> BindIsVisibleWithFade(this UIView view)
-            => isVisible =>
+        public static Action<nfloat> BindAnimatedAlpha<T>(this Reactive<T> reactive) where T : UIView
+            => alpha =>
             {
-                var alpha = isVisible ? 1 : 0;
                 AnimationExtensions.Animate(
                     Animation.Timings.EnterTiming,
                     Animation.Curves.EaseIn,
                     () =>
                     {
-                        view.Alpha = alpha;
+                        reactive.Base.Alpha = alpha;
                     });
             };
 
-        public static Action<UIColor> BindTintColor(this UIView view)
-            => color => view.TintColor = color;
+        public static Action<UIColor> BindTintColor<T>(this Reactive<T> reactive) where T : UIView
+            => color => reactive.Base.TintColor = color;
 
-        public static Action<bool> BindAnimatedIsVisible(this UIView view)
+        public static Action<bool> BindAnimatedIsVisible<T>(this Reactive<T> reactive) where T : UIView
             => isVisible =>
             {
-                view.Transform = CGAffineTransform.MakeTranslation(0, 20);
+                reactive.Base.Transform = CGAffineTransform.MakeTranslation(0, 20);
 
                 AnimationExtensions.Animate(
                     Animation.Timings.EnterTiming,
                     Animation.Curves.SharpCurve,
                     () =>
                     {
-                        view.Hidden = !isVisible;
-                        view.Transform = CGAffineTransform.MakeTranslation(0, 0);
+                        reactive.Base.Hidden = !isVisible;
+                        reactive.Base.Transform = CGAffineTransform.MakeTranslation(0, 0);
                     }
                 );
             };

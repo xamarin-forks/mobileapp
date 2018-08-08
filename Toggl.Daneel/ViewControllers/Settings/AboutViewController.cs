@@ -17,9 +17,9 @@ namespace Toggl.Daneel.ViewControllers
 
             Title = Resources.About;
 
-            this.Bind(LicensesView.Tapped(), ViewModel.OpenLicensesView);
-            this.Bind(PrivacyPolicyView.Tapped(), ViewModel.OpenPrivacyPolicyView);
-            this.Bind(TermsOfServiceView.Tapped(), ViewModel.OpenTermsOfServiceView);
+            this.Bind(LicensesView.Rx().Tapped(), ViewModel.OpenLicensesView);
+            this.Bind(PrivacyPolicyView.Rx().Tapped(), ViewModel.OpenPrivacyPolicyView);
+            this.Bind(TermsOfServiceView.Rx().Tapped(), ViewModel.OpenTermsOfServiceView);
         }
     }
 }

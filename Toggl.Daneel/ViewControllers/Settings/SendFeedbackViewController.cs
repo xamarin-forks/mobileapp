@@ -26,20 +26,20 @@ namespace Toggl.Daneel.ViewControllers.Settings
             prepareViews();
             prepareIndicatorView();
 
-            this.Bind(CloseButton.Tapped(), ViewModel.CloseButtonTapped);
+            this.Bind(CloseButton.Rx().Tapped(), ViewModel.CloseButtonTapped);
             this.Bind(FeedbackTextView.Text(), ViewModel.FeedbackText);
-            this.Bind(ErrorView.Tapped(), ViewModel.ErrorViewTapped);
+            this.Bind(ErrorView.Rx().Tapped(), ViewModel.ErrorViewTapped);
 
-            this.Bind(SendButton.Tapped(), ViewModel.SendButtonTapped);
+            this.Bind(SendButton.Rx().Tapped(), ViewModel.SendButtonTapped);
             SendButton.TouchUpInside += (sender, args) => { FeedbackTextView.ResignFirstResponder(); };
 
-            this.Bind(ViewModel.IsFeedbackEmpty, FeedbackPlaceholderTextView.BindIsVisible());
-            this.Bind(ViewModel.ErrorViewVisible, ErrorView.BindAnimatedIsVisible());
+            this.Bind(ViewModel.IsFeedbackEmpty, FeedbackPlaceholderTextView.Rx().BindIsVisible());
+            this.Bind(ViewModel.ErrorViewVisible, ErrorView.Rx().BindAnimatedIsVisible());
             this.Bind(ViewModel.SendEnabled, SendButton.Rx().BindIsEnabled());
 
             var isLoading = ViewModel.IsLoading.AsDriver(false);
-            this.Bind(isLoading.Invert(), SendButton.BindIsVisible());
-            this.Bind(isLoading, IndicatorView.BindIsVisible());
+            this.Bind(isLoading.Invert(), SendButton.Rx().BindIsVisible());
+            this.Bind(isLoading, IndicatorView.Rx().BindIsVisible());
             this.Bind(isLoading, UIApplication.SharedApplication.Rx().BindNetworkActivityIndicatorVisible());
         }
 

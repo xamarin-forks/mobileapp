@@ -44,22 +44,22 @@ namespace Toggl.Daneel.ViewControllers
             this.Bind(ViewModel.IsLoading.Select(loginButtonTitle), LoginButton.Rx().AnimatedTitle());
 
             //Visibility
-            this.Bind(ViewModel.HasError, ErrorLabel.BindAnimatedIsVisible());
-            this.Bind(ViewModel.IsLoading, ActivityIndicator.BindIsVisibleWithFade());
+            this.Bind(ViewModel.HasError, ErrorLabel.Rx().BindAnimatedIsVisible());
+            this.Bind(ViewModel.IsLoading.Select(loading => new nfloat(loading ? 1.0 : 0.0)), ActivityIndicator.Rx().BindAnimatedAlpha());
             this.Bind(ViewModel.IsPasswordMasked.Skip(1), PasswordTextField.Rx().BindSecureTextEntry());
-            this.Bind(ViewModel.IsShowPasswordButtonVisible, ShowPasswordButton.BindIsVisible());
+            this.Bind(ViewModel.IsShowPasswordButtonVisible, ShowPasswordButton.Rx().BindIsVisible());
             this.Bind(PasswordTextField.FirstResponder, ViewModel.SetIsShowPasswordButtonVisible);
 
             //Commands
-            this.Bind(SignupCard.Tapped(), ViewModel.Signup);
-            this.BindVoid(LoginButton.Tapped(), ViewModel.Login);
-            this.BindVoid(GoogleLoginButton.Tapped(), ViewModel.GoogleLogin);
-            this.Bind(ForgotPasswordButton.Tapped(), ViewModel.ForgotPassword);
-            this.Bind(PasswordManagerButton.Tapped(), ViewModel.StartPasswordManager);
-            this.BindVoid(ShowPasswordButton.Tapped(), ViewModel.TogglePasswordVisibility);
+            this.Bind(SignupCard.Rx().Tapped(), ViewModel.Signup);
+            this.BindVoid(LoginButton.Rx().Tapped(), ViewModel.Login);
+            this.BindVoid(GoogleLoginButton.Rx().Tapped(), ViewModel.GoogleLogin);
+            this.Bind(ForgotPasswordButton.Rx().Tapped(), ViewModel.ForgotPassword);
+            this.Bind(PasswordManagerButton.Rx().Tapped(), ViewModel.StartPasswordManager);
+            this.BindVoid(ShowPasswordButton.Rx().Tapped(), ViewModel.TogglePasswordVisibility);
 
             //Color
-            this.Bind(ViewModel.HasError.Select(loginButtonTintColor), LoginButton.BindTintColor());
+            this.Bind(ViewModel.HasError.Select(loginButtonTintColor), LoginButton.Rx().BindTintColor());
             this.Bind(ViewModel.LoginEnabled.Select(loginButtonTitleColor), LoginButton.Rx().TitleColor());
 
             //Animation

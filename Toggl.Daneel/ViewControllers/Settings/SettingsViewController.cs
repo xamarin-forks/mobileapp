@@ -33,10 +33,10 @@ namespace Toggl.Daneel.ViewControllers
             SendFeedbackSuccessView.Hidden = true;
 
             this.Bind(ViewModel.Email, EmailLabel.Rx().BindText());
-            this.Bind(ViewModel.IsSynced, SyncedView.BindIsVisible());
+            this.Bind(ViewModel.IsSynced, SyncedView.Rx().BindIsVisible());
             this.Bind(ViewModel.WorkspaceName, WorkspaceLabel.Rx().BindText());
             this.Bind(ViewModel.DurationFormat, DurationFormatLabel.Rx().BindText());
-            this.Bind(ViewModel.IsRunningSync, SyncingView.BindIsVisible());
+            this.Bind(ViewModel.IsRunningSync, SyncingView.Rx().BindIsVisible());
             this.Bind(ViewModel.DateFormat, DateFormatLabel.Rx().BindText());
             this.Bind(ViewModel.IsManualModeEnabled, ManualModeSwitch.Rx().BindIsOn());
             this.Bind(ViewModel.BeginningOfWeek, BeginningOfWeekLabel.Rx().BindText());
@@ -47,19 +47,19 @@ namespace Toggl.Daneel.ViewControllers
                 SyncingView.Hidden = true;
                 SyncedView.Hidden = true;
             });
-            this.Bind(ViewModel.IsFeedbackSuccessViewShowing, SendFeedbackSuccessView.BindAnimatedIsVisible());
+            this.Bind(ViewModel.IsFeedbackSuccessViewShowing, SendFeedbackSuccessView.Rx().BindAnimatedIsVisible());
 
-            this.Bind(HelpView.Tapped(), ViewModel.OpenHelpView);
-            this.Bind(LogoutButton.Tapped(), ViewModel.TryLogout);
-            this.Bind(AboutView.Tapped(), ViewModel.OpenAboutView);
-            this.Bind(FeedbackView.Tapped(), ViewModel.SubmitFeedback);
-            this.Bind(DateFormatView.Tapped(), ViewModel.SelectDateFormat);
-            this.Bind(WorkspaceView.Tapped(), ViewModel.PickDefaultWorkspace);
-            this.BindVoid(ManualModeView.Tapped(), ViewModel.ToggleManualMode);
-            this.Bind(DurationFormatView.Tapped(), ViewModel.SelectDurationFormat);
-            this.Bind(BeginningOfWeekView.Tapped(), ViewModel.SelectBeginningOfWeek);
-            this.Bind(TwentyFourHourClockView.Tapped(), ViewModel.ToggleUseTwentyFourHourClock);
-            this.BindVoid(SendFeedbackSuccessView.Tapped(), ViewModel.CloseFeedbackSuccessView);
+            this.Bind(HelpView.Rx().Tapped(), ViewModel.OpenHelpView);
+            this.Bind(LogoutButton.Rx().Tapped(), ViewModel.TryLogout);
+            this.Bind(AboutView.Rx().Tapped(), ViewModel.OpenAboutView);
+            this.Bind(FeedbackView.Rx().Tapped(), ViewModel.SubmitFeedback);
+            this.Bind(DateFormatView.Rx().Tapped(), ViewModel.SelectDateFormat);
+            this.Bind(WorkspaceView.Rx().Tapped(), ViewModel.PickDefaultWorkspace);
+            this.BindVoid(ManualModeView.Rx().Tapped(), ViewModel.ToggleManualMode);
+            this.Bind(DurationFormatView.Rx().Tapped(), ViewModel.SelectDurationFormat);
+            this.Bind(BeginningOfWeekView.Rx().Tapped(), ViewModel.SelectBeginningOfWeek);
+            this.Bind(TwentyFourHourClockView.Rx().Tapped(), ViewModel.ToggleUseTwentyFourHourClock);
+            this.BindVoid(SendFeedbackSuccessView.Rx().Tapped(), ViewModel.CloseFeedbackSuccessView);
 
             UIApplication.Notifications
                 .ObserveWillEnterForeground((sender, e) => startAnimations())

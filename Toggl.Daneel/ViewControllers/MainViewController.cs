@@ -234,8 +234,8 @@ namespace Toggl.Daneel.ViewControllers
             bindingSet.Apply();
 
             this.Bind(ViewModel.RatingViewModel.IsFeedbackSuccessViewShowing,
-                SendFeedbackSuccessView.BindAnimatedIsVisible());
-            this.BindVoid(SendFeedbackSuccessView.Tapped(), ViewModel.RatingViewModel.CloseFeedbackSuccessView);
+                SendFeedbackSuccessView.Rx().BindAnimatedIsVisible());
+            this.BindVoid(SendFeedbackSuccessView.Rx().Tapped(), ViewModel.RatingViewModel.CloseFeedbackSuccessView);
 
             View.SetNeedsLayout();
             View.LayoutIfNeeded();

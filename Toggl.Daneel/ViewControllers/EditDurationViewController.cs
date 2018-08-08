@@ -208,8 +208,8 @@ namespace Toggl.Daneel.ViewControllers
             // Interaction observables for analytics
 
             var editingStart = Observable.Merge(
-                StartView.Tapped().Select(true),
-                EndView.Tapped().Select(false)
+                StartView.Rx().Tapped().Select(true),
+                EndView.Rx().Tapped().Select(false)
             );
 
             var dateComponentChanged = DatePicker.DateComponentChanged()
