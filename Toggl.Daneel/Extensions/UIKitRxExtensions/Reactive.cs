@@ -6,9 +6,9 @@ namespace Toggl.Daneel.Extensions
     {
         public TBase Base { get; set; }
 
-        public Reactive(TBase _base)
+        public Reactive(TBase @base)
         {
-            Base = _base;
+            Base = @base;
         }
     }
 
