@@ -1,4 +1,6 @@
-﻿namespace Toggl.Daneel.Extensions
+﻿using Foundation;
+
+namespace Toggl.Daneel.Extensions
 {
     public class Reactive<TBase>
     {
@@ -12,8 +14,8 @@
 
     public static class NSObjectReactiveCompatibleExtensions
     {
-        public static Reactive<NSObject> Rx<NSObject>(this NSObject nsObject)
-            => new Reactive<NSObject>(nsObject);
+        public static Reactive<T> Rx<T>(this T type) where T: NSObject
+            => new Reactive<T>(type);
     }
 }
 
