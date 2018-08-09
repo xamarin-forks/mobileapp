@@ -19,18 +19,18 @@ namespace Toggl.Daneel.Extensions
                 .FromEventPattern(e => textView.Changed += e, e => textView.Changed -= e)
                 .Select(e => ((UITextView)e.Sender).AttributedText);
 
-        public static IObservable<int> CursorPosition(this UITextView textView)
+        public static IObservable<int> CursorPosition<T>(this Reactive<T> reactive) where T : UITextView
             => Observable.Create<int>(observer =>
                 {
-                    var selectedTextRangeDisposable = textView.AddObserver(
+                    var selectedTextRangeDisposable = reactive.Base.AddObserver(
                         selectedTextRangeChangedKey,
                         NSKeyValueObservingOptions.OldNew,
-                        _ => observer.OnNext((int)textView.SelectedRange.Location)
+                        _ => observer.OnNext((int)reactive.Base.SelectedRange.Location)
                     );
 
                     return selectedTextRangeDisposable;
                 })
-                .StartWith((int)textView.SelectedRange.Location);
+                .StartWith((int)reactive.Base.SelectedRange.Location);
 
         public static Action<string> BindText(this UITextView textView)
             => text => textView.Text = text;
