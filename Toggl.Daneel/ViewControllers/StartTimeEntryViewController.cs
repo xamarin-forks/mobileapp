@@ -195,7 +195,7 @@ namespace Toggl.Daneel.ViewControllers
             // Reactive
             this.Bind(ViewModel.TextFieldInfoObservable, onTextFieldInfo);
 
-            DescriptionTextView.AttributedText()
+            DescriptionTextView.Rx().AttributedText()
                 .CombineLatest(DescriptionTextView.Rx().CursorPosition(), (text, _) => text)
                 .Where(_ => !isUpdatingDescriptionField)
                 .SubscribeOn(ThreadPoolScheduler.Instance)

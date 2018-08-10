@@ -9,14 +9,14 @@ namespace Toggl.Daneel.Extensions
     {
         private const string selectedTextRangeChangedKey = "selectedTextRange";
 
-        public static IObservable<string> Text(this UITextView textView)
+        public static IObservable<string> Text(this Reactive<UITextView> reactive)
             => Observable
-                .FromEventPattern(e => textView.Changed += e, e => textView.Changed -= e)
+                .FromEventPattern(e => reactive.Base.Changed += e, e => reactive.Base.Changed -= e)
                 .Select(e => ((UITextView)e.Sender).Text);
 
-        public static IObservable<NSAttributedString> AttributedText(this UITextView textView)
+        public static IObservable<NSAttributedString> AttributedText(this Reactive<UITextView> reactive)
             => Observable
-                .FromEventPattern(e => textView.Changed += e, e => textView.Changed -= e)
+                .FromEventPattern(e => reactive.Base.Changed += e, e => reactive.Base.Changed -= e)
                 .Select(e => ((UITextView)e.Sender).AttributedText);
 
         public static IObservable<int> CursorPosition<T>(this Reactive<T> reactive) where T : UITextView

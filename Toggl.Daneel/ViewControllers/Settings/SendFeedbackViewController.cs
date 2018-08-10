@@ -27,7 +27,7 @@ namespace Toggl.Daneel.ViewControllers.Settings
             prepareIndicatorView();
 
             this.Bind(CloseButton.Rx().Tapped(), ViewModel.CloseButtonTapped);
-            this.Bind(FeedbackTextView.Text(), ViewModel.FeedbackText);
+            this.Bind(FeedbackTextView.Rx().Text(), ViewModel.FeedbackText);
             this.Bind(ErrorView.Rx().Tapped(), ViewModel.ErrorViewTapped);
 
             this.Bind(SendButton.Rx().Tapped(), ViewModel.SendButtonTapped);
