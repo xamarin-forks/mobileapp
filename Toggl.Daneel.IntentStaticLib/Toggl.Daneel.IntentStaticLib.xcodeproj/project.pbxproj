@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		D62EA1B4212F148100350CA9 /* StopTimerIntent.m in Sources */ = {isa = PBXBuildFile; fileRef = D62EA1B2212F148100350CA9 /* StopTimerIntent.m */; };
+		D62EA1B7212F172800350CA9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D62EA1B6212F172800350CA9 /* Foundation.framework */; };
+		D62EA1B9212F172B00350CA9 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D62EA1B8212F172B00350CA9 /* Intents.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,6 +28,8 @@
 		D62EA1A6212F145200350CA9 /* libToggl.Daneel.IntentStaticLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libToggl.Daneel.IntentStaticLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D62EA1B2212F148100350CA9 /* StopTimerIntent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StopTimerIntent.m; sourceTree = "<group>"; };
 		D62EA1B3212F148100350CA9 /* StopTimerIntent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StopTimerIntent.h; sourceTree = "<group>"; };
+		D62EA1B6212F172800350CA9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D62EA1B8212F172B00350CA9 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +37,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D62EA1B9212F172B00350CA9 /* Intents.framework in Frameworks */,
+				D62EA1B7212F172800350CA9 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +50,7 @@
 			children = (
 				D62EA1A8212F145200350CA9 /* Toggl.Daneel.IntentStaticLib */,
 				D62EA1A7212F145200350CA9 /* Products */,
+				D62EA1B5212F172800350CA9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -62,6 +69,15 @@
 				D62EA1B2212F148100350CA9 /* StopTimerIntent.m */,
 			);
 			path = Toggl.Daneel.IntentStaticLib;
+			sourceTree = "<group>";
+		};
+		D62EA1B5212F172800350CA9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D62EA1B8212F172B00350CA9 /* Intents.framework */,
+				D62EA1B6212F172800350CA9 /* Foundation.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
