@@ -30,7 +30,6 @@ using Toggl.PrimeRadiant.Onboarding;
 using Toggl.PrimeRadiant.Settings;
 using UIKit;
 using static Toggl.Foundation.MvvmCross.Helper.Animation;
-using Intents;
 
 namespace Toggl.Daneel.ViewControllers
 {

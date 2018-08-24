@@ -95,7 +95,6 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private readonly IInteractorFactory interactorFactory;
         private readonly IMvxNavigationService navigationService;
         private readonly ISchedulerProvider schedulerProvider;
-        private readonly IIntentDonationService intentDonationService;
 
         private CompositeDisposable disposeBag = new CompositeDisposable();
 
@@ -140,7 +139,6 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             IMvxNavigationService navigationService,
             IRemoteConfigService remoteConfigService,
             ISuggestionProviderContainer suggestionProviders,
-            IIntentDonationService intentDonationService,
             ISchedulerProvider schedulerProvider)
         {
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
@@ -153,7 +151,6 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             Ensure.Argument.IsNotNull(navigationService, nameof(navigationService));
             Ensure.Argument.IsNotNull(remoteConfigService, nameof(remoteConfigService));
             Ensure.Argument.IsNotNull(suggestionProviders, nameof(suggestionProviders));
-            Ensure.Argument.IsNotNull(intentDonationService, nameof(intentDonationService));
             Ensure.Argument.IsNotNull(schedulerProvider, nameof(schedulerProvider));
 
             this.dataSource = dataSource;
@@ -164,7 +161,6 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             this.navigationService = navigationService;
             this.onboardingStorage = onboardingStorage;
             this.schedulerProvider = schedulerProvider;
-            this.intentDonationService = intentDonationService;
 
             SuggestionsViewModel = new SuggestionsViewModel(dataSource, interactorFactory, onboardingStorage, suggestionProviders);
             RatingViewModel = new RatingViewModel(timeService, dataSource, ratingService, analyticsService, onboardingStorage, navigationService, schedulerProvider);
