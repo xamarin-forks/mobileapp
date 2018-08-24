@@ -77,6 +77,10 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public IObservable<bool> IsManualModeEnabled { get; }
 
+        public IObservable<bool> AreRunningTimerNotificationsEnabled { get; }
+
+        public IObservable<bool> AreStoppedTimerNotificationsEnabled { get; }
+
         public IObservable<bool> UseTwentyFourHourFormat { get; }
 
         public IObservable<IList<SelectableWorkspaceViewModel>> Workspaces { get; }
@@ -140,6 +144,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                     .DistinctUntilChanged();
 
             IsManualModeEnabled = userPreferences.IsManualModeEnabledObservable;
+            AreRunningTimerNotificationsEnabled = userPreferences.AreRunningTimerNotificationsEnabledObservable;
+            AreStoppedTimerNotificationsEnabled = userPreferences.AreStoppedTimerNotificationsEnabledObservable;
 
             WorkspaceName =
                 dataSource.User.Current
@@ -259,6 +265,30 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             else
             {
                 userPreferences.EnableManualMode();
+            }
+        }
+
+        public void ToggleRunningTimerNotifications()
+        {
+            if (userPreferences.AreRunningTimerNotificationsEnabled)
+            {
+                userPreferences.DisableRunningTimerNotifications();
+            }
+            else
+            {
+                userPreferences.EnableRunningTimerNotifications();
+            }
+        }
+
+        public void ToggleStoppedTimerNotifications()
+        {
+            if (userPreferences.AreStoppedTimerNotificationsEnabled)
+            {
+                userPreferences.DisableStoppedTimerNotifications();
+            }
+            else
+            {
+                userPreferences.EnableStoppedTimerNotifications();
             }
         }
 

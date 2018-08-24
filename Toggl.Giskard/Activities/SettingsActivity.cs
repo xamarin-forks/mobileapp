@@ -43,6 +43,8 @@ namespace Toggl.Giskard.Activities
             this.Bind(ViewModel.Email, emailTextView.BindText());
             this.Bind(ViewModel.Workspaces, adapter.BindItems());
             this.Bind(ViewModel.IsManualModeEnabled, manualModeSwitch.BindChecked());
+            this.Bind(ViewModel.AreRunningTimerNotificationsEnabled, runningTimerNotificationsSwitch.BindChecked());
+            this.Bind(ViewModel.AreStoppedTimerNotificationsEnabled, stoppedTimerNotificationsSwitch.BindChecked());
             this.Bind(ViewModel.BeginningOfWeek, beginningOfWeekTextView.BindText());
             this.Bind(ViewModel.UserAvatar.Select(userImageFromBytes), bitmap =>
             {
@@ -55,6 +57,8 @@ namespace Toggl.Giskard.Activities
             this.Bind(aboutView.Tapped(), ViewModel.OpenAboutView);
             this.Bind(feedbackView.Tapped(), ViewModel.SubmitFeedbackUsingEmail);
             this.BindVoid(manualModeView.Tapped(), ViewModel.ToggleManualMode);
+            this.BindVoid(runningTimerNotificationsView.Tapped(), ViewModel.ToggleRunningTimerNotifications);
+            this.BindVoid(stoppedTimerNotificationsView.Tapped(), ViewModel.ToggleStoppedTimerNotifications);
             this.Bind(beginningOfWeekView.Tapped(), ViewModel.SelectBeginningOfWeek);
 
             setupToolbar();
