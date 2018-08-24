@@ -1054,6 +1054,11 @@
       <Project>{A1BBF640-E712-4E35-8E3F-AE07C7C7EDB0}</Project>
       <Name>Toggl.Daneel.IntentBinding</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SiriExtension\SiriExtension.csproj">
+      <IsAppExtension>true</IsAppExtension>
+      <Project>{48C970FE-E13F-4664-A2FD-4EBFD2DD131E}</Project>
+      <Name>Toggl.Daneel.SiriExtension</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Images.xcassets\line.imageset\" />
