@@ -2,7 +2,7 @@ XBUILD=xcodebuild
 PROJECT_ROOT=./
 PROJECT=$(PROJECT_ROOT)/Toggl.Daneel.IntentStaticLib.xcodeproj
 TARGET=Toggl.Daneel.IntentStaticLib
-NAMESPACE=Daneel
+NAMESPACE=Toggl.Daneel.Intents
 
 all: bind
 
@@ -18,7 +18,7 @@ lib$(TARGET).a: lib$(TARGET)-i386.a lib$(TARGET)-arm64.a
 	xcrun -sdk iphoneos lipo -create -output $@ $^
 
 bind: lib$(TARGET).a
-	sharpie bind -scope Toggl.Daneel.IntentStaticLib -output bo -namespace $(NAMESPACE) -sdk iphoneos12.0 Toggl.Daneel.IntentStaticLib/StopTimerIntent.h
+	sharpie bind -scope Toggl.Daneel.IntentStaticLib -output bo -namespace $(NAMESPACE) -sdk iphoneos12.0 Toggl.Daneel.IntentStaticLib/*.h
 
 clean:
 	-rm -rf bo build *.a *.dll
