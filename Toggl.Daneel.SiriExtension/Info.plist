@@ -27,6 +27,7 @@
 			<key>IntentsRestrictedWhileLocked</key>
 			<array/>
 			<key>IntentsSupported</key>
+				<string>StopTimerIntent</string>
 			<array/>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
