@@ -1054,7 +1054,11 @@
       <Project>{A1BBF640-E712-4E35-8E3F-AE07C7C7EDB0}</Project>
       <Name>Toggl.Daneel.IntentBinding</Name>
     </ProjectReference>
+<<<<<<< Updated upstream
     <ProjectReference Include="..\Toggl.Daneel.SiriExtension\SiriExtension.csproj">
+=======
+    <ProjectReference Include="..\Toggl.Daneel.SiriExtension\Toggl.Daneel.SiriExtension.csproj">
+>>>>>>> Stashed changes
       <IsAppExtension>true</IsAppExtension>
       <Project>{48C970FE-E13F-4664-A2FD-4EBFD2DD131E}</Project>
       <Name>Toggl.Daneel.SiriExtension</Name>
