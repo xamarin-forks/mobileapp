@@ -6,7 +6,6 @@ using ObjCRuntime;
 namespace Toggl.Daneel.Intents
 {
     // @interface StopTimerIntent : INIntent
-//    [Watch(5, 0), iOS(12, 0)]
     [BaseType(typeof(INIntent))]
     interface StopTimerIntent
     {
@@ -16,7 +15,6 @@ namespace Toggl.Daneel.Intents
     }
 
     // @protocol StopTimerIntentHandling <NSObject>
-//    [Watch(5, 0), iOS(12, 0)]
     [Protocol, Model]
     [BaseType(typeof(NSObject))]
     interface StopTimerIntentHandling
@@ -32,7 +30,6 @@ namespace Toggl.Daneel.Intents
     }
 
     // @interface StopTimerIntentResponse : INIntentResponse
-//    [Watch(5, 0), iOS(12, 0)]
     [BaseType(typeof(INIntentResponse))]
     [DisableDefaultCtor]
     interface StopTimerIntentResponse
