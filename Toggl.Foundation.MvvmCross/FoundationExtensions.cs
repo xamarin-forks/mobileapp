@@ -37,7 +37,10 @@ namespace Toggl.Foundation.MvvmCross
             return foundation;
         }
 
-        public static void Initialize(this MvvmCrossFoundation foundation)
+        public static void Initialize<TLoginManager>(
+            this MvvmCrossFoundation foundation, 
+            Func<Func<ITogglApi, ITogglDataSource>, TLoginManager> createLoginManager)
+            where TLoginManager : ILoginManager
         {
             initializeInversionOfControl(foundation);
 
@@ -64,9 +67,7 @@ namespace Toggl.Foundation.MvvmCross
                 return dataSource;
             }
 
-            var loginManager =
-                new LoginManager(foundation.ApiFactory, foundation.Database, foundation.GoogleService, foundation.ShortcutCreator, foundation.AccessRestrictionStorage, foundation.AnalyticsService, createDataSource, foundation.Scheduler);
-
+            var loginManager = createLoginManager(createDataSource);
             Mvx.RegisterSingleton<ILoginManager>(loginManager);
         }
 

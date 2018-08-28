@@ -5,20 +5,21 @@ using Toggl.Foundation.Analytics;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Extensions;
 using Toggl.Foundation.Models;
+using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.Shortcuts;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.Models;
 using Toggl.PrimeRadiant.Settings;
 using Toggl.Ultrawave;
 using Toggl.Ultrawave.Exceptions;
 using Toggl.Ultrawave.Network;
-using Math = System.Math;
 
 namespace Toggl.Foundation.Login
 {
-    public sealed class LoginManager : ILoginManager
+    public class LoginManager : ILoginManager
     {
         private readonly IApiFactory apiFactory;
         private readonly ITogglDatabase database;
@@ -73,7 +74,7 @@ namespace Toggl.Foundation.Login
                 .Clear()
                 .SelectMany(_ => apiFactory.CreateApiWith(credentials).User.Get())
                 .Select(User.Clean)
-                .SelectMany(database.User.Create)
+                .SelectMany(PersistUser)
                 .Select(dataSourceFromUser)
                 .Do(shortcutCreator.OnLogin)
                 .Track<ITogglDataSource, LoginSignupAuthenticationMethod, UserIsMissingApiTokenException>(
@@ -100,7 +101,7 @@ namespace Toggl.Foundation.Login
                 .Clear()
                 .SelectMany(_ => signUp(email, password, termsAccepted, countryId))
                 .Select(User.Clean)
-                .SelectMany(database.User.Create)
+                .SelectMany(PersistUser)
                 .Select(dataSourceFromUser)
                 .Do(shortcutCreator.OnLogin)
                 .Track<ITogglDataSource, LoginSignupAuthenticationMethod, UserIsMissingApiTokenException>(
@@ -150,6 +151,9 @@ namespace Toggl.Foundation.Login
                 .Do(shortcutCreator.OnLogin);
         }
 
+        protected virtual IObservable<IDatabaseUser> PersistUser(IThreadSafeUser user)
+            => database.User.Create(user);
+
         private ITogglDataSource dataSourceFromUser(IUser user)
         {
             var newCredentials = Credentials.WithApiToken(user.ApiToken);
@@ -165,7 +169,7 @@ namespace Toggl.Foundation.Login
                 .Return(apiFactory.CreateApiWith(credentials))
                 .SelectMany(api => api.User.GetWithGoogle())
                 .Select(User.Clean)
-                .SelectMany(database.User.Create)
+                .SelectMany(PersistUser)
                 .Select(dataSourceFromUser)
                 .Do(shortcutCreator.OnLogin)
                 .Track<ITogglDataSource, LoginSignupAuthenticationMethod, UserIsMissingApiTokenException>(
@@ -191,7 +195,7 @@ namespace Toggl.Foundation.Login
                 .Return(googleToken)
                 .SelectMany(apiFactory.CreateApiWith(Credentials.None).User.SignUpWithGoogle)
                 .Select(User.Clean)
-                .SelectMany(database.User.Create)
+                .SelectMany(PersistUser)
                 .Select(dataSourceFromUser)
                 .Do(shortcutCreator.OnLogin)
                 .Track<ITogglDataSource, LoginSignupAuthenticationMethod, UserIsMissingApiTokenException>(

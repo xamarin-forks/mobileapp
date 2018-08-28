@@ -133,7 +133,20 @@ namespace Toggl.Daneel
                     .WithFeedbackService(new FeedbackService(userAgent, mailService, dialogService, platformConstants))
                     .Build();
 
-            foundation.RevokeNewUserIfNeeded().Initialize();
+            foundation
+                .RevokeNewUserIfNeeded()
+                .Initialize(createDataSource =>
+                    new IosLoginManager(
+                        foundation.ApiFactory,
+                        foundation.Database,
+                        foundation.GoogleService,
+                        foundation.ShortcutCreator,
+                        foundation.AccessRestrictionStorage,
+                        foundation.AnalyticsService,
+                        createDataSource,
+                        foundation.Scheduler
+                    )
+                );
 
             base.InitializeApp(pluginManager, app);
         }

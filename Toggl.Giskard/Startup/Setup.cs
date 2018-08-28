@@ -122,7 +122,20 @@ namespace Toggl.Giskard
                     .WithErrorHandlingService(new ErrorHandlingService(navigationService, settingsStorage))
                     .Build();
 
-            foundation.RevokeNewUserIfNeeded().Initialize();
+            foundation
+                .RevokeNewUserIfNeeded()
+                .Initialize(createDataSource => 
+                    new LoginManager(
+                        foundation.ApiFactory, 
+                        foundation.Database, 
+                        foundation.GoogleService, 
+                        foundation.ShortcutCreator, 
+                        foundation.AccessRestrictionStorage, 
+                        foundation.AnalyticsService, 
+                        createDataSource, 
+                        foundation.Scheduler
+                    )
+                );
 
             base.InitializeApp(pluginManager, app);
         }
