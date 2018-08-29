@@ -5,10 +5,10 @@ namespace Toggl.Ultrawave.Helpers
     internal static class BaseUrls
     {
         private static Uri productionBaseUrl { get; }
-            = new Uri("https://mobile.toggl.com");
+            = new Uri("https://api.toggl.com");
 
         private static Uri stagingBaseUrl { get; }
-            = new Uri("https://mobile.toggl.space");
+            = new Uri("https://api.toggl.space");
 
         private const string apiPrefix = "/api/v9/";
 
