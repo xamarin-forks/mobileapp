@@ -323,35 +323,23 @@ namespace Toggl.PrimeRadiant.Settings
             isManualModeEnabledSubject.OnNext(false);
         }
 
-        public void EnableRunningTimerNotifications()
+        public void SetRunningTimerNotifications(bool state)
         {
-            keyValueStorage.SetBool(runningTimerNotificationsKey, true);
-            areRunningTimerNotificationsEnabledSubject.OnNext(true);
+            keyValueStorage.SetBool(runningTimerNotificationsKey, state);
+            areRunningTimerNotificationsEnabledSubject.OnNext(state);
         }
 
-        public void DisableRunningTimerNotifications()
+        public void SetStoppedTimerNotifications(bool state)
         {
-            keyValueStorage.SetBool(runningTimerNotificationsKey, false);
-            areRunningTimerNotificationsEnabledSubject.OnNext(false);
-        }
-
-        public void EnableStoppedTimerNotifications()
-        {
-            keyValueStorage.SetBool(stoppedTimerNotificationsKey, true);
-            areStoppedTimerNotificationsEnabledSubject.OnNext(true);
-        }
-
-        public void DisableStoppedTimerNotifications()
-        {
-            keyValueStorage.SetBool(stoppedTimerNotificationsKey, false);
-            areStoppedTimerNotificationsEnabledSubject.OnNext(false);
+            keyValueStorage.SetBool(stoppedTimerNotificationsKey, state);
+            areStoppedTimerNotificationsEnabledSubject.OnNext(state);
         }
 
         void IUserPreferences.Reset()
         {
             EnableTimerMode();
-            DisableStoppedTimerNotifications();
-            DisableRunningTimerNotifications();
+            SetStoppedTimerNotifications(false);
+            SetRunningTimerNotifications(false);
             isManualModeEnabledSubject.OnNext(false);
         }
 

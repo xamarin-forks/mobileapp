@@ -20,13 +20,9 @@ namespace Toggl.PrimeRadiant.Settings
 
         void EnableTimerMode();
 
-        void EnableRunningTimerNotifications();
+        void SetRunningTimerNotifications(bool state);
 
-        void DisableRunningTimerNotifications();
-
-        void EnableStoppedTimerNotifications();
-
-        void DisableStoppedTimerNotifications();
+        void SetStoppedTimerNotifications(bool state);
 
         void Reset();
     }

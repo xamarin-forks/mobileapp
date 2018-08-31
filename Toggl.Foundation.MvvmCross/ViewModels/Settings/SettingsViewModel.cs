@@ -270,26 +270,14 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public void ToggleRunningTimerNotifications()
         {
-            if (userPreferences.AreRunningTimerNotificationsEnabled)
-            {
-                userPreferences.DisableRunningTimerNotifications();
-            }
-            else
-            {
-                userPreferences.EnableRunningTimerNotifications();
-            }
+            var newState = !userPreferences.AreRunningTimerNotificationsEnabled;
+            userPreferences.SetRunningTimerNotifications(newState);
         }
 
         public void ToggleStoppedTimerNotifications()
         {
-            if (userPreferences.AreStoppedTimerNotificationsEnabled)
-            {
-                userPreferences.DisableStoppedTimerNotifications();
-            }
-            else
-            {
-                userPreferences.EnableStoppedTimerNotifications();
-            }
+            var newState = !userPreferences.AreStoppedTimerNotificationsEnabled;
+            userPreferences.SetStoppedTimerNotifications(newState);
         }
 
         public async Task TryLogout()
