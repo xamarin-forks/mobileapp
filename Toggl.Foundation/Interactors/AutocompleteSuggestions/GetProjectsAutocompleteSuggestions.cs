@@ -7,6 +7,7 @@ using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
+using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.Interactors.AutocompleteSuggestions
 {
@@ -26,24 +27,28 @@ namespace Toggl.Foundation.Interactors.AutocompleteSuggestions
         }
 
         public IObservable<IEnumerable<AutocompleteSuggestion>> Execute()
-            => getProjectsForSuggestions().Select(ProjectSuggestion.FromProjects);
+            => getProjectsForSuggestions();
 
-        private IObservable<IEnumerable<IThreadSafeProject>> getProjectsForSuggestions()
+        private IObservable<IEnumerable<AutocompleteSuggestion>> getProjectsForSuggestions()
             => wordsToQuery.Count == 0
                 ? getAllProjects()
                 : getAllProjectsFiltered();
 
-        private IObservable<IEnumerable<IThreadSafeProject>> getAllProjects()
-            => dataSource.GetAll(project => project.Active);
+        private IObservable<IEnumerable<AutocompleteSuggestion>> getAllProjects()
+            => dataSource.GetAll(project => project.Active).Select(ProjectSuggestion.FromProjects);
 
-        private IObservable<IEnumerable<IThreadSafeProject>> getAllProjectsFiltered()
-            => wordsToQuery.Aggregate(getAllProjects(), (obs, word) => obs.Select(filterProjectsByWord(word)));
+        private IObservable<IEnumerable<AutocompleteSuggestion>> getAllProjectsFiltered()
+            => wordsToQuery
+                .Select(word => dataSource.GetAll(filter(word))
+                    .Select(ProjectSuggestion.FromProjects))
+                .Merge();
 
-        private Func<IEnumerable<IThreadSafeProject>, IEnumerable<IThreadSafeProject>> filterProjectsByWord(string word)
-            => projects =>
-                projects.Where(
-                    p => p.Name.ContainsIgnoringCase(word)
-                         || (p.Client != null && p.Client.Name.ContainsIgnoringCase(word))
-                         || (p.Tasks != null && p.Tasks.Any(task => task.Name.ContainsIgnoringCase(word))));
+        private Func<IDatabaseProject, bool> filter(string word)
+        {
+            return p => p.Active
+                    || p.Name.ContainsIgnoringCase(word)
+                    || (p.Client != null && p.Client.Name.ContainsIgnoringCase(word))
+                    || (p.Tasks != null && p.Tasks.Any(task => task.Name.ContainsIgnoringCase(word)));
+        }
     }
 }

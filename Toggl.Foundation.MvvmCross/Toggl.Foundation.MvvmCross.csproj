@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="PropertyChanged.Fody" Version="2.2.0" />
-    <PackageReference Include="Fody" Version="2.2.1" />
+    <PackageReference Include="Fody" Version="2.4.6" />
     <PackageReference Include="MvvmCross" Version="6.1.2" />
   </ItemGroup>
   <ItemGroup>

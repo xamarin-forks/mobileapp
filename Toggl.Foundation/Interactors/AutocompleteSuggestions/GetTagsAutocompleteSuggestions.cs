@@ -7,6 +7,7 @@ using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
+using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.Interactors.AutocompleteSuggestions
 {
@@ -27,10 +28,13 @@ namespace Toggl.Foundation.Interactors.AutocompleteSuggestions
 
         public IObservable<IEnumerable<AutocompleteSuggestion>> Execute()
             => wordsToQuery
-                .Aggregate(dataSource.GetAll(), (obs, word) => obs.Select(filterByWord(word)))
-                .Select(TagSuggestion.FromTags);
+                .Select(word => dataSource.GetAll(filter(word))
+                    .Select(TagSuggestion.FromTags))
+                .Merge();
 
-        private Func<IEnumerable<IThreadSafeTag>, IEnumerable<IThreadSafeTag>> filterByWord(string word)
-            => tags => tags.Where(t => t.Name.ContainsIgnoringCase(word));
+        private Func<IDatabaseTag, bool> filter(string word)
+        {
+            return t => t.Name.ContainsIgnoringCase(word);
+        }
     }
 }
