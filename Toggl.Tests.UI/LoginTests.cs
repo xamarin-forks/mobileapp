@@ -28,6 +28,7 @@ namespace Toggl.Tests.UI
             var email = randomEmail();
             var password = "asdads";
 
+            app.Tap(Login.EmailText);
             app.EnterText(email);
             app.Tap(Login.PasswordText);
             app.EnterText($"{password}123456");
@@ -42,6 +43,7 @@ namespace Toggl.Tests.UI
             var email = randomEmail();
             var password = await User.Create(email);
 
+            app.Tap(Login.EmailText);
             app.EnterText(email);
             app.Tap(Login.PasswordText);
             app.EnterText(password);
