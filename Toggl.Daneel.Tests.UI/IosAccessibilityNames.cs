@@ -25,8 +25,9 @@
     public static class SignUp
     {
         public const string EmailText = "SignUpEmail";
+        public const string SignUpButton = "SignUpButton";
         public const string PasswordText = "SignUpPassword";
-        public const string SignUpButton = "SignUpEmail";
+        public const string GdprButton = "SignUpGdprButton";
     }
 
     public static class Main

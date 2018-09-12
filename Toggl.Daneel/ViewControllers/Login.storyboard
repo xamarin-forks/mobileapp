@@ -149,6 +149,9 @@
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" label="LoginSwitchToSignUp">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
                                 <constraints>
                                     <constraint firstItem="EVb-tB-eEa" firstAttribute="top" secondItem="R6U-zp-jAZ" secondAttribute="top" id="2Be-PX-Dee"/>
                                     <constraint firstAttribute="trailing" secondItem="EVb-tB-eEa" secondAttribute="trailing" constant="24" id="cXM-08-Iu3"/>

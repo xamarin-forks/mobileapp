@@ -51,6 +51,7 @@
                 </imageView>
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="l9R-60-VBL" customClass="LoginTextField">
                     <rect key="frame" x="16" y="133" width="288" height="56"/>
+                    <accessibility key="accessibilityConfiguration" label="SignUpEmail"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="56" id="uN1-Sc-9gG"/>
                     </constraints>
@@ -60,6 +61,7 @@
                 </textField>
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Tbg-EL-dza" customClass="LoginTextField">
                     <rect key="frame" x="16" y="201" width="288" height="56"/>
+                    <accessibility key="accessibilityConfiguration" label="SignUpPassword"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="56" id="GQS-iS-edi"/>
                     </constraints>
@@ -79,6 +81,7 @@
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4U6-rc-Cap">
                     <rect key="frame" x="16" y="297" width="288" height="40"/>
                     <color key="backgroundColor" red="0.023529411764705882" green="0.66666666666666663" blue="0.96078431372549022" alpha="1" colorSpace="calibratedRGB"/>
+                    <accessibility key="accessibilityConfiguration" label="SignUpButton"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="g1T-bA-zza"/>
                     </constraints>

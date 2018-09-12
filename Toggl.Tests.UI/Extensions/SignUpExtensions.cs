@@ -13,15 +13,17 @@ namespace Toggl.Tests.UI.Extensions
 
         public static void TrySigningUpAndFail(this IApp app)
         {
-            app.Tap(Login.LoginButton);
+            app.Tap(SignUp.SignUpButton);
 
             app.WaitForElement(Login.ErrorLabel);
         }
 
         public static void SignUpSuccesfully(this IApp app)
         {
-            app.Tap(Login.LoginButton);
+            app.Tap(SignUp.SignUpButton);
+            app.WaitForElement(SignUp.GdprButton);
 
+            app.Tap(SignUp.GdprButton);
             app.WaitForElement(Main.StartTimeEntryButton);
         }
     }
