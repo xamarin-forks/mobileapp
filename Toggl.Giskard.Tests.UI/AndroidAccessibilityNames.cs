@@ -5,11 +5,9 @@ namespace Toggl.Tests.UI
 {
     public static class Onboarding
     {
-        public const string FirstOnboardingElement = LoginButton;
+        public const string FirstOnboardingElement = "";
         public const string SkipButton = "";
         public const string NextButton = "";
-        public const string LoginButton = "Log in";
-        public const string SignUpButton = "New to Toggl";
         public const string FirstLabel = "";
         public const string SecondLabel = "";
         public const string ThirdLabel = "";
@@ -18,14 +16,21 @@ namespace Toggl.Tests.UI
 
     public static class Login
     {
-        //public const string EmailText = "";
         public static readonly Func<AppQuery, AppQuery> EmailText = x => x.Id("LoginEmailTextField");
         public static readonly Func<AppQuery, AppQuery> ErrorLabel = x => x.Id("InfoTextField");
+        public const string LoginButton = "LoginButton";
         public static readonly Func<AppQuery, AppQuery> PasswordText = x => x.Id("LoginPasswordTextField");
         public const string ShowPasswordButton = "";
+        public const string SwitchToSignUpLabel = "LoginSwitchToSignUp";
         public const string ForgotPasswordButton = "";
-        public const string BackButton = "Back Button";
-        public static readonly Func<AppQuery, AppQuery> NextButton = x => x.Id("LoginNextButton");
+    }
+
+    public static class SignUp
+    {
+        public const string EmailText = "SignUpEmail";
+        public const string SignUpButton = "SignUpButton";
+        public const string PasswordText = "SignUpPassword";
+        public const string GdprButton = "SignUpGdprButton";
     }
 
     public static class Main

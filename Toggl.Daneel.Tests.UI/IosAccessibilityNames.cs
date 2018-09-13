@@ -41,9 +41,4 @@
         public const string DoneButton = "StartTimeEntryDone";
         public const string DescriptionText = "StartTimeEntryDescription";
     }
-
-    public static class Calendar
-    {
-        public const string Tab = "CalendarTab";
-    }
 }
