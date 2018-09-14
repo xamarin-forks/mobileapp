@@ -5,6 +5,7 @@ using CoreGraphics;
 using MvvmCross;
 using Toggl.Daneel.Cells.Calendar;
 using Toggl.Daneel.Extensions;
+using Toggl.Daneel.Extensions.Reactive;
 using Toggl.Daneel.Presentation.Attributes;
 using Toggl.Daneel.ViewControllers.Calendar;
 using Toggl.Daneel.Views.Calendar;
@@ -56,8 +57,8 @@ namespace Toggl.Daneel.ViewControllers
                     shouldShowOnboarding => OnboardingView.Alpha = shouldShowOnboarding ? 1: 0)
                 .DisposedBy(DisposeBag);
 
-            this.Bind(ViewModel.ShouldShowOnboarding, OnboardingView.BindIsVisibleWithFade());
-            this.Bind(GetStartedButton.Tapped(), ViewModel.GetStartedAction);
+            this.Bind(ViewModel.ShouldShowOnboarding, OnboardingView.Rx().IsVisibleWithFade());
+            this.Bind(GetStartedButton.Rx().Tap(), ViewModel.GetStartedAction);
 
             var timeService = Mvx.Resolve<ITimeService>();
 
@@ -78,9 +79,9 @@ namespace Toggl.Daneel.ViewControllers
             CalendarCollectionView.ContentInset = new UIEdgeInsets(20, 0, 20, 0);
 
             this.Bind(dataSource.ItemTapped, ViewModel.OnItemTapped);
-            this.Bind(settingsButton.Tapped(), ViewModel.SelectCalendars);
+            this.Bind(settingsButton.Rx().Tap(), ViewModel.SelectCalendars);
             this.Bind(editItemHelper.EditCalendarItem, ViewModel.OnUpdateTimeEntry);
-            this.Bind(ViewModel.SettingsAreVisible , settingsButton.BindIsVisible());
+            this.Bind(ViewModel.SettingsAreVisible , settingsButton.Rx().IsVisible());
             this.Bind(createFromSpanHelper.CreateFromSpan, ViewModel.OnDurationSelected);
 
             CalendarCollectionView.LayoutIfNeeded();
