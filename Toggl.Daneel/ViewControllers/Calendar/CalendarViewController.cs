@@ -1,25 +1,34 @@
+
 using System;
 using System.Reactive.Linq;
 using CoreGraphics;
 using MvvmCross;
+using Toggl.Daneel.Cells.Calendar;
 using Toggl.Daneel.Extensions;
 using Toggl.Daneel.Presentation.Attributes;
+using Toggl.Daneel.ViewControllers.Calendar;
 using Toggl.Daneel.Views.Calendar;
 using Toggl.Daneel.ViewSources;
 using Toggl.Foundation;
 using Toggl.Foundation.MvvmCross.Extensions;
+using Toggl.Foundation.Calendar;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Foundation.MvvmCross.ViewModels.Calendar;
 using Toggl.Multivac.Extensions;
 using UIKit;
+using Toggl.Foundation.Interactors;
+using Toggl.Multivac;
 
 namespace Toggl.Daneel.ViewControllers
 {
     [TabPresentation]
-    public sealed partial class CalendarViewController : ReactiveViewController<CalendarViewModel>
+    public sealed partial class CalendarViewController : ReactiveViewController<CalendarViewModel>, IUIViewControllerPreviewingDelegate
     {
+        private const int minPeekViewHeight = 50;
+
         private readonly UIImageView titleImage = new UIImageView(UIImage.FromBundle("togglLogo"));
 
+        private IInteractorFactory interactorFactory;
         private CalendarCollectionViewLayout layout;
         private CalendarCollectionViewSource dataSource;
         private CalendarCollectionViewEditItemHelper editItemHelper;
@@ -27,7 +36,7 @@ namespace Toggl.Daneel.ViewControllers
 
         private readonly UIButton settingsButton = new UIButton(new CGRect(0, 0, 40, 50));
 
-        public CalendarViewController() 
+        public CalendarViewController()
             : base(nameof(CalendarViewController))
         {
         }
@@ -35,6 +44,8 @@ namespace Toggl.Daneel.ViewControllers
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+            interactorFactory = Mvx.Resolve<IInteractorFactory>();
+            RegisterForPreviewingWithDelegate(this, CalendarCollectionView);
 
             settingsButton.SetImage(UIImage.FromBundle("icSettings"), UIControlState.Normal);
 
@@ -89,5 +100,39 @@ namespace Toggl.Daneel.ViewControllers
                 new UIBarButtonItem(settingsButton)
             };
         }
+
+        public UIViewController GetViewControllerForPreview(IUIViewControllerPreviewing previewingContext, CGPoint location)
+        {
+            var index = CalendarCollectionView.IndexPathForItemAtPoint(location);
+            if (index == null)
+                return null;
+
+            var cell = CalendarCollectionView.CellForItem(index);
+            var calendarItemView = cell as CalendarItemView;
+            if (calendarItemView == null)
+                return null;
+
+            if (calendarItemView.Item.Source == CalendarItemSource.Calendar)
+                return null;
+
+            previewingContext.SourceRect = cell.Frame;
+
+            return new CalendarItemPeekViewController(calendarItemView.Item, interactorFactory)
+            {
+                PreferredContentSize = sizeForPeekView(cell.Frame.Size)
+            };
+        }
+
+        public void CommitViewController(IUIViewControllerPreviewing previewingContext, UIViewController viewControllerToCommit)
+        {
+        }
+
+        private CGSize sizeForPeekView(CGSize cellSize)
+            => new CGSize(
+                0, //Width is set by iOSc
+                cellSize.Height < minPeekViewHeight
+                    ? minPeekViewHeight
+                    : cellSize.Height
+            );
     }
 }

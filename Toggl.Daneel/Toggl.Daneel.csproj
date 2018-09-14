@@ -631,6 +631,7 @@
     <InterfaceDefinition Include="ViewControllers\Settings\NotificationSettingsViewController.xib" />
     <InterfaceDefinition Include="ViewControllers\Settings\UpcomingEventsNotificationSettingsViewController.xib" />
     <InterfaceDefinition Include="Cells\Settings\UpcomingEventsOptionCell.xib" />
+    <InterfaceDefinition Include="ViewControllers\Calendar\CalendarItemPeekViewController.xib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -1127,6 +1128,10 @@
     <Compile Include="Presentation\Attributes\TabPresentationAttribute.cs" />
     <Compile Include="Views\Calendar\CalendarCollectionViewAutoScrollHelper.cs" />
     <Compile Include="Extensions\UIKitRxExtensions\FadeViewRxExtensions.cs" />
+    <Compile Include="ViewControllers\Calendar\CalendarItemPeekViewController.cs" />
+    <Compile Include="ViewControllers\Calendar\CalendarItemPeekViewController.designer.cs">
+      <DependentUpon>CalendarItemPeekViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Foundation.MvvmCross\Toggl.Foundation.MvvmCross.csproj">
