@@ -1125,7 +1125,6 @@
     <Compile Include="Extensions\ScrollViewExtensions.cs" />
     <Compile Include="Presentation\Attributes\TabPresentationAttribute.cs" />
     <Compile Include="Views\Calendar\CalendarCollectionViewAutoScrollHelper.cs" />
-    <Compile Include="Extensions\UIKitRxExtensions\FadeViewRxExtensions.cs" />
     <Compile Include="ViewControllers\Calendar\CalendarItemPeekViewController.cs" />
     <Compile Include="ViewControllers\Calendar\CalendarItemPeekViewController.designer.cs">
       <DependentUpon>CalendarItemPeekViewController.cs</DependentUpon>
