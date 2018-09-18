@@ -6,6 +6,7 @@ using Toggl.Foundation.MvvmCross.ViewModels;
 using MvvmCross;
 using MvvmCross.Droid.Support.V7.AppCompat;
 using MvvmCross.Navigation;
+using Toggl.Foundation;
 
 namespace Toggl.Giskard
 {
@@ -20,6 +21,10 @@ namespace Toggl.Giskard
         Categories = new[] { "android.intent.category.BROWSABLE", "android.intent.category.DEFAULT" },
         DataSchemes = new[] { "toggl" },
         DataHost = "*")]
+    [IntentFilter(
+        new[] { "android.intent.action.PROCESS_TEXT" },
+        Categories = new[] { "android.intent.category.DEFAULT" },
+        DataMimeType = "text/plain")]
     public class SplashScreen : MvxSplashScreenAppCompatActivity<Setup, App<LoginViewModel>>
     {
         public SplashScreen()
@@ -31,7 +36,7 @@ namespace Toggl.Giskard
         protected override void RunAppStart(Bundle bundle)
         {
             base.RunAppStart(bundle);
-            var navigationUrl = Intent.Data?.ToString();
+            var navigationUrl = Intent.Data?.ToString() ?? getTrackUrlFromProcessedText();
             var navigationService = Mvx.Resolve<IMvxNavigationService>();
             if (string.IsNullOrEmpty(navigationUrl))
             {
@@ -40,6 +45,16 @@ namespace Toggl.Giskard
             }
 
             navigationService.Navigate(navigationUrl);
+        }
+
+        private string getTrackUrlFromProcessedText()
+        {
+            var description = Intent.GetStringExtra(Android.Content.Intent.ExtraProcessText);
+            if (string.IsNullOrWhiteSpace(description))
+                return null;
+
+            var applicationUrl = ApplicationUrls.Main.Track(description);
+            return applicationUrl;
         }
     }
 }
