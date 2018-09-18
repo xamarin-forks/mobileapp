@@ -3,19 +3,16 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using PropertyChanged;
 using Toggl.Foundation;
 using Toggl.Foundation.Analytics;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Experiments;
 using Toggl.Foundation.Extensions;
-using Toggl.Foundation.Helper;
 using Toggl.Foundation.Interactors;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.MvvmCross.Collections;
@@ -180,9 +177,21 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             RefreshAction = new UIAction(refresh);
         }
 
-        public void Init(string action)
+        public void Init(string action, string description)
         {
             urlNavigationAction = action;
+
+            if (description != null)
+            {
+                interactorFactory
+                    .GetDefaultWorkspace()
+                    .Execute()
+                    .SelectMany(workspace => interactorFactory
+                        .CreateTimeEntry(description.AsTimeEntryPrototype(timeService.CurrentDateTime, workspace.Id))
+                        .Execute())
+                    .Subscribe()
+                    .DisposedBy(disposeBag);
+            }
         }
 
         public override async Task Initialize()
