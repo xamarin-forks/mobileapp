@@ -48,6 +48,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         public IObservable<IThreadSafeTimeEntry> CurrentRunningTimeEntry { get; private set; }
         public IObservable<bool> ShouldShowRunningTimeEntryNotification { get; private set; }
         public IObservable<bool> ShouldShowStoppedTimeEntryNotification { get; private set; }
+        public IObservable<bool> IsShowingSuggestions { get; private set; }
 
         public TimeSpan CurrentTimeEntryElapsedTime { get; private set; } = TimeSpan.Zero;
         public DurationFormat CurrentTimeEntryElapsedTimeFormat { get; } = DurationFormat.Improved;
@@ -221,6 +222,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
             ShouldShowRunningTimeEntryNotification = userPreferences.AreRunningTimerNotificationsEnabledObservable;
             ShouldShowStoppedTimeEntryNotification = userPreferences.AreStoppedTimerNotificationsEnabledObservable;
+
+            IsShowingSuggestions = userPreferences.IsShowingSuggestionsObservable;
 
             CurrentRunningTimeEntry = dataSource
                 .TimeEntries

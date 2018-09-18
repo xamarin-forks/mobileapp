@@ -45,6 +45,7 @@ namespace Toggl.Giskard.Activities
             this.Bind(ViewModel.Email, emailTextView.Rx().TextObserver());
             this.Bind(ViewModel.Workspaces, adapter.Rx().Items());
             this.Bind(ViewModel.IsManualModeEnabled, manualModeSwitch.Rx().Checked());
+            this.Bind(ViewModel.IsShowingSuggestions, isShowingSuggestionsSwitch.Rx().Checked());
             this.Bind(ViewModel.AreRunningTimerNotificationsEnabled, runningTimerNotificationsSwitch.Rx().Checked());
             this.Bind(ViewModel.AreStoppedTimerNotificationsEnabled, stoppedTimerNotificationsSwitch.Rx().Checked());
             this.Bind(ViewModel.BeginningOfWeek, beginningOfWeekTextView.Rx().TextObserver());
@@ -62,6 +63,7 @@ namespace Toggl.Giskard.Activities
             this.Bind(aboutView.Rx().Tap(), ViewModel.OpenAboutView);
             this.Bind(feedbackView.Rx().Tap(), ViewModel.SubmitFeedback);
             this.BindVoid(manualModeView.Rx().Tap(), ViewModel.ToggleManualMode);
+            this.BindVoid(isShowingSuggestionsView.Rx().Tap(), ViewModel.ToggleShowingSuggestions);
             this.BindVoid(runningTimerNotificationsView.Rx().Tap(), ViewModel.ToggleRunningTimerNotifications);
             this.BindVoid(stoppedTimerNotificationsView.Rx().Tap(), ViewModel.ToggleStoppedTimerNotifications);
             this.Bind(beginningOfWeekView.Rx().Tap(), ViewModel.SelectBeginningOfWeek);

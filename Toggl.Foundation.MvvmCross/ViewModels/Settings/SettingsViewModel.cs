@@ -74,6 +74,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         public IObservable<string> DurationFormat { get; }
 
         public IObservable<string> BeginningOfWeek { get; }
+       
+        public IObservable<bool> IsShowingSuggestions { get; }
 
         public IObservable<bool> IsManualModeEnabled { get; }
 
@@ -146,6 +148,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             IsManualModeEnabled = userPreferences.IsManualModeEnabledObservable;
             AreRunningTimerNotificationsEnabled = userPreferences.AreRunningTimerNotificationsEnabledObservable;
             AreStoppedTimerNotificationsEnabled = userPreferences.AreStoppedTimerNotificationsEnabledObservable;
+            IsShowingSuggestions = userPreferences.IsShowingSuggestionsObservable;
 
             WorkspaceName =
                 dataSource.User.Current
@@ -266,6 +269,12 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             {
                 userPreferences.EnableManualMode();
             }
+        }
+
+        public void ToggleShowingSuggestions()
+        {
+            var newState = !userPreferences.IsShowingSuggestions;
+            userPreferences.SetIsShowingSuggestions(newState);
         }
 
         public void ToggleRunningTimerNotifications()

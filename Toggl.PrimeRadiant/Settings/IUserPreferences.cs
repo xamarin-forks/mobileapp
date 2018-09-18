@@ -4,6 +4,8 @@ namespace Toggl.PrimeRadiant.Settings
 {
     public interface IUserPreferences
     {
+        IObservable<bool> IsShowingSuggestionsObservable { get; }
+
         IObservable<bool> IsManualModeEnabledObservable { get; }
 
         IObservable<bool> AreRunningTimerNotificationsEnabledObservable { get; }
@@ -16,9 +18,13 @@ namespace Toggl.PrimeRadiant.Settings
 
         bool AreStoppedTimerNotificationsEnabled { get; }
 
+        bool IsShowingSuggestions { get; }
+
         void EnableManualMode();
 
         void EnableTimerMode();
+
+        void SetIsShowingSuggestions(bool state);
 
         void SetRunningTimerNotifications(bool state);
 

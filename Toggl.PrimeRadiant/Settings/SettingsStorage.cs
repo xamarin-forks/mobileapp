@@ -42,6 +42,8 @@ namespace Toggl.PrimeRadiant.Settings
         private const string lastSuccessfulSyncKey = "LastSuccessfulSync";
         private const string lastLoginKey = "LastLogin";
 
+        private const string isShowingSuggestionsKey = "IsShowingSuggestions";
+
         private readonly Version version;
         private readonly IKeyValueStorage keyValueStorage;
 
@@ -58,6 +60,7 @@ namespace Toggl.PrimeRadiant.Settings
         private readonly ISubject<bool> areStoppedTimerNotificationsEnabledSubject;
         private readonly ISubject<bool> navigatedAwayFromMainViewAfterTappingStopButtonSubject;
         private readonly ISubject<bool> hasTimeEntryBeenContinuedSubject;
+        private readonly ISubject<bool> isShowingSuggestionsSubject;
 
         public SettingsStorage(Version version, IKeyValueStorage keyValueStorage)
         {
@@ -79,6 +82,7 @@ namespace Toggl.PrimeRadiant.Settings
             (projectOrTagWasAddedSubject, ProjectOrTagWasAddedBefore) = prepareSubjectAndObservable(projectOrTagWasAddedBeforeKey);
             (navigatedAwayFromMainViewAfterTappingStopButtonSubject, NavigatedAwayFromMainViewAfterTappingStopButton) = prepareSubjectAndObservable(navigatedAwayFromMainViewAfterTappingStopButtonKey);
             (hasTimeEntryBeenContinuedSubject, HasTimeEntryBeenContinued) = prepareSubjectAndObservable(hasTimeEntryBeenContinuedKey);
+            (isShowingSuggestionsSubject, IsShowingSuggestionsObservable) = prepareSubjectAndObservable(isShowingSuggestionsKey);
         }
 
         #region IAccessRestrictionStorage
@@ -313,12 +317,16 @@ namespace Toggl.PrimeRadiant.Settings
 
         #region IUserPreferences
 
+        public IObservable<bool> IsShowingSuggestionsObservable { get; }
         public IObservable<bool> IsManualModeEnabledObservable { get; }
         public IObservable<bool> AreRunningTimerNotificationsEnabledObservable { get; }
         public IObservable<bool> AreStoppedTimerNotificationsEnabledObservable { get; }
 
         public bool IsManualModeEnabled
             => keyValueStorage.GetBool(preferManualModeKey);
+
+        public bool IsShowingSuggestions
+            => keyValueStorage.GetBool(isShowingSuggestionsKey);
 
         public bool AreRunningTimerNotificationsEnabled
             => keyValueStorage.GetBool(runningTimerNotificationsKey);
@@ -342,6 +350,12 @@ namespace Toggl.PrimeRadiant.Settings
         {
             keyValueStorage.SetBool(runningTimerNotificationsKey, state);
             areRunningTimerNotificationsEnabledSubject.OnNext(state);
+        }
+
+        public void SetIsShowingSuggestions(bool state)
+        {
+            keyValueStorage.SetBool(isShowingSuggestionsKey, state);
+            isShowingSuggestionsSubject.OnNext(state);
         }
 
         public void SetStoppedTimerNotifications(bool state)

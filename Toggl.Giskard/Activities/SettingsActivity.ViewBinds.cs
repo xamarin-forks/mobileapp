@@ -16,6 +16,7 @@ namespace Toggl.Giskard.Activities
         private View stoppedTimerNotificationsView;
         private View avatarContainer;
         private View beginningOfWeekView;
+        private View isShowingSuggestionsView;
 
         private TextView nameTextView;
         private TextView emailTextView;
@@ -27,6 +28,7 @@ namespace Toggl.Giskard.Activities
         private Switch manualModeSwitch;
         private Switch runningTimerNotificationsSwitch;
         private Switch stoppedTimerNotificationsSwitch;
+        private Switch isShowingSuggestionsSwitch;
 
         private RecyclerView workspacesRecyclerView;
 
@@ -51,6 +53,9 @@ namespace Toggl.Giskard.Activities
             manualModeSwitch = FindViewById<Switch>(Resource.Id.SettingsIsManualModeEnabledSwitch);
             runningTimerNotificationsSwitch = FindViewById<Switch>(Resource.Id.SettingsAreRunningTimerNotificationsEnabledSwitch);
             stoppedTimerNotificationsSwitch = FindViewById<Switch>(Resource.Id.SettingsAreStoppedTimerNotificationsEnabledSwitch);
+
+            isShowingSuggestionsView = FindViewById(Resource.Id.SettingsShowSuggestions);
+            isShowingSuggestionsSwitch = FindViewById<Switch>(Resource.Id.SettingsIsShowingSuggestionsSwitch);
 
             workspacesRecyclerView = FindViewById<RecyclerView>(Resource.Id.SettingsWorkspacesRecyclerView);
         }

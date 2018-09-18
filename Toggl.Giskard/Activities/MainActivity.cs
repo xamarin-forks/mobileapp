@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
@@ -12,6 +13,7 @@ using Android.Support.V7.Widget.Helper;
 using Android.Views;
 using MvvmCross.Droid.Support.V7.AppCompat;
 using MvvmCross.Platforms.Android.Presenters.Attributes;
+using Toggl.Foundation.MvvmCross.Collections.Changes;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Foundation.Sync;
 using Toggl.Giskard.Adapters;
@@ -82,6 +84,11 @@ namespace Toggl.Giskard.Activities
                 .IsTimeEntryRunning
                 .ObserveOn(SynchronizationContext.Current);
             this.Bind(isTimeEntryRunning, updateRecyclerViewPadding);
+
+            var isShowingSuggestions = ViewModel
+                .IsShowingSuggestions
+                .ObserveOn(SynchronizationContext.Current);
+            this.Bind(isShowingSuggestions, mainRecyclerAdapter.UpdateShowingSuggestions);
 
             notificationManager = GetSystemService(NotificationService) as NotificationManager;
             this.BindRunningTimeEntry(notificationManager, ViewModel.CurrentRunningTimeEntry, ViewModel.ShouldShowRunningTimeEntryNotification);

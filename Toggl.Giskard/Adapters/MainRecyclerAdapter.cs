@@ -30,6 +30,8 @@ namespace Toggl.Giskard.Adapters
 
         public SuggestionsViewModel SuggestionsViewModel { get; set; }
 
+        public bool IsShowingSuggestions { get; set; }
+
         private Subject<TimeEntryViewModel> timeEntryTappedSubject = new Subject<TimeEntryViewModel>();
         private Subject<TimeEntryViewModel> continueTimeEntrySubject = new Subject<TimeEntryViewModel>();
         private Subject<TimeEntryViewModel> deleteTimeEntrySubject = new Subject<TimeEntryViewModel>();
@@ -51,7 +53,7 @@ namespace Toggl.Giskard.Adapters
             deleteTimeEntrySubject.OnNext(deletedTimeEntry);
         }
 
-        public override int HeaderOffset => 1;
+        public override int HeaderOffset => IsShowingSuggestions ? 1 : 0;
 
         protected override bool TryBindCustomViewType(RecyclerView.ViewHolder holder, int position)
         {
@@ -62,6 +64,12 @@ namespace Toggl.Giskard.Adapters
             }
 
             return false;
+        }
+
+        public void UpdateShowingSuggestions(bool isShowingSuggestions) 
+        {
+            IsShowingSuggestions = isShowingSuggestions;
+            NotifyDataSetChanged();
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
@@ -77,10 +85,8 @@ namespace Toggl.Giskard.Adapters
 
         public override int GetItemViewType(int position)
         {
-            if (position == 0)
-            {
+            if (IsShowingSuggestions && position == 0)
                 return SuggestionViewType;
-            }
 
             return base.GetItemViewType(position);
         }
