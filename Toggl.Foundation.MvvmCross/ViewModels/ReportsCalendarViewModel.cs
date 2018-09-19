@@ -21,7 +21,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
     [Preserve(AllMembers = true)]
     public sealed class ReportsCalendarViewModel : MvxViewModel
     {
-        private const int monthsToShow = 12;
+        private const int monthsToShow = 13;
 
         //Fields
         private readonly ITimeService timeService;
@@ -154,7 +154,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private void fillMonthArray()
         {
             var monthIterator = initialMonth;
-            for (int i = 0; i < 12; i++, monthIterator = monthIterator.Next())
+            for (int i = 0; i < monthsToShow; i++, monthIterator = monthIterator.Next())
                 Months.Add(new CalendarPageViewModel(monthIterator, BeginningOfWeek, timeService.CurrentDateTime));
         }
 
