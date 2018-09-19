@@ -51,6 +51,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private readonly ISubject<TextFieldInfo> querySubject = new Subject<TextFieldInfo>();
         private readonly ISubject<AutocompleteSuggestionType> queryByTypeSubject = new Subject<AutocompleteSuggestionType>();
 
+        private readonly TimeSpan queryThrottle = TimeSpan.FromMilliseconds(100);
+
         private bool hasAnyTags;
         private bool hasAnyProjects;
         private long defaultWorkspaceId;
@@ -261,6 +263,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
             querySubject.AsObservable()
                 .StartWith(textFieldInfo)
+                .Throttle(queryThrottle, schedulerProvider.DefaultScheduler)
                 .Select(QueryInfo.ParseFieldInfo)
                 .Do(onParsedQuery)
                 .SelectMany(autocompleteProvider.Query)
