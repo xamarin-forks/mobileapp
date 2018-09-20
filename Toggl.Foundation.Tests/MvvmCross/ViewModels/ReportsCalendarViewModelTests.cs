@@ -64,7 +64,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
         public sealed class TheInitializeMethod : ReportsCalendarViewModelTest
         {
             [Fact, LogIfTooSlow]
-            public async Task InitializesTheMonthsPropertyToLast12Months()
+            public async Task InitializesTheMonthsPropertyToLast13Months()
             {
                 var now = new DateTimeOffset(2020, 4, 2, 1, 1, 1, TimeSpan.Zero);
                 TimeService.CurrentDateTime.Returns(now);
@@ -72,8 +72,8 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 await ViewModel.Initialize();
 
-                ViewModel.Months.Should().HaveCount(12);
-                var firstDateTime = now.AddMonths(-11);
+                ViewModel.Months.Should().HaveCount(13);
+                var firstDateTime = now.AddMonths(-12);
                 var month = new CalendarMonth(
                     firstDateTime.Year, firstDateTime.Month);
                 for (int i = 0; i < 12; i++, month = month.Next())
@@ -134,8 +134,8 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 observer.Received().OnNext(Arg.Is<ReportsDateRangeParameter>(
                     dateRange => ensureDateRangeIsCorrect(
                         dateRange,
-                        ViewModel.Months[11].Days[0],
-                        ViewModel.Months[11].Days[6]
+                        ViewModel.Months[12].Days[0],
+                        ViewModel.Months[12].Days[6]
                     )));
             }
         }
@@ -143,11 +143,11 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
         public sealed class TheCurrentMonthProperty : ReportsCalendarViewModelTest
         {
             [Theory, LogIfTooSlow]
-            [InlineData(2017, 12, 11, 2017, 12)]
-            [InlineData(2017, 5, 0, 2016, 6)]
-            [InlineData(2017, 5, 11, 2017, 5)]
-            [InlineData(2017, 5, 6, 2016, 12)]
-            [InlineData(2017, 5, 7, 2017, 1)]
+            [InlineData(2017, 12, 12, 2017, 12)]
+            [InlineData(2017, 5, 0, 2016, 5)]
+            [InlineData(2017, 5, 12, 2017, 5)]
+            [InlineData(2017, 5, 7, 2016, 12)]
+            [InlineData(2017, 5, 8, 2017, 1)]
             public void RepresentsTheCurrentPage(
                 int currentYear,
                 int currentMonth,
@@ -168,18 +168,18 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
         public sealed class TheCurrentPageProperty : ReportsCalendarViewModelTest
         {
             [Fact, LogIfTooSlow]
-            public void IsInitializedTo11()
+            public void IsInitializedTo12()
             {
-                ViewModel.CurrentPage.Should().Be(11);
+                ViewModel.CurrentPage.Should().Be(12);
             }
         }
 
         public sealed class TheRowsInCurrentMonthProperty : ReportsCalendarViewModelTest
         {
             [Theory, LogIfTooSlow]
-            [InlineData(2017, 12, 11, BeginningOfWeek.Monday, 5)]
-            [InlineData(2017, 12, 9, BeginningOfWeek.Monday, 6)]
-            [InlineData(2017, 2, 11, BeginningOfWeek.Wednesday, 4)]
+            [InlineData(2017, 12, 12, BeginningOfWeek.Monday, 5)]
+            [InlineData(2017, 12, 10, BeginningOfWeek.Monday, 6)]
+            [InlineData(2017, 2, 12, BeginningOfWeek.Wednesday, 4)]
             public async Task ReturnsTheRowCountOfCurrentlyShownMonth(
                 int currentYear,
                 int currentMonth,
