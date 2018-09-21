@@ -8,7 +8,20 @@ namespace Toggl.PrimeRadiant.Realm
 {
     internal partial class RealmProject : RealmObject, IDatabaseProject
     {
-        public string Name { get; set; }
+        public string Name
+        {
+            get => InternalName;
+            set
+            {
+                InternalName = value;
+                LowerCaseName = value?.ToLower();
+            }
+        }
+
+        [MapTo(nameof(Name))]
+        public string InternalName { get; set; }
+
+        public string LowerCaseName { get; set; }
 
         public bool IsPrivate { get; set; }
 
@@ -40,7 +53,20 @@ namespace Toggl.PrimeRadiant.Realm
 
         public IDatabaseWorkspace Workspace => RealmWorkspace;
 
-        public RealmClient RealmClient { get; set; }
+        public RealmClient RealmClient
+        {
+            get => InternalRealmClient;
+            set
+            {
+                InternalRealmClient = value;
+                LowerCaseClientName = value?.Name.ToLower();
+            }
+        }
+
+        [MapTo(nameof(RealmClient))]
+        public RealmClient InternalRealmClient { get; set; }
+
+        public string LowerCaseClientName { get; set; }
 
         public long? ClientId => RealmClient?.Id;
 

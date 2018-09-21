@@ -74,7 +74,7 @@ namespace Toggl.PrimeRadiant.Realm
         private RealmConfiguration createRealmConfiguration()
             => new RealmConfiguration
             {
-                SchemaVersion = 6,
+                SchemaVersion = 7,
                 MigrationCallback = (migration, oldSchemaVersion) =>
                 {
                     if (oldSchemaVersion < 3)
@@ -97,6 +97,19 @@ namespace Toggl.PrimeRadiant.Realm
                     if (oldSchemaVersion < 6)
                     {
                         // nothing needs explicit updating when updating from schema 4 up to 6
+                    }
+
+                    if (oldSchemaVersion < 7)
+                    {
+                        var newProjects = migration.NewRealm.All<RealmProject>();
+                        var oldProjects = migration.OldRealm.All("RealmProject");
+                        for (var i = 0; i < newProjects.Count(); i++)
+                        {
+                            var oldProject = oldProjects.ElementAt(i);
+                            var newProject = newProjects.ElementAt(i);
+                            newProject.LowerCaseName = oldProject.Name.ToLower();
+                            newProject.LowerCaseClientName = oldProject.RealmClient?.Name.ToLower();
+                        }
                     }
                 }
             };
