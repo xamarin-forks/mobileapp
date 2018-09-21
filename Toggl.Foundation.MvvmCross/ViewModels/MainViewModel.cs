@@ -5,6 +5,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -13,10 +14,12 @@ using PropertyChanged;
 using Toggl.Foundation;
 using Toggl.Foundation.Analytics;
 using Toggl.Foundation.DataSources;
+using Toggl.Foundation.DTOs;
 using Toggl.Foundation.Experiments;
 using Toggl.Foundation.Extensions;
 using Toggl.Foundation.Helper;
 using Toggl.Foundation.Interactors;
+using Toggl.Foundation.Models;
 using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.MvvmCross.Collections;
 using Toggl.Foundation.MvvmCross.Extensions;
@@ -277,6 +280,85 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 .CurrentlyRunningTimeEntry
                 .Subscribe(setRunningEntry)
                 .DisposedBy(disposeBag);
+
+            var rnd = new Random(123);
+
+            TimeEntriesViewModel.Empty
+                .Where(isEmpty => isEmpty)
+                .CombineLatest(dataSource.User.Current, (_, user) => user)
+                .Subscribe(async (IThreadSafeUser user) =>
+                {
+                    if (user.DefaultWorkspaceId.HasValue == false)
+                        throw new InvalidOperationException();
+
+                    // create clients
+                    var clients = await Enumerable.Range(0, 50)
+                        .Select(n => $"client{n}")
+                        .Select(clientName =>
+                            interactorFactory.CreateClient(clientName, user.DefaultWorkspaceId.Value).Execute())
+                        .Merge()
+                        .ToList();
+
+                    // create projects
+                    var projects = await Enumerable.Range(0, 100)
+                        .Select(n => $"project{n}")
+                        .Select(projectName =>
+                            interactorFactory.CreateProject(
+                                    new CreateProjectDTO
+                                    {
+                                        Name = projectName,
+                                        IsPrivate = false,
+                                        WorkspaceId = user.DefaultWorkspaceId.Value,
+                                        Color = Color.DefaultProjectColors[rnd.Next(0, Color.DefaultProjectColors.Length)],
+                                        ClientId = rnd.NextDouble() > 0.8 ? (long?)null : clients[rnd.Next(0, clients.Count)].Id
+                                    })
+                                .Execute())
+                        .Merge()
+                        .ToList();
+
+                    // create tags
+                    var tags = await Enumerable.Range(0, 300)
+                        .Select(n => $"tag{n}")
+                        .Select(tagName =>
+                            interactorFactory.CreateTag(tagName, user.DefaultWorkspaceId.Value).Execute())
+                        .Merge()
+                        .ToList();
+
+                    // create time entries
+                    var numberOfDays = 30;
+                    var startDate = DateTimeOffset.Now.AddDays(-numberOfDays);
+                    var timeEntries = await Enumerable.Range(0, numberOfDays)
+                        .Select(n => startDate.AddDays(n))
+                        .SelectMany(date => Enumerable.Range(0, 15)
+                            .Select(n => $"timeEntry{n}")
+                            .Select(name => new TimeEntryPrototype
+                                {
+                                    Description = name,
+                                    Duration = TimeSpan.FromMinutes(rnd.Next(1, 10)),
+                                    TagIds = Enumerable.Range(0, rnd.Next(0, 3)).Select(_ => tags[rnd.Next(0, tags.Count)].Id).ToArray(),
+                                    ProjectId = rnd.NextDouble() > 0.5 ? (long?)null : projects[rnd.Next(0, projects.Count)].Id,
+                                    StartTime = date.AddMinutes(rnd.Next(0, 12 * 60)),
+                                    TaskId = null,
+                                    WorkspaceId = user.DefaultWorkspaceId.Value,
+                                    IsBillable = rnd.NextDouble() > 0.33
+                                })
+                            .Select(prototype => interactorFactory.CreateTimeEntry(prototype).Execute()))
+                        .Merge()
+                        .ToList();
+                })
+                .DisposedBy(disposeBag);
+        }
+
+        private class TimeEntryPrototype : ITimeEntryPrototype
+        {
+            public long? ProjectId { get; set; }
+            public long? TaskId { get; set; }
+            public string Description { get; set; }
+            public long WorkspaceId { get; set; }
+            public long[] TagIds { get; set; }
+            public bool IsBillable { get; set; }
+            public DateTimeOffset StartTime { get; set; }
+            public TimeSpan? Duration { get; set; }
         }
 
         private void presentRatingViewIfNeeded(bool shouldBevisible)
