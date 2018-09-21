@@ -35,7 +35,6 @@ namespace Toggl.Foundation.Interactors.AutocompleteSuggestions
         private IObservable<IEnumerable<ProjectSuggestion>> getFilteredProjectsForSuggestions()
             => projectsContainingWordsToQuery?.GetAll()
                 .Select(ProjectSuggestion.FromProject)
-                .ToList()
                 .Apply(Observable.Return);
 
         private IObservable<IEnumerable<IThreadSafeProject>> getAllProjects()
