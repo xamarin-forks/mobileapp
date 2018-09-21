@@ -23,6 +23,7 @@ using Toggl.Foundation.MvvmCross.Extensions;
 using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Foundation.MvvmCross.ViewModels.Hints;
+using Toggl.Foundation.MvvmCross.ViewModels.Reports;
 using Toggl.Foundation.Services;
 using Toggl.Foundation.Suggestions;
 using Toggl.Foundation.Sync;
@@ -47,6 +48,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         public IObservable<IThreadSafeTimeEntry> CurrentRunningTimeEntry { get; private set; }
         public IObservable<bool> ShouldShowRunningTimeEntryNotification { get; private set; }
         public IObservable<bool> ShouldShowStoppedTimeEntryNotification { get; private set; }
+        public IObservable<Unit> ShouldReloadTimeEntryLog { get; private set; }
 
         public TimeSpan CurrentTimeEntryElapsedTime { get; private set; } = TimeSpan.Zero;
         public DurationFormat CurrentTimeEntryElapsedTimeFormat { get; } = DurationFormat.Improved;
@@ -100,6 +102,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private readonly IInteractorFactory interactorFactory;
         private readonly IMvxNavigationService navigationService;
         private readonly ISchedulerProvider schedulerProvider;
+        private readonly IAccessRestrictionStorage accessRestrictionStorage;
 
         private CompositeDisposable disposeBag = new CompositeDisposable();
 
@@ -130,6 +133,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             IMvxNavigationService navigationService,
             IRemoteConfigService remoteConfigService,
             ISuggestionProviderContainer suggestionProviders,
+            IAccessRestrictionStorage accessRestrictionStorage,
             ISchedulerProvider schedulerProvider)
         {
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
@@ -143,6 +147,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             Ensure.Argument.IsNotNull(remoteConfigService, nameof(remoteConfigService));
             Ensure.Argument.IsNotNull(suggestionProviders, nameof(suggestionProviders));
             Ensure.Argument.IsNotNull(schedulerProvider, nameof(schedulerProvider));
+            Ensure.Argument.IsNotNull(accessRestrictionStorage, nameof(accessRestrictionStorage));
 
             this.dataSource = dataSource;
             this.timeService = timeService;
@@ -152,6 +157,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             this.navigationService = navigationService;
             this.onboardingStorage = onboardingStorage;
             this.schedulerProvider = schedulerProvider;
+            this.accessRestrictionStorage = accessRestrictionStorage;
 
             SuggestionsViewModel = new SuggestionsViewModel(dataSource, interactorFactory, onboardingStorage, suggestionProviders);
             RatingViewModel = new RatingViewModel(timeService, dataSource, ratingService, analyticsService, onboardingStorage, navigationService, schedulerProvider);
@@ -243,9 +249,10 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 .Subscribe(n => NumberOfSyncFailures = n)
                 .DisposedBy(disposeBag);
 
-            timeService.MidnightObservable
-                .Subscribe(onMidnight)
-                .DisposedBy(disposeBag);
+            ShouldReloadTimeEntryLog = Observable.Merge(
+                timeService.MidnightObservable.SelectUnit(),
+                timeService.SignificantTimeChangeObservable.SelectUnit()
+            );
 
             switch (urlNavigationAction)
             {
@@ -315,6 +322,10 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             base.ViewAppearing();
 
             IsInManualMode = userPreferences.IsManualModeEnabled;
+            if (accessRestrictionStorage.HasNoWorkspace())
+            {
+                navigationService.Navigate<NoWorkspaceViewModel>();
+            }
         }
 
         private void setRunningEntry(IThreadSafeTimeEntry timeEntry)
@@ -336,11 +347,6 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             EditTimeEntryCommand.RaiseCanExecuteChanged();
 
             RaisePropertyChanged(nameof(IsTimeEntryRunning));
-        }
-
-        private void onMidnight(DateTimeOffset midnight)
-        {
-            navigationService.ChangePresentation(new ReloadLogHint());
         }
 
         private Task openSettings()
@@ -405,7 +411,9 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             isStopButtonEnabled = false;
             StopTimeEntryCommand.RaiseCanExecuteChanged();
 
-            await dataSource.TimeEntries.Stop(timeService.CurrentDateTime)
+            await interactorFactory
+                .StopTimeEntry(timeService.CurrentDateTime)
+                .Execute()
                 .Do(dataSource.SyncManager.InitiatePushSync);
 
             CurrentTimeEntryElapsedTime = TimeSpan.Zero;

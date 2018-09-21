@@ -18,6 +18,7 @@ using UIKit;
 using MvvmCross.Presenters.Attributes;
 using MvvmCross.Platforms.Ios.Presenters;
 using MvvmCross.Presenters;
+using Toggl.Foundation.MvvmCross.ViewModels.Reports;
 
 namespace Toggl.Daneel.Presentation
 {
@@ -198,19 +199,6 @@ namespace Toggl.Daneel.Presentation
         {
             switch (hint)
             {
-                case ReloadLogHint _:
-                {
-                    var mainViewController = mainTabBarController
-                        .ViewControllers
-                        .Cast<UINavigationController>()
-                        .SelectMany(nav => nav.ViewControllers)
-                        .FirstOrDefault(vc => vc is MainViewController) as MainViewController;
-
-                    mainViewController?.Reload();
-
-                    return;
-                }
-
                 case ToggleCalendarVisibilityHint calendarHint:
 
                     if ((mainTabBarController.SelectedViewController as UINavigationController).TopViewController is ReportsViewController reportsViewController)

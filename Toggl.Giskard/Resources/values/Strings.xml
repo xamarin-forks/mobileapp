@@ -92,7 +92,7 @@ understand and agree to Toggl\'s</string>
     <string name="AboutPrivacyPolicy">Privacy Policy</string>
     <string name="AboutLicenses">Licenses</string>
     <string name="OnboardingTapToStartTimer">Tap to start timer</string>
-    <string name="OnboardingTapToEdit">You have created your first time entry 🙌\nTap to edit</string>
+    <string name="OnboardingTapToEdit">You have created your first time entry\nTap to edit</string>
     <string name="OnboardingTapToStopTimer">Tap to stop timer</string>
     <string name="OnboardingAddProjectOrTag">Add a project and tags on the fly</string>
     <string name="OnboardingSwipeRight">Swipe right to continue</string>
@@ -107,6 +107,10 @@ understand and agree to Toggl\'s</string>
     <string name="GenericInternetConnectionErrorMessage">No internet connection. Please try again.</string>
     <string name="SendFeedbackTitle">Submit feedback</string>
     <string name="SendFeedbackSuccessMessage">Message sent. Thank you for your feedback. If you had any questions, we\'ll get back to you soon.</string>
+    <string name="TryAgain">Try Again</string>
+    <string name="CreateWorkspace">Create Workspace</string>
+    <string name="NoWorkspaceHelperText">Seems someone has removed you from their workspace.\nNo worries. Create a new workspace to continue.</string>
+    <string name="Uhoh">Uh oh.</string>
 
     <string name="ReportsTemplateSelector" translatable="false">Toggl.Giskard.TemplateSelectors.ReportsTemplateSelector, Toggl.Giskard</string>
     <string name="CalendarTemplateSelector" translatable="false">Toggl.Giskard.TemplateSelectors.CalendarTemplateSelector, Toggl.Giskard</string>

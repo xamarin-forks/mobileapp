@@ -8,6 +8,7 @@ using Toggl.Foundation.Analytics;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Interactors;
 using Toggl.Foundation.MvvmCross.Services;
+using Toggl.Foundation.MvvmCross.ViewModels.Reports;
 using Toggl.Foundation.Services;
 using Toggl.Foundation.Suggestions;
 using Toggl.Multivac;
@@ -37,7 +38,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             IRemoteConfigService remoteConfigService,
             ISuggestionProviderContainer suggestionProviders,
             IDialogService dialogService,
-            ISchedulerProvider schedulerProvider)
+            ISchedulerProvider schedulerProvider,
+            IAccessRestrictionStorage accessRestrictionStorage)
         {
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
             Ensure.Argument.IsNotNull(timeService, nameof(timeService));
@@ -59,10 +61,11 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 userPreferences,
                 analyticsService,
                 onboardingStorage,
-                interactorFactory, 
-                navigationService, 
-                remoteConfigService, 
+                interactorFactory,
+                navigationService,
+                remoteConfigService,
                 suggestionProviders,
+                accessRestrictionStorage,
                 schedulerProvider);
 
             reportsViewModel = new ReportsViewModel(
