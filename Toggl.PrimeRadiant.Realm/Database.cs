@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -14,7 +15,7 @@ namespace Toggl.PrimeRadiant.Realm
     {
         private readonly RealmConfiguration realmConfiguration;
 
-        private readonly IMigration[] migrations =
+        private IEnumerable<IMigration> migrations => new[]
         {
             new TagServerDeletedAt()
         };
