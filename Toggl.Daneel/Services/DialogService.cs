@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Toggl.Daneel.Views;
 using Toggl.Foundation;
 using Toggl.Foundation.MvvmCross.Services;
 using Toggl.Multivac;
 using UIKit;
+using CoreFoundation;
+using Foundation;
 
 namespace Toggl.Daneel.Services
 {
@@ -85,6 +88,20 @@ namespace Toggl.Daneel.Services
                     .TopViewController
                     .PresentViewController(actionSheet, true, null);
 
+                return Disposable.Empty;
+            });
+        }
+
+        public IObservable<Unit> Toast(string message)
+        {
+            return Observable.Create<Unit>(observer =>
+            {
+                var superView = topViewControllerProvider.TopViewController.View;
+                var toast = SnackBar.Factory.CreateToast(message);
+                toast.Show(superView);
+                DispatchQueue.MainQueue.DispatchAfter(new DispatchTime(5000000000), toast.Hide);
+                observer.OnNext(Unit.Default);
+                observer.OnCompleted();
                 return Disposable.Empty;
             });
         }

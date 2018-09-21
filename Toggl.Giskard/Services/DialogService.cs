@@ -4,6 +4,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Android.Support.V7.App;
+using Android.Widget;
 using MvvmCross;
 using MvvmCross.Platforms.Android;
 using Toggl.Foundation;
@@ -58,6 +59,20 @@ namespace Toggl.Giskard.Services
             {
                 var dialog = new ListSelectionDialog<T>(activity, title, options, initialSelectionIndex, observer.CompleteWith);
                 activity.RunOnUiThread(dialog.Show);
+                return Disposable.Empty;
+            });
+        }
+
+        public IObservable<Unit> Toast(string message)
+        {
+            var activity = Mvx.Resolve<IMvxAndroidCurrentTopActivity>().Activity;
+            return Observable.Create<Unit>(observer =>
+            {
+                activity?.RunOnUiThread(() =>
+                {
+                    Android.Widget.Toast.MakeText(activity, message, ToastLength.Long).Show();
+                    observer.CompleteWith(Unit.Default);
+                });
                 return Disposable.Empty;
             });
         }
