@@ -86,7 +86,20 @@ namespace Toggl.PrimeRadiant.Realm
                     migrations
                         .Where(migration => oldSchemaVersion < migration.TargetSchemaVersion)
                         .OrderBy(migration => migration.TargetSchemaVersion)
+                        .Do(ensureApplicabilityOfMigrationFrom(oldSchemaVersion))
                         .ForEach(migration => migration.PerformMigration(realmMigration.OldRealm, realmMigration.NewRealm))
             };
-    }
+
+        private Action<IMigration> ensureApplicabilityOfMigrationFrom(ulong oldSchemaVersion)
+            => migration =>
+            {
+                if (oldSchemaVersion < migration.MinimumSchemaVersionToMigrateFrom)
+                {
+                    throw new InvalidOperationException(
+                        $"The old schema is too old: {migration.GetType().FullName} " +
+                        $"can be used to migrate from schema versions {migration.MinimumSchemaVersionToMigrateFrom}-{migration.TargetSchemaVersion - 1} " +
+                        $"to schema {migration.TargetSchemaVersion}, but it was supposed to migrate from version {oldSchemaVersion}.");
+                }
+            };
+}
 }

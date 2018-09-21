@@ -4,6 +4,8 @@ namespace Toggl.PrimeRadiant.Realm.Migrations
 {
     public sealed class TagServerDeletedAt : IMigration
     {
+        public ulong MinimumSchemaVersionToMigrateFrom { get; } = 0;
+
         public ulong TargetSchemaVersion { get; } = 4;
 
         public void PerformMigration(Realms.Realm oldRealm, Realms.Realm newRealm)
