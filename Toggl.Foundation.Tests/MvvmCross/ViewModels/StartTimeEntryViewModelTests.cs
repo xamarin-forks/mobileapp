@@ -260,7 +260,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             [Fact, LogIfTooSlow]
             public async Task ReturnsFalseIfWorkspaceSettingsDisableProjectCreation()
             {
-                var workspace = new MockWorkspace { Id = 1, Admin = false, OnlyAdminsMayCreateProjects = true};
+                var workspace = new MockWorkspace { Id = 1, Admin = false, OnlyAdminsMayCreateProjects = true };
                 InteractorFactory.GetDefaultWorkspace().Execute().Returns(Observable.Return(workspace));
 
                 await ViewModel.Initialize();
@@ -270,7 +270,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             [Fact, LogIfTooSlow]
             public async Task ReturnsTrueIfAdminRegardlessOfWorkspaceSettings()
             {
-                var workspace = new MockWorkspace { Id = 1, Admin = true, OnlyAdminsMayCreateProjects = true};
+                var workspace = new MockWorkspace { Id = 1, Admin = true, OnlyAdminsMayCreateProjects = true };
                 InteractorFactory.GetDefaultWorkspace().Execute().Returns(Observable.Return(workspace));
 
                 await ViewModel.Initialize();
