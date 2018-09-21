@@ -285,7 +285,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
             TimeEntriesViewModel.Empty
                 .Where(isEmpty => isEmpty)
-                .CombineLatest(dataSource.User.Current, (_, user) => user)
+                .CombineLatest(dataSource.User.Get(), (_, user) => user)
                 .Subscribe(async (IThreadSafeUser user) =>
                 {
                     if (user.DefaultWorkspaceId.HasValue == false)
@@ -300,7 +300,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                         .ToList();
 
                     // create projects
-                    var projects = await Enumerable.Range(0, 100)
+                    var projects = await Enumerable.Range(0, 5000)
                         .Select(n => $"project{n}")
                         .Select(projectName =>
                             interactorFactory.CreateProject(
@@ -317,7 +317,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                         .ToList();
 
                     // create tags
-                    var tags = await Enumerable.Range(0, 300)
+                    var tags = await Enumerable.Range(0, 5000)
                         .Select(n => $"tag{n}")
                         .Select(tagName =>
                             interactorFactory.CreateTag(tagName, user.DefaultWorkspaceId.Value).Execute())
