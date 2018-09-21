@@ -15,5 +15,6 @@ namespace Toggl.Foundation.Interactors
 
         public IInteractor<IObservable<IEnumerable<AutocompleteSuggestion>>> GetProjectsAutocompleteSuggestions(IList<string> wordsToQuery)
             => new GetProjectsAutocompleteSuggestions(dataSource.Projects, queryFactory.GetAllProjectsContaining(wordsToQuery));
+            // => new OldGetProjectsAutocompleteSuggestions(dataSource.Projects, wordsToQuery);
     }
 }
