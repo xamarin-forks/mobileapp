@@ -1,12 +1,14 @@
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
-using Toggl.Foundation.MvvmCross;
-using Toggl.Foundation.MvvmCross.ViewModels;
 using MvvmCross;
 using MvvmCross.Droid.Support.V7.AppCompat;
 using MvvmCross.Navigation;
 using Toggl.Foundation;
+using Toggl.Foundation.MvvmCross;
+using Toggl.Foundation.MvvmCross.ViewModels;
+using Toggl.Giskard.Helper;
+using static Android.Content.Intent;
 
 namespace Toggl.Giskard
 {
@@ -49,7 +51,10 @@ namespace Toggl.Giskard
 
         private string getTrackUrlFromProcessedText()
         {
-            var description = Intent.GetStringExtra(Android.Content.Intent.ExtraProcessText);
+            if (MarshmallowApis.AreNotAvailable)
+                return null;
+
+            var description = Intent.GetStringExtra(ExtraProcessText);
             if (string.IsNullOrWhiteSpace(description))
                 return null;
 
