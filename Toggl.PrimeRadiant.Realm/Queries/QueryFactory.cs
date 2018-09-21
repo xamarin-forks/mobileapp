@@ -16,5 +16,8 @@ namespace Toggl.PrimeRadiant.Realm.Queries
 
             this.getRealmInstance = getRealmInstance;
         }
+
+        public IQuery<IDatabaseProject> GetAllProjectsContaining(IEnumerable<string> words)
+            => new GetAllProjectsContainingQuery(getRealmInstance, words);
     }
 }

@@ -16,9 +16,11 @@ namespace Toggl.Foundation.Autocomplete.Suggestions
         public static ProjectSuggestion NoProject(long workspaceId, string workspaceName)
             => new ProjectSuggestion(workspaceId, workspaceName);
 
-        public static IEnumerable<ProjectSuggestion> FromProjects(
-            IEnumerable<IThreadSafeProject> projects
-        ) => projects.Select(project => new ProjectSuggestion(project));
+        public static ProjectSuggestion FromProject(IThreadSafeProject project)
+            => new ProjectSuggestion(project);
+
+        public static IEnumerable<ProjectSuggestion> FromProjects(IEnumerable<IThreadSafeProject> projects)
+            => projects.Select(FromProject);
 
         public long ProjectId { get; }
 
@@ -60,7 +62,7 @@ namespace Toggl.Foundation.Autocomplete.Suggestions
             Tasks = project.Tasks?.Select(task => new TaskSuggestion(Task.From(task))).ToList() ?? new List<TaskSuggestion>();
         }
 
-        public override int GetHashCode() 
+        public override int GetHashCode()
             => HashCode.From(ProjectName, ProjectColor, ClientName);
     }
 }

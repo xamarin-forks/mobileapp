@@ -6,5 +6,6 @@ namespace Toggl.Foundation.DataSources.Queries
 {
     public interface IThreadSafeQueryFactory
     {
+        IQuery<IThreadSafeProject> GetAllProjectsContaining(IEnumerable<string> words);
     }
 }
