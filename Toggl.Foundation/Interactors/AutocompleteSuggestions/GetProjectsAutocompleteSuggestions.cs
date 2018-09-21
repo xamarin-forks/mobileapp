@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reactive.Linq;
 using Toggl.Foundation.Autocomplete.Suggestions;
 using Toggl.Foundation.DataSources.Interfaces;
@@ -38,13 +39,25 @@ namespace Toggl.Foundation.Interactors.AutocompleteSuggestions
             => dataSource.GetAll(project => project.Active);
 
         private IObservable<IEnumerable<IThreadSafeProject>> getAllProjectsFiltered()
-            => wordsToQuery.Aggregate(getAllProjects(), (obs, word) => obs.Select(filterProjectsByWord(word)));
+            => dataSource.GetAll(activeProjectsFilterByWords(wordsToQuery));
 
-        private Func<IEnumerable<IThreadSafeProject>, IEnumerable<IThreadSafeProject>> filterProjectsByWord(string word)
-            => projects =>
-                projects.Where(
-                    p => p.Name.ContainsIgnoringCase(word)
-                         || (p.Client != null && p.Client.Name.ContainsIgnoringCase(word))
-                         || (p.Tasks != null && p.Tasks.Any(task => task.Name.ContainsIgnoringCase(word))));
+        private Expression<Func<IDatabaseProject, bool>> activeProjectsFilterByWords(IEnumerable<string> words)
+        {
+            var projectExpr = Expression.Parameter(typeof(IDatabaseProject), "project");
+            var projectNameExpr = Expression.Property(projectExpr, nameof(IDatabaseProject.LowerCaseName));
+            var clientNameExpr = Expression.Property(projectExpr, nameof(IDatabaseProject.LowerCaseClientName));
+            var containsMethod = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
+            Expression alwaysTrue = Expression.Constant(true, typeof(bool));
+
+            var wordsExpr = words
+                .Select(word => Expression.Constant(projectNameExpr, typeof(string)))
+                .Select(wordExpr =>
+                    Expression.OrElse(
+                        Expression.Call(projectNameExpr, containsMethod, wordExpr),
+                        Expression.Call(clientNameExpr, containsMethod, wordExpr)))
+                .Aggregate(alwaysTrue, Expression.AndAlso);
+
+            return Expression.Lambda<Func<IDatabaseProject, bool>>(wordsExpr, projectExpr);
+        }
     }
 }
