@@ -33,10 +33,11 @@ namespace Toggl.PrimeRadiant.Realm.Queries
             get
             {
                 var projectExpr = Expression.Parameter(typeof(RealmProject), "project");
+                var isActiveExpr = Expression.Property(projectExpr, nameof(RealmProject.Active));
                 var projectNameExpr = Expression.Property(projectExpr, nameof(RealmProject.LowerCaseName));
                 var clientNameExpr = Expression.Property(projectExpr, nameof(RealmProject.LowerCaseName));
                 var containsMethod = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
-                Expression alwaysTrue = Expression.Constant(true, typeof(bool));
+                var isActive = Expression.Equal(isActiveExpr, Expression.Constant(true));
 
                 var wordsExpr = words
                     .Select(word => Expression.Constant(word, typeof(string)))
@@ -46,7 +47,7 @@ namespace Toggl.PrimeRadiant.Realm.Queries
                             Expression.AndAlso(
                                 Expression.NotEqual(clientNameExpr, Expression.Constant(null, typeof(string))),
                                 Expression.Call(clientNameExpr, containsMethod, wordExpr))))
-                    .Aggregate(alwaysTrue, Expression.AndAlso);
+                    .Aggregate(isActive, Expression.AndAlso);
 
                 return Expression.Lambda<Func<RealmProject, bool>>(wordsExpr, projectExpr);
             }
