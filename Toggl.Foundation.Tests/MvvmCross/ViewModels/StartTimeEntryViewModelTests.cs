@@ -257,6 +257,26 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.SuggestCreation.Should().BeFalse();
             }
 
+            [Fact, LogIfTooSlow]
+            public async Task ReturnsFalseIfWorkspaceSettingsDisableProjectCreation()
+            {
+                var workspace = new MockWorkspace { Id = 1, Admin = false, OnlyAdminsMayCreateProjects = true};
+                InteractorFactory.GetDefaultWorkspace().Execute().Returns(Observable.Return(workspace));
+
+                await ViewModel.Initialize();
+                ViewModel.SuggestCreation.Should().BeFalse();
+            }
+
+            [Fact, LogIfTooSlow]
+            public async Task ReturnsTrueIfAdminRegardlessOfWorkspaceSettings()
+            {
+                var workspace = new MockWorkspace { Id = 1, Admin = true, OnlyAdminsMayCreateProjects = true};
+                InteractorFactory.GetDefaultWorkspace().Execute().Returns(Observable.Return(workspace));
+
+                await ViewModel.Initialize();
+                ViewModel.SuggestCreation.Should().BeTrue();
+            }
+
             private string createLongString(int length)
                 => Enumerable
                     .Range(0, length)

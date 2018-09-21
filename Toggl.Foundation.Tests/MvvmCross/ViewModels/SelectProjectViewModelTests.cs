@@ -14,6 +14,7 @@ using Toggl.Foundation.Extensions;
 using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Foundation.Tests.Generators;
+using Toggl.Foundation.Tests.Mocks;
 using Toggl.PrimeRadiant.Models;
 using Xunit;
 
@@ -359,6 +360,26 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Text = "Some absurdly long project name created solely for making sure that the SuggestCreation property returns false when the project name is longer than the previously specified threshold so that the mobile apps behave and avoid crashes in backend and even bigger problems.";
 
                 ViewModel.SuggestCreation.Should().BeFalse();
+            }
+
+            [Fact, LogIfTooSlow]
+            public async Task ReturnsFalseIfWorkspaceSettingsDisableProjectCreation()
+            {
+                var workspace = new MockWorkspace { Id = 1, Admin = false, OnlyAdminsMayCreateProjects = true};
+                InteractorFactory.GetDefaultWorkspace().Execute().Returns(Observable.Return(workspace));
+
+                await ViewModel.Initialize();
+                ViewModel.SuggestCreation.Should().BeFalse();
+            }
+
+            [Fact, LogIfTooSlow]
+            public async Task ReturnsTrueIfAdminRegardlessOfWorkspaceSettings()
+            {
+                var workspace = new MockWorkspace { Id = 1, Admin = true, OnlyAdminsMayCreateProjects = true};
+                InteractorFactory.GetDefaultWorkspace().Execute().Returns(Observable.Return(workspace));
+
+                await ViewModel.Initialize();
+                ViewModel.SuggestCreation.Should().BeTrue();
             }
         }
 

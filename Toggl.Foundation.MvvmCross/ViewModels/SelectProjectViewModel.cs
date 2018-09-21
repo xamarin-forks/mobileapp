@@ -38,6 +38,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private long? taskId;
         private long? projectId;
         private long workspaceId;
+        private IThreadSafeWorkspace defaultWorkspace;
 
         private List<IThreadSafeWorkspace> allWorkspaces = new List<IThreadSafeWorkspace>();
 
@@ -51,6 +52,9 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             get
             {
+                if (!defaultWorkspace.Admin && defaultWorkspace.OnlyAdminsMayCreateProjects)
+                    return false;
+
                 if (!UsesFilter)
                     return false;
 
@@ -119,6 +123,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             await base.Initialize();
 
+            defaultWorkspace = await interactorFactory.GetDefaultWorkspace().Execute();
             var workspaces = await interactorFactory.GetAllWorkspaces().Execute();
             allWorkspaces = workspaces.ToList();
             UseGrouping = allWorkspaces.Count > 1;

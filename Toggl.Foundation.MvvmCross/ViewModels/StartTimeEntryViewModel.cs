@@ -17,6 +17,7 @@ using Toggl.Foundation.Autocomplete.Suggestions;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Interactors;
 using Toggl.Foundation.Models;
+using Toggl.Foundation.Models.Interfaces;
 using Toggl.Foundation.MvvmCross.Collections;
 using Toggl.Foundation.MvvmCross.Extensions;
 using Toggl.Foundation.MvvmCross.Parameters;
@@ -53,7 +54,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         private bool hasAnyTags;
         private bool hasAnyProjects;
-        private long defaultWorkspaceId;
+        private IThreadSafeWorkspace defaultWorkspace;
         private StartTimeEntryParameters parameter;
         private TextFieldInfo textFieldInfo = TextFieldInfo.Empty(0);
 
@@ -75,6 +76,9 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             get
             {
+                if (!defaultWorkspace.Admin && defaultWorkspace.OnlyAdminsMayCreateProjects)
+                    return false;
+
                 if (IsSuggestingProjects && textFieldInfo.HasProject) return false;
 
                 if (string.IsNullOrEmpty(CurrentQuery))
@@ -287,10 +291,9 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             await base.Initialize();
 
-            var workspace = await interactorFactory.GetDefaultWorkspace().Execute();
-            defaultWorkspaceId = workspace.Id;
+            defaultWorkspace = await interactorFactory.GetDefaultWorkspace().Execute();
 
-            textFieldInfo = TextFieldInfo.Empty(workspace.Id);
+            textFieldInfo = TextFieldInfo.Empty(defaultWorkspace.Id);
 
             await setBillableValues(textFieldInfo.ProjectId);
 
@@ -632,7 +635,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             if (firstSuggestion is ProjectSuggestion)
                 return suggestions
                     .GroupByWorkspaceAddingNoProject()
-                    .OrderByDefaultWorkspaceAndName(defaultWorkspaceId);
+                    .OrderByDefaultWorkspaceAndName(defaultWorkspace.Id);
 
             if (IsSuggestingTags)
                 suggestions = suggestions.Where(suggestion => suggestion.WorkspaceId == textFieldInfo.WorkspaceId);
