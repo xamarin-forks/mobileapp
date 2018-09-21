@@ -28,6 +28,7 @@ using Toggl.PrimeRadiant.Settings;
 using static Toggl.Foundation.Helper.Constants;
 using static Toggl.Multivac.Extensions.CommonFunctions;
 using SelectTimeOrigin = Toggl.Foundation.MvvmCross.Parameters.SelectTimeParameters.Origin;
+using System.Reactive.Concurrency;
 
 [assembly: MvxNavigation(typeof(StartTimeEntryViewModel), ApplicationUrls.StartTimeEntry)]
 namespace Toggl.Foundation.MvvmCross.ViewModels
@@ -259,6 +260,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             var queryByTypeObservable = queryByTypeSubject
                 .AsObservable()
+                .ObserveOn(ThreadPoolScheduler.Instance)
                 .SelectMany(type => autocompleteProvider.Query(new QueryInfo("", type)));
 
             querySubject.AsObservable()
@@ -266,6 +268,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 .Throttle(queryThrottle, schedulerProvider.DefaultScheduler)
                 .Select(QueryInfo.ParseFieldInfo)
                 .Do(onParsedQuery)
+                .ObserveOn(ThreadPoolScheduler.Instance)
                 .SelectMany(autocompleteProvider.Query)
                 .Merge(queryByTypeObservable)
                 .Subscribe(onSuggestions)

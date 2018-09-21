@@ -206,7 +206,6 @@ namespace Toggl.Daneel.ViewControllers
                 .SubscribeOn(ThreadPoolScheduler.Instance)
                 .Do(updatePlaceholder)
                 .Select(text => text.AsImmutableSpans((int)DescriptionTextView.SelectedRange.Location))
-                .ObserveOn(SynchronizationContext.Current)
                 .Subscribe(async info => await ViewModel.OnTextFieldInfoFromView(info))
                 .DisposedBy(DisposeBag);
         }
