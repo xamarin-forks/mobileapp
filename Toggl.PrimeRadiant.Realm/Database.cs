@@ -4,7 +4,9 @@ using System.Reactive;
 using System.Reactive.Linq;
 using Realms;
 using Toggl.PrimeRadiant.Models;
+using Toggl.PrimeRadiant.Queries;
 using Toggl.PrimeRadiant.Realm.Models;
+using Toggl.PrimeRadiant.Realm.Queries;
 
 namespace Toggl.PrimeRadiant.Realm
 {
@@ -30,6 +32,7 @@ namespace Toggl.PrimeRadiant.Realm
                 (collection, realm) => new RealmWorkspaceFeatureCollection(collection, realm),
                 id => x => x.WorkspaceId == id,
                 features => features.WorkspaceId);
+            Queries = new QueryFactory(getRealmInstance);
         }
 
         public IIdProvider IdProvider { get; }
@@ -43,6 +46,7 @@ namespace Toggl.PrimeRadiant.Realm
         public IRepository<IDatabaseTimeEntry> TimeEntries { get; }
         public IRepository<IDatabaseWorkspace> Workspaces { get; }
         public IRepository<IDatabaseWorkspaceFeatureCollection> WorkspaceFeatures { get; }
+        public IQueryFactory Queries { get; }
 
         public IObservable<Unit> Clear() =>
             Observable.Start(() =>

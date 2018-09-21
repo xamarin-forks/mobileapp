@@ -2,6 +2,7 @@
 using MvvmCross;
 using Toggl.Foundation.Autocomplete;
 using Toggl.Foundation.DataSources;
+using Toggl.Foundation.DataSources.Queries;
 using Toggl.Foundation.Interactors;
 using Toggl.Foundation.Login;
 using Toggl.Foundation.MvvmCross.Services;
@@ -75,6 +76,8 @@ namespace Toggl.Foundation.MvvmCross
             Mvx.RegisterSingleton(foundation.BackgroundService);
             Mvx.RegisterSingleton(foundation.DialogService);
             Mvx.RegisterSingleton(foundation.Database);
+            Mvx.RegisterSingleton<IThreadSafeQueryFactory>(
+                new ThreadSafeQueriesFactory(foundation.Database.Queries));
             Mvx.RegisterSingleton(foundation.BrowserService);
             Mvx.RegisterSingleton(foundation.UserAgent);
             Mvx.RegisterSingleton(foundation.Scheduler);

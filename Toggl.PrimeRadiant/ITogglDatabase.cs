@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive;
 using Toggl.PrimeRadiant.Models;
+using Toggl.PrimeRadiant.Queries;
 
 namespace Toggl.PrimeRadiant
 {
@@ -18,5 +19,7 @@ namespace Toggl.PrimeRadiant
         IIdProvider IdProvider { get; }
         ISinceParameterRepository SinceParameters { get; }
         IObservable<Unit> Clear();
+
+        IQueryFactory Queries { get; }
     }
 }

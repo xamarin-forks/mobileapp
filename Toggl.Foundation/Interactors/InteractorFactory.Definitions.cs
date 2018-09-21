@@ -1,8 +1,10 @@
 ﻿using Toggl.Foundation.Analytics;
 using Toggl.Foundation.DataSources;
+using Toggl.Foundation.DataSources.Queries;
 using Toggl.Foundation.Shortcuts;
 using Toggl.Multivac;
 using Toggl.PrimeRadiant;
+using Toggl.PrimeRadiant.Queries;
 using Toggl.PrimeRadiant.Settings;
 using Toggl.Ultrawave.Network;
 
@@ -19,6 +21,7 @@ namespace Toggl.Foundation.Interactors
         private readonly IApplicationShortcutCreator shortcutCreator;
         private readonly ILastTimeUsageStorage lastTimeUsageStorage;
         private readonly IPlatformConstants platformConstants;
+        private readonly IThreadSafeQueryFactory queryFactory;
         private readonly UserAgent userAgent;
 
         public InteractorFactory(
@@ -30,6 +33,7 @@ namespace Toggl.Foundation.Interactors
             IApplicationShortcutCreator shortcutCreator,
             ILastTimeUsageStorage lastTimeUsageStorage,
             IPlatformConstants platformConstants,
+            IThreadSafeQueryFactory queryFactory,
             UserAgent userAgent)
         {
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
@@ -40,6 +44,7 @@ namespace Toggl.Foundation.Interactors
             Ensure.Argument.IsNotNull(analyticsService, nameof(analyticsService));
             Ensure.Argument.IsNotNull(lastTimeUsageStorage, nameof(lastTimeUsageStorage));
             Ensure.Argument.IsNotNull(platformConstants, nameof(platformConstants));
+            Ensure.Argument.IsNotNull(queryFactory, nameof(queryFactory));
             Ensure.Argument.IsNotNull(userAgent, nameof(userAgent));
 
             this.dataSource = dataSource;
@@ -50,6 +55,7 @@ namespace Toggl.Foundation.Interactors
             this.analyticsService = analyticsService;
             this.lastTimeUsageStorage = lastTimeUsageStorage;
             this.platformConstants = platformConstants;
+            this.queryFactory = queryFactory;
             this.userAgent = userAgent;
         }
     }
