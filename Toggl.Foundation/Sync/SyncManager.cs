@@ -59,7 +59,7 @@ namespace Toggl.Foundation.Sync
         {
             lock (stateLock)
             {
-                queue.QueuePushSync();
+                // queue.QueuePushSync();
                 return startSyncIfNeededAndObserve();
             }
         }
@@ -70,7 +70,7 @@ namespace Toggl.Foundation.Sync
 
             lock (stateLock)
             {
-                queue.QueuePullSync();
+                // queue.QueuePullSync();
                 return startSyncIfNeededAndObserve().Do(saveTimeWhenReachedSleep);
             }
         }
