@@ -82,13 +82,11 @@ namespace Toggl.PrimeRadiant.Realm
             => new RealmConfiguration
             {
                 SchemaVersion = 6,
-                MigrationCallback = (migration, oldSchemaVersion) =>
-                {
+                MigrationCallback = (realmMigration, oldSchemaVersion) =>
                     migrations
-                        .Where(m => oldSchemaVersion < m.TargetSchemaVersion)
-                        .OrderBy(m => m.TargetSchemaVersion)
-                        .ForEach(m => m.PerformMigration(migration.OldRealm, migration.NewRealm));
-                }
+                        .Where(migration => oldSchemaVersion < migration.TargetSchemaVersion)
+                        .OrderBy(migration => migration.TargetSchemaVersion)
+                        .ForEach(migration => migration.PerformMigration(realmMigration.OldRealm, realmMigration.NewRealm))
             };
     }
 }
