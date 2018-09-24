@@ -105,15 +105,6 @@ namespace Toggl.PrimeRadiant.Realm
 
                     if (oldSchemaVersion < 7)
                     {
-                        var newProjects = migration.NewRealm.All<RealmProject>();
-                        var oldProjects = migration.OldRealm.All("RealmProject");
-                        for (var i = 0; i < newProjects.Count(); i++)
-                        {
-                            var oldProject = oldProjects.ElementAt(i);
-                            var newProject = newProjects.ElementAt(i);
-                            newProject.LowerCaseName = oldProject.Name.ToLower();
-                            newProject.LowerCaseClientName = oldProject.RealmClient?.Name.ToLower();
-                        }
                     }
                 }
             };

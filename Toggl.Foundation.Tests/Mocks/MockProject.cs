@@ -18,6 +18,8 @@ namespace Toggl.Foundation.Tests.Mocks
 
         public long? ClientId { get; set; }
 
+        public string LowerCaseClientName { get; set; }
+
         public string Name { get; set; }
 
         public bool IsPrivate { get; set; }

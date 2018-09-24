@@ -16,6 +16,8 @@ namespace Toggl.Foundation.Models
 
         public long? ClientId { get; }
 
+        public string ClientName => Client?.Name;
+
         public string Name { get; }
 
         public bool IsPrivate { get; }

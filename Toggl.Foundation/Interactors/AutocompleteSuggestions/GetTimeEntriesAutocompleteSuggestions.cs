@@ -28,14 +28,15 @@ namespace Toggl.Foundation.Interactors.AutocompleteSuggestions
         public IObservable<IEnumerable<AutocompleteSuggestion>> Execute()
             => wordsToQuery
                 .Aggregate(dataSource.GetAll(), (obs, word) => obs.Select(filterByWord(word)))
+                .Take(10)
                 .Select(TimeEntrySuggestion.FromTimeEntries);
 
         private Func<IEnumerable<IThreadSafeTimeEntry>, IEnumerable<IThreadSafeTimeEntry>> filterByWord(string word)
             => timeEntries =>
                 timeEntries.Where(
-                    te => te.Description.ContainsIgnoringCase(word)
-                        || (te.Project != null && te.Project.Name.ContainsIgnoringCase(word) && te.Project.Active)
-                        || (te.Project?.Client != null && te.Project.Client.Name.ContainsIgnoringCase(word))
-                        || (te.Task != null && te.Task.Name.ContainsIgnoringCase(word)));
+                    te => te.Description.ContainsIgnoringCase(word));
+                        //|| (te.Project != null && te.Project.Name.ContainsIgnoringCase(word) && te.Project.Active)
+                        //|| (te.Project?.Client != null && te.Project.Client.Name.ContainsIgnoringCase(word))
+                        //|| (te.Task != null && te.Task.Name.ContainsIgnoringCase(word)));
     }
 }

@@ -34,8 +34,8 @@ namespace Toggl.PrimeRadiant.Realm.Queries
             {
                 var projectExpr = Expression.Parameter(typeof(RealmProject), "project");
                 var isActiveExpr = Expression.Property(projectExpr, nameof(RealmProject.Active));
-                var projectNameExpr = Expression.Property(projectExpr, nameof(RealmProject.LowerCaseName));
-                var clientNameExpr = Expression.Property(projectExpr, nameof(RealmProject.LowerCaseClientName));
+                var projectNameExpr = Expression.Property(projectExpr, nameof(RealmProject.Name));
+                var clientNameExpr = Expression.Property(projectExpr, nameof(RealmProject.ClientName));
                 var containsMethod = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
                 var isActive = Expression.Equal(isActiveExpr, Expression.Constant(true));
 

@@ -73,8 +73,8 @@ namespace Toggl.Foundation.Interactors.AutocompleteSuggestions
         private Func<IEnumerable<IThreadSafeProject>, IEnumerable<IThreadSafeProject>> filterProjectsByWord(string word)
             => projects =>
                 projects.Where(
-                    p => p.Name.ContainsIgnoringCase(word)
-                         || (p.Client != null && p.Client.Name.ContainsIgnoringCase(word))
-                         || (p.Tasks != null && p.Tasks.Any(task => task.Name.ContainsIgnoringCase(word))));
+                    p => p.Name.ContainsIgnoringCase(word));
+                         //|| (p.Client != null && p.Client.Name.ContainsIgnoringCase(word))
+                         //|| (p.Tasks != null && p.Tasks.Any(task => task.Name.ContainsIgnoringCase(word))));
     }
 }
