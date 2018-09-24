@@ -24,6 +24,6 @@ namespace Toggl.Foundation.DataSources.Queries
         }
 
         public IEnumerable<TThreadSafeModel> GetAll()
-            => query.GetAll().Select(convert);
+            => query.Execute().Select(convert);
     }
 }

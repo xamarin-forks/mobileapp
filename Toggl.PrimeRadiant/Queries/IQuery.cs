@@ -4,6 +4,6 @@ namespace Toggl.PrimeRadiant.Queries
 {
     public interface IQuery<T>
     {
-        IEnumerable<T> GetAll();
+        IEnumerable<T> Execute();
     }
 }

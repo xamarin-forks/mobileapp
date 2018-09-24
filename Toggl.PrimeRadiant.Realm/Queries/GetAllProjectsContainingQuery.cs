@@ -25,7 +25,7 @@ namespace Toggl.PrimeRadiant.Realm.Queries
             this.words = words;
         }
 
-        public IEnumerable<IDatabaseProject> GetAll()
+        public IEnumerable<IDatabaseProject> Execute()
             => realm().All<RealmProject>().Where(activeProjectsFilteredByWords);
 
         private Expression<Func<RealmProject, bool>> activeProjectsFilteredByWords
