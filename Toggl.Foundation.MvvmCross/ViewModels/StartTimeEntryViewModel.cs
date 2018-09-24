@@ -76,9 +76,6 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             get
             {
-                if (!defaultWorkspace.Admin && defaultWorkspace.OnlyAdminsMayCreateProjects)
-                    return false;
-
                 if (IsSuggestingProjects && textFieldInfo.HasProject) return false;
 
                 if (string.IsNullOrEmpty(CurrentQuery))
@@ -86,7 +83,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
                 if (IsSuggestingProjects)
                     return Suggestions.None(c => c.Any(s => s is ProjectSuggestion pS && pS.ProjectName == CurrentQuery))
-                           && CurrentQuery.LengthInBytes() <= MaxProjectNameLengthInBytes;
+                           && CurrentQuery.LengthInBytes() <= MaxProjectNameLengthInBytes
+                           && (defaultWorkspace.Admin || !defaultWorkspace.OnlyAdminsMayCreateProjects);
 
                 if (IsSuggestingTags)
                     return Suggestions.None(c => c.Any(s => s is TagSuggestion tS && tS.Name == CurrentQuery))
