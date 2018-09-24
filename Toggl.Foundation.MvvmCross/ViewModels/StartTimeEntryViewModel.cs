@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -55,7 +55,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private bool hasAnyTags;
         private bool hasAnyProjects;
         private bool shouldSuggestProjectCreation;
-        private IThreadSafeWorkspace defaultWorkspace;
+        private long defaultWorkspaceId;
         private StartTimeEntryParameters parameter;
         private TextFieldInfo textFieldInfo = TextFieldInfo.Empty(0);
 
@@ -291,12 +291,14 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             await base.Initialize();
 
-            defaultWorkspace = await interactorFactory.GetDefaultWorkspace().Execute();
+            var workspace = await interactorFactory.GetDefaultWorkspace().Execute();
+            defaultWorkspaceId = workspace.Id;
+
             shouldSuggestProjectCreation =
                 await interactorFactory.GetAllWorkspaces().Execute().Select(allWorkspaces =>
-                    allWorkspaces.Any(workspace => workspace.IsEligibleForProjectCreation()));
+                    allWorkspaces.Any(ws => ws.IsEligibleForProjectCreation()));
 
-            textFieldInfo = TextFieldInfo.Empty(defaultWorkspace.Id);
+            textFieldInfo = TextFieldInfo.Empty(defaultWorkspaceId);
 
             await setBillableValues(textFieldInfo.ProjectId);
 

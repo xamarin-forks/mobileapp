@@ -267,16 +267,6 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.SuggestCreation.Should().BeFalse();
             }
 
-            [Fact, LogIfTooSlow]
-            public async Task ReturnsTrueIfAdminRegardlessOfWorkspaceSettings()
-            {
-                var workspace = new MockWorkspace { Id = 1, Admin = true, OnlyAdminsMayCreateProjects = true };
-                InteractorFactory.GetDefaultWorkspace().Execute().Returns(Observable.Return(workspace));
-
-                await ViewModel.Initialize();
-                ViewModel.SuggestCreation.Should().BeTrue();
-            }
-
             private string createLongString(int length)
                 => Enumerable
                     .Range(0, length)
@@ -336,6 +326,8 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 public async Task TracksProjectSelection()
                 {
                     ViewModel.Prepare();
+
+                    await ViewModel.Initialize();
 
                     await ViewModel.OnTextFieldInfoFromView(new QueryTextSpan("abcde @fgh", 10));
 
@@ -661,6 +653,9 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     .Query(Arg.Is<QueryInfo>(
                         arg => arg.SuggestionType == AutocompleteSuggestionType.Projects))
                     .Returns(Observable.Return(suggestions));
+
+                var defaultWorkspace = new MockWorkspace { Id = WorkspaceId };
+                InteractorFactory.GetDefaultWorkspace().Execute().Returns(Observable.Return(defaultWorkspace));
             }
 
             private List<ProjectSuggestion> createProjects(int count)
@@ -718,6 +713,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 AutocompleteProvider.Query(Arg.Any<QueryInfo>()).Returns(Observable.Return(projects));
                 ViewModel.Prepare();
                 ViewModel.Prepare(DefaultParameter);
+                await ViewModel.Initialize();
                 await ViewModel.OnTextFieldInfoFromView(new QueryTextSpan(Description, Description.Length));
 
                 ViewModel.ToggleProjectSuggestionsCommand.Execute();
@@ -736,6 +732,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 AutocompleteProvider.Query(Arg.Any<QueryInfo>()).Returns(Observable.Return(projects));
                 ViewModel.Prepare();
                 ViewModel.Prepare(DefaultParameter);
+                await ViewModel.Initialize();
                 await ViewModel.OnTextFieldInfoFromView(new QueryTextSpan(Description, Description.Length));
 
                 ViewModel.ToggleProjectSuggestionsCommand.Execute();
