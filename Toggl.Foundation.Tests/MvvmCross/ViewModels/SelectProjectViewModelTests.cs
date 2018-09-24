@@ -363,23 +363,13 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             }
 
             [Fact, LogIfTooSlow]
-            public async Task ReturnsFalseIfWorkspaceSettingsDisableProjectCreation()
+            public async Task ReturnsFalseIfNoWorkspaceIsEligible()
             {
-                var workspace = new MockWorkspace { Id = 1, Admin = false, OnlyAdminsMayCreateProjects = true };
-                InteractorFactory.GetDefaultWorkspace().Execute().Returns(Observable.Return(workspace));
+                var workspace = new MockWorkspace { Id = 1, Name = "ws", Admin = false, OnlyAdminsMayCreateProjects = true };
+                InteractorFactory.GetAllWorkspaces().Execute().Returns(Observable.Return(new[] { workspace } ));
 
                 await ViewModel.Initialize();
                 ViewModel.SuggestCreation.Should().BeFalse();
-            }
-
-            [Fact, LogIfTooSlow]
-            public async Task ReturnsTrueIfAdminRegardlessOfWorkspaceSettings()
-            {
-                var workspace = new MockWorkspace { Id = 1, Admin = true, OnlyAdminsMayCreateProjects = true };
-                InteractorFactory.GetDefaultWorkspace().Execute().Returns(Observable.Return(workspace));
-
-                await ViewModel.Initialize();
-                ViewModel.SuggestCreation.Should().BeTrue();
             }
         }
 
@@ -401,6 +391,8 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             [Fact, LogIfTooSlow]
             public async Task ClosesTheViewModelReturningTheCreatedIdIfTheProjectIsCreated()
             {
+                var workspace = new MockWorkspace { Id = 1, Name = "ws", Admin = true, OnlyAdminsMayCreateProjects = true };
+                InteractorFactory.GetAllWorkspaces().Execute().Returns(Observable.Return(new[] { workspace } ));
                 const long projectId = 10;
                 setupProjectCreationResult(projectId);
                 ViewModel.Prepare(SelectProjectParameter.WithIds(null, null, 10));
