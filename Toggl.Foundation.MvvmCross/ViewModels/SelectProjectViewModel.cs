@@ -38,7 +38,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private long? taskId;
         private long? projectId;
         private long workspaceId;
-        private IThreadSafeWorkspace defaultWorkspace;
+        private bool shouldShowProjectCreationSuggestion;
 
         private List<IThreadSafeWorkspace> allWorkspaces = new List<IThreadSafeWorkspace>();
 
@@ -52,7 +52,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             get
             {
-                if (!defaultWorkspace.IsEligibleForProjectCreation())
+                if (!shouldShowProjectCreationSuggestion)
                     return false;
 
                 if (!UsesFilter)
@@ -123,8 +123,9 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             await base.Initialize();
 
-            defaultWorkspace = await interactorFactory.GetDefaultWorkspace().Execute();
             var workspaces = await interactorFactory.GetAllWorkspaces().Execute();
+
+            shouldShowProjectCreationSuggestion = workspaces.Any(ws => ws.IsEligibleForProjectCreation());
             allWorkspaces = workspaces.ToList();
             UseGrouping = allWorkspaces.Count > 1;
 
