@@ -54,6 +54,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         private bool hasAnyTags;
         private bool hasAnyProjects;
+        private bool shouldSuggestProjectCreation;
         private IThreadSafeWorkspace defaultWorkspace;
         private StartTimeEntryParameters parameter;
         private TextFieldInfo textFieldInfo = TextFieldInfo.Empty(0);
@@ -82,9 +83,10 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                     return false;
 
                 if (IsSuggestingProjects)
-                    return Suggestions.None(c => c.Any(s => s is ProjectSuggestion pS && pS.ProjectName == CurrentQuery))
+                    return Suggestions.None(
+                               c => c.Any(s => s is ProjectSuggestion pS && pS.ProjectName == CurrentQuery))
                            && CurrentQuery.LengthInBytes() <= MaxProjectNameLengthInBytes
-                           && (defaultWorkspace.Admin || !defaultWorkspace.OnlyAdminsMayCreateProjects);
+                           && shouldSuggestProjectCreation;
 
                 if (IsSuggestingTags)
                     return Suggestions.None(c => c.Any(s => s is TagSuggestion tS && tS.Name == CurrentQuery))
@@ -290,6 +292,9 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             await base.Initialize();
 
             defaultWorkspace = await interactorFactory.GetDefaultWorkspace().Execute();
+            shouldSuggestProjectCreation =
+                await interactorFactory.GetAllWorkspaces().Execute().Select(allWorkspaces =>
+                    allWorkspaces.Any(workspace => !workspace.OnlyAdminsMayCreateProjects || workspace.Admin));
 
             textFieldInfo = TextFieldInfo.Empty(defaultWorkspace.Id);
 
