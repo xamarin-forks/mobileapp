@@ -16,14 +16,6 @@
     <PackageReference Include="System.Reactive.Linq" Version="4.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="HashCode.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>HashCode.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="HashCode.cs">
-      <DependentUpon>HashCode.tt</DependentUpon>
-    </Compile>
+    <None Remove="HashCode.tt" />
   </ItemGroup>
 </Project>
