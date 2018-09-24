@@ -58,7 +58,7 @@ namespace Toggl.Foundation.Sync
 
         private SyncState push()
         {
-            pushSyncQueued = false;
+            // pushSyncQueued = false;
             pulledLast = false;
             return Push;
         }
