@@ -107,7 +107,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         public override async Task Initialize()
         {
             var allWorkspaces = await interactorFactory.GetAllWorkspaces().Execute();
-            var workspace = allWorkspaces.First(ws => ws.Admin || !ws.OnlyAdminsMayCreateProjects);
+            var workspace = allWorkspaces.First(ws => ws.IsEligibleForProjectCreation());
             areCustomColorsEnabled = await interactorFactory.AreCustomColorsEnabledForWorkspace(workspace.Id).Execute();
             workspaceId = initialWorkspaceId = workspace.Id;
             WorkspaceName = workspace.Name;

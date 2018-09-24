@@ -294,7 +294,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             defaultWorkspace = await interactorFactory.GetDefaultWorkspace().Execute();
             shouldSuggestProjectCreation =
                 await interactorFactory.GetAllWorkspaces().Execute().Select(allWorkspaces =>
-                    allWorkspaces.Any(workspace => !workspace.OnlyAdminsMayCreateProjects || workspace.Admin));
+                    allWorkspaces.Any(workspace => workspace.IsEligibleForProjectCreation()));
 
             textFieldInfo = TextFieldInfo.Empty(defaultWorkspace.Id);
 

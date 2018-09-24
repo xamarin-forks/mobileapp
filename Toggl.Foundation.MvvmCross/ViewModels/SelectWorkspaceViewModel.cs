@@ -59,7 +59,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
             var workspaces = await interactorFactory.GetAllWorkspaces().Execute();
 
-            allWorkspaces = workspaces.Where(w => w.Admin || !w.OnlyAdminsMayCreateProjects)
+            allWorkspaces = workspaces.Where(w => w.IsEligibleForProjectCreation())
                 .Select(w => new SelectableWorkspaceViewModel(w, w.Id == defaultWorkspaceId));
             Suggestions.AddRange(allWorkspaces);
         }

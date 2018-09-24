@@ -52,7 +52,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             get
             {
-                if (!defaultWorkspace.Admin && defaultWorkspace.OnlyAdminsMayCreateProjects)
+                if (!defaultWorkspace.IsEligibleForProjectCreation())
                     return false;
 
                 if (!UsesFilter)
