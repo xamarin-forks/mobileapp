@@ -30,7 +30,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     var workspace = Substitute.For<IThreadSafeWorkspace>();
                     workspace.Id.Returns(i);
                     workspace.Name.Returns(i.ToString());
-                    workspace.OnlyAdminsMayCreateProjects.Returns(i > 5);
+                    workspace.OnlyAdminsMayCreateProjects.Returns(i < 5);
                     return workspace;
                 }).ToList();
         }

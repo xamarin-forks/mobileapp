@@ -640,7 +640,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             if (firstSuggestion is ProjectSuggestion)
                 return suggestions
                     .GroupByWorkspaceAddingNoProject()
-                    .OrderByDefaultWorkspaceAndName(defaultWorkspace.Id);
+                    .OrderByDefaultWorkspaceAndName(defaultWorkspaceId);
 
             if (IsSuggestingTags)
                 suggestions = suggestions.Where(suggestion => suggestion.WorkspaceId == textFieldInfo.WorkspaceId);
