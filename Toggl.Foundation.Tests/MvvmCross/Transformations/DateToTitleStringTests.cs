@@ -42,7 +42,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.Transformations
                 {
                     var result = DateToTitleString.Convert(date, now);
                     var expectedCulture = CultureInfo.CreateSpecificCulture("en-US");
-                    result.Should().Be(date.ToString("ddd, dd MMM", expectedCulture));
+                    result.Should().Be(date.ToLocalTime().ToString("ddd, dd MMM", expectedCulture));
                 });
             }
         }
