@@ -14,10 +14,10 @@ namespace Toggl.Foundation.Interactors.AutocompleteSuggestions
 {
     internal sealed class GetProjectsAutocompleteSuggestions : IInteractor<IObservable<IEnumerable<AutocompleteSuggestion>>>
     {
-        private readonly IQuery<IThreadSafeProject> projectsContainingWordsToQuery;
+        private readonly IQuery<IEnumerable<IThreadSafeProject>> projectsContainingWordsToQuery;
 
         public GetProjectsAutocompleteSuggestions(
-            IQuery<IThreadSafeProject> projectsContainingWordsToQuery)
+            IQuery<IEnumerable<IThreadSafeProject>> projectsContainingWordsToQuery)
         {
             Ensure.Argument.IsNotNull(projectsContainingWordsToQuery, nameof(projectsContainingWordsToQuery));
 

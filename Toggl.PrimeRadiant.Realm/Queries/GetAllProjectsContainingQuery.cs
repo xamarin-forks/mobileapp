@@ -10,7 +10,7 @@ using Toggl.Multivac.Extensions;
 
 namespace Toggl.PrimeRadiant.Realm.Queries
 {
-    public class GetAllProjectsContainingQuery : IQuery<IDatabaseProject>
+    public class GetAllProjectsContainingQuery : IQuery<IEnumerable<IDatabaseProject>>
     {
         private readonly Func<Realms.Realm> realm;
 

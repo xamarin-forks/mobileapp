@@ -19,7 +19,7 @@ namespace Toggl.Foundation.DataSources.Queries
             this.queryFactory = queryFactory;
         }
 
-        public IQuery<IThreadSafeProject> GetAllProjectsContaining(IEnumerable<string> words)
+        public IQuery<IEnumerable<IThreadSafeProject>> GetAllProjectsContaining(IEnumerable<string> words)
             => new ThreadSafeQuery<IThreadSafeProject, IDatabaseProject>(queryFactory.GetAllProjectsContaining(words), Project.From);
     }
 }

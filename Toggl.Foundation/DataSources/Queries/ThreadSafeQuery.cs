@@ -8,13 +8,13 @@ using Toggl.PrimeRadiant.Queries;
 
 namespace Toggl.Foundation.DataSources.Queries
 {
-    public sealed class ThreadSafeQuery<TThreadSafeModel, TDatabaseModel> : IQuery<TThreadSafeModel>
+    public sealed class ThreadSafeQuery<TThreadSafeModel, TDatabaseModel> : IQuery<IEnumerable<TThreadSafeModel>>
     {
         private readonly Func<TDatabaseModel, TThreadSafeModel> convert;
 
-        private readonly IQuery<TDatabaseModel> query;
+        private readonly IQuery<IEnumerable<TDatabaseModel>> query;
 
-        public ThreadSafeQuery(IQuery<TDatabaseModel> query, Func<TDatabaseModel, TThreadSafeModel> convert)
+        public ThreadSafeQuery(IQuery<IEnumerable<TDatabaseModel>> query, Func<TDatabaseModel, TThreadSafeModel> convert)
         {
             Ensure.Argument.IsNotNull(query, nameof(query));
             Ensure.Argument.IsNotNull(convert, nameof(convert));
@@ -23,7 +23,7 @@ namespace Toggl.Foundation.DataSources.Queries
             this.convert = convert;
         }
 
-        public IEnumerable<TThreadSafeModel> GetAll()
+        public IEnumerable<TThreadSafeModel> Execute()
             => query.Execute().Select(convert);
     }
 }
