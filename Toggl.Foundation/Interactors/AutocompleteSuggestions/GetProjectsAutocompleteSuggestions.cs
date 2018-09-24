@@ -14,31 +14,20 @@ namespace Toggl.Foundation.Interactors.AutocompleteSuggestions
 {
     internal sealed class GetProjectsAutocompleteSuggestions : IInteractor<IObservable<IEnumerable<AutocompleteSuggestion>>>
     {
-        private readonly IDataSource<IThreadSafeProject, IDatabaseProject> dataSource;
-
         private readonly IQuery<IThreadSafeProject> projectsContainingWordsToQuery;
 
         public GetProjectsAutocompleteSuggestions(
-            IDataSource<IThreadSafeProject, IDatabaseProject> dataSource,
             IQuery<IThreadSafeProject> projectsContainingWordsToQuery)
         {
-            Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
+            Ensure.Argument.IsNotNull(projectsContainingWordsToQuery, nameof(projectsContainingWordsToQuery));
 
-            this.dataSource = dataSource;
             this.projectsContainingWordsToQuery = projectsContainingWordsToQuery;
         }
 
         public IObservable<IEnumerable<AutocompleteSuggestion>> Execute()
-            => getFilteredProjectsForSuggestions()
-               ?? getAllProjects().Select(ProjectSuggestion.FromProjects);
-
-        private IObservable<IEnumerable<ProjectSuggestion>> getFilteredProjectsForSuggestions()
-            => projectsContainingWordsToQuery?.GetAll()
+            => projectsContainingWordsToQuery?.Execute()
                 .Select(ProjectSuggestion.FromProject)
                 .Apply(Observable.Return);
-
-        private IObservable<IEnumerable<IThreadSafeProject>> getAllProjects()
-            => dataSource.GetAll(project => project.Active);
     }
 
     internal sealed class OldGetProjectsAutocompleteSuggestions : IInteractor<IObservable<IEnumerable<AutocompleteSuggestion>>>
@@ -73,8 +62,8 @@ namespace Toggl.Foundation.Interactors.AutocompleteSuggestions
         private Func<IEnumerable<IThreadSafeProject>, IEnumerable<IThreadSafeProject>> filterProjectsByWord(string word)
             => projects =>
                 projects.Where(
-                    p => p.Name.ContainsIgnoringCase(word));
-                         //|| (p.Client != null && p.Client.Name.ContainsIgnoringCase(word))
-                         //|| (p.Tasks != null && p.Tasks.Any(task => task.Name.ContainsIgnoringCase(word))));
+                    p => p.Name.ContainsIgnoringCase(word)
+                        || (p.Client != null && p.Client.Name.ContainsIgnoringCase(word))
+                        || (p.Tasks != null && p.Tasks.Any(task => task.Name.ContainsIgnoringCase(word))));
     }
 }
