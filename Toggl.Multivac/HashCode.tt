@@ -58,7 +58,7 @@ private void CreateFromMethod(int typeParametersCount)
         {
             unchecked
             {
-                return seed * From(<#= callArguments #>) + item0.GetHashCode();
+                return hashMultiplier * From(<#= callArguments #>) + item0.GetHashCode();
             }
         }
 

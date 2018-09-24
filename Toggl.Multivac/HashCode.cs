@@ -9,7 +9,7 @@
         {
             unchecked
             {
-                return seed * From(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12, item13, item14, item15) + item0.GetHashCode();
+                return hashMultiplier * From(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12, item13, item14, item15) + item0.GetHashCode();
             }
         }
 
@@ -17,7 +17,7 @@
         {
             unchecked
             {
-                return seed * From(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12, item13, item14) + item0.GetHashCode();
+                return hashMultiplier * From(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12, item13, item14) + item0.GetHashCode();
             }
         }
 
@@ -25,7 +25,7 @@
         {
             unchecked
             {
-                return seed * From(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12, item13) + item0.GetHashCode();
+                return hashMultiplier * From(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12, item13) + item0.GetHashCode();
             }
         }
 
@@ -33,7 +33,7 @@
         {
             unchecked
             {
-                return seed * From(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12) + item0.GetHashCode();
+                return hashMultiplier * From(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12) + item0.GetHashCode();
             }
         }
 
@@ -41,7 +41,7 @@
         {
             unchecked
             {
-                return seed * From(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11) + item0.GetHashCode();
+                return hashMultiplier * From(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11) + item0.GetHashCode();
             }
         }
 
@@ -49,7 +49,7 @@
         {
             unchecked
             {
-                return seed * From(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10) + item0.GetHashCode();
+                return hashMultiplier * From(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10) + item0.GetHashCode();
             }
         }
 
@@ -57,7 +57,7 @@
         {
             unchecked
             {
-                return seed * From(item1, item2, item3, item4, item5, item6, item7, item8, item9) + item0.GetHashCode();
+                return hashMultiplier * From(item1, item2, item3, item4, item5, item6, item7, item8, item9) + item0.GetHashCode();
             }
         }
 
@@ -65,7 +65,7 @@
         {
             unchecked
             {
-                return seed * From(item1, item2, item3, item4, item5, item6, item7, item8) + item0.GetHashCode();
+                return hashMultiplier * From(item1, item2, item3, item4, item5, item6, item7, item8) + item0.GetHashCode();
             }
         }
 
@@ -73,7 +73,7 @@
         {
             unchecked
             {
-                return seed * From(item1, item2, item3, item4, item5, item6, item7) + item0.GetHashCode();
+                return hashMultiplier * From(item1, item2, item3, item4, item5, item6, item7) + item0.GetHashCode();
             }
         }
 
@@ -81,7 +81,7 @@
         {
             unchecked
             {
-                return seed * From(item1, item2, item3, item4, item5, item6) + item0.GetHashCode();
+                return hashMultiplier * From(item1, item2, item3, item4, item5, item6) + item0.GetHashCode();
             }
         }
 
@@ -89,7 +89,7 @@
         {
             unchecked
             {
-                return seed * From(item1, item2, item3, item4, item5) + item0.GetHashCode();
+                return hashMultiplier * From(item1, item2, item3, item4, item5) + item0.GetHashCode();
             }
         }
 
@@ -97,7 +97,7 @@
         {
             unchecked
             {
-                return seed * From(item1, item2, item3, item4) + item0.GetHashCode();
+                return hashMultiplier * From(item1, item2, item3, item4) + item0.GetHashCode();
             }
         }
 
@@ -105,7 +105,7 @@
         {
             unchecked
             {
-                return seed * From(item1, item2, item3) + item0.GetHashCode();
+                return hashMultiplier * From(item1, item2, item3) + item0.GetHashCode();
             }
         }
 
@@ -113,7 +113,7 @@
         {
             unchecked
             {
-                return seed * From(item1, item2) + item0.GetHashCode();
+                return hashMultiplier * From(item1, item2) + item0.GetHashCode();
             }
         }
 
