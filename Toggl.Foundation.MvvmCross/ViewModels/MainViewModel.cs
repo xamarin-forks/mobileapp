@@ -11,6 +11,7 @@ using MvvmCross.ViewModels;
 using Toggl.Foundation;
 using Toggl.Foundation.Analytics;
 using Toggl.Foundation.DataSources;
+using Toggl.Foundation.DataSources.Queries;
 using Toggl.Foundation.DTOs;
 using Toggl.Foundation.Experiments;
 using Toggl.Foundation.Extensions;
@@ -102,6 +103,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private readonly IMvxNavigationService navigationService;
         private readonly ISchedulerProvider schedulerProvider;
         private readonly IAccessRestrictionStorage accessRestrictionStorage;
+        private readonly IThreadSafeQueryFactory queryFactory;
 
         private CompositeDisposable disposeBag = new CompositeDisposable();
 
@@ -133,7 +135,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             IRemoteConfigService remoteConfigService,
             ISuggestionProviderContainer suggestionProviders,
             IAccessRestrictionStorage accessRestrictionStorage,
-            ISchedulerProvider schedulerProvider)
+            ISchedulerProvider schedulerProvider,
+            IThreadSafeQueryFactory queryFactory)
         {
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
             Ensure.Argument.IsNotNull(timeService, nameof(timeService));
@@ -157,6 +160,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             this.onboardingStorage = onboardingStorage;
             this.schedulerProvider = schedulerProvider;
             this.accessRestrictionStorage = accessRestrictionStorage;
+            this.queryFactory = queryFactory;
 
             SuggestionsViewModel = new SuggestionsViewModel(dataSource, interactorFactory, onboardingStorage, suggestionProviders);
             RatingViewModel = new RatingViewModel(timeService, dataSource, ratingService, analyticsService, onboardingStorage, navigationService, schedulerProvider);
@@ -279,6 +283,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 .DisposedBy(disposeBag);
 
             var rnd = new Random(123);
+
+            queryFactory.CacheProperties().Execute();
 
             TimeEntriesViewModel.Empty
                 .Where(isEmpty => isEmpty)

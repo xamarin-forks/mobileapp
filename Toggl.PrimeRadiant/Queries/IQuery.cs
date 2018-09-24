@@ -4,4 +4,9 @@ namespace Toggl.PrimeRadiant.Queries
     {
         T Execute();
     }
+
+    public interface IQuery
+    {
+        void Execute();
+    }
 }

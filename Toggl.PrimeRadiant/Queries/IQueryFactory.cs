@@ -6,5 +6,7 @@ namespace Toggl.PrimeRadiant.Queries
     public interface IQueryFactory
     {
         IQuery<IEnumerable<IDatabaseProject>> GetAllProjectsContaining(IEnumerable<string> words);
+
+        IQuery CacheProperties();
     }
 }

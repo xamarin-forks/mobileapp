@@ -19,5 +19,8 @@ namespace Toggl.PrimeRadiant.Realm.Queries
 
         public IQuery<IEnumerable<IDatabaseProject>> GetAllProjectsContaining(IEnumerable<string> words)
             => new GetAllProjectsContainingQuery(getRealmInstance, words);
+
+        public IQuery CacheProperties()
+            => new CacheProperties(getRealmInstance);
     }
 }

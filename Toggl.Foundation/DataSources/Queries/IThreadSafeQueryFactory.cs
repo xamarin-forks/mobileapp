@@ -7,5 +7,6 @@ namespace Toggl.Foundation.DataSources.Queries
     public interface IThreadSafeQueryFactory
     {
         IQuery<IEnumerable<IThreadSafeProject>> GetAllProjectsContaining(IEnumerable<string> words);
+        IQuery CacheProperties();
     }
 }
