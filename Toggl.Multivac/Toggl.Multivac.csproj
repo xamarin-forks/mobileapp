@@ -15,7 +15,4 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
     <PackageReference Include="System.Reactive.Linq" Version="4.0.0" />
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="HashCode.tt" />
-  </ItemGroup>
 </Project>
