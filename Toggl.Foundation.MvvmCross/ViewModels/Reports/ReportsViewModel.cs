@@ -164,7 +164,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels.Reports
             this.interactorFactory = interactorFactory;
             this.dialogService = dialogService;
 
-            calendarViewModel = new ReportsCalendarViewModel(timeService, dataSource);
+            calendarViewModel = new ReportsCalendarViewModel(timeService, dialogService, dataSource);
 
             var totalsObservable = reportSubject
                 .SelectMany(_ => dataSource.ReportsProvider.GetTotals(workspaceId, startDate, endDate))

@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Toggl.Daneel.ViewControllers;
 using Toggl.Foundation;
 using Toggl.Foundation.MvvmCross.Services;
 using Toggl.Multivac;
+using CoreFoundation;
+using Foundation;
 using UIKit;
 
 namespace Toggl.Daneel.Services
@@ -89,7 +92,7 @@ namespace Toggl.Daneel.Services
             });
         }
 
-        public IObservable<Unit> Alert(string title, string message, string buttonTitle)
+        public IObservable<Unit> Alert(string title, string message, string buttonTitle, bool silentlyIfPossible = false)
         {
             return Observable.Create<Unit>(observer =>
             {
@@ -102,10 +105,18 @@ namespace Toggl.Daneel.Services
 
                 alert.AddAction(alertAction);
 
-                topViewControllerProvider
-                    .TopViewController
-                    .PresentViewController(alert, true, null);
-
+                if (topViewControllerProvider.TopViewController is MainTabBarController tabBarController)
+                {
+                    tabBarController
+                        .SelectedViewController
+                        .PresentViewController(alert, true, null);
+                }
+                else
+                {
+                    topViewControllerProvider
+                        .TopViewController
+                        .PresentViewController(alert, true, null);
+                }
                 return Disposable.Empty;
             });
         }

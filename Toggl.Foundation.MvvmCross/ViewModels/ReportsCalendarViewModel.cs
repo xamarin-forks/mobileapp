@@ -11,6 +11,7 @@ using PropertyChanged;
 using Toggl.Foundation.Analytics;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.MvvmCross.Parameters;
+using Toggl.Foundation.MvvmCross.Services;
 using Toggl.Foundation.MvvmCross.ViewModels.Calendar;
 using Toggl.Foundation.MvvmCross.ViewModels.Calendar.QuickSelectShortcuts;
 using Toggl.Multivac;
@@ -25,6 +26,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         //Fields
         private readonly ITimeService timeService;
+        private readonly IDialogService dialogService;
         private readonly ITogglDataSource dataSource;
         private readonly ISubject<ReportsDateRangeParameter> selectedDateRangeSubject = new Subject<ReportsDateRangeParameter>();
         private readonly string[] dayHeaders =
@@ -67,12 +69,14 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         public IMvxCommand<CalendarBaseQuickSelectShortcut> QuickSelectCommand { get; }
 
         public ReportsCalendarViewModel(
-            ITimeService timeService, ITogglDataSource dataSource)
+            ITimeService timeService, IDialogService dialogService, ITogglDataSource dataSource)
         {
             Ensure.Argument.IsNotNull(timeService, nameof(timeService));
+            Ensure.Argument.IsNotNull(dialogService, nameof(dialogService));
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
 
             this.timeService = timeService;
+            this.dialogService = dialogService;
             this.dataSource = dataSource;
 
             CalendarDayTappedCommand = new MvxCommand<CalendarDayViewModel>(calendarDayTapped);
@@ -98,11 +102,19 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 var startDate = startOfSelection.DateTimeOffset;
                 var endDate = tappedDay.DateTimeOffset;
 
-                var dateRange = ReportsDateRangeParameter
-                    .WithDates(startDate, endDate)
-                    .WithSource(ReportsSource.Calendar);
-                startOfSelection = null;
-                changeDateRange(dateRange);
+                // if (System.Math.Abs((endDate - startDate).Days) > 365)
+                if (System.Math.Abs((endDate - startDate).Days) > 4)
+                {
+                    dialogService.Alert("Too long", "You can do a year max", "Okay, lol", true).First();
+                }
+                else
+                {
+                    var dateRange = ReportsDateRangeParameter
+                        .WithDates(startDate, endDate)
+                        .WithSource(ReportsSource.Calendar);
+                    startOfSelection = null;
+                    changeDateRange(dateRange);
+                }
             }
         }
 
