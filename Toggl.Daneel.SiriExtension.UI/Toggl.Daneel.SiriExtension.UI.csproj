@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -104,6 +105,10 @@
     <Compile Include="IntentViewController.cs" />
     <Compile Include="IntentViewController.designer.cs">
       <DependentUpon>IntentViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EntryInfoView.cs" />
+    <Compile Include="Views\EntryInfoView.designer.cs">
+      <DependentUpon>EntryInfoView.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
