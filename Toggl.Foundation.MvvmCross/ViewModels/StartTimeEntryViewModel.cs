@@ -234,7 +234,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
             TextFieldInfoObservable = uiSubject.AsDriver(this.schedulerProvider);
 
-            BackCommand = new MvxAsyncCommand(back);
+            BackCommand = new MvxAsyncCommand(Close);
             DoneCommand = new MvxAsyncCommand(done);
             CreateCommand = new MvxAsyncCommand(create);
             DurationTapped = new MvxCommand(durationTapped);
@@ -316,6 +316,19 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             queryWith(textFieldInfo.ReplaceSpans(spans));
             await setBillableValues(textFieldInfo.ProjectId);
+        }
+
+        public async Task<bool> Close()
+        {
+            if (IsDirty)
+            {
+                var shouldDiscard = await dialogService.ConfirmDestructiveAction(ActionType.DiscardNewTimeEntry);
+                if (!shouldDiscard)
+                    return false;
+            }
+
+            await navigationService.Close(this);
+            return true;
         }
 
         private async Task selectSuggestion(AutocompleteSuggestion suggestion)
@@ -569,18 +582,6 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             {
                 Duration = duration;
             }
-        }
-
-        private async Task back()
-        {
-            if (IsDirty)
-            {
-                var shouldDiscard = await dialogService.ConfirmDestructiveAction(ActionType.DiscardNewTimeEntry);
-                if (!shouldDiscard)
-                    return;
-            }
-
-            await navigationService.Close(this);
         }
 
         private async Task done()
