@@ -92,7 +92,7 @@ namespace Toggl.Daneel.Services
             });
         }
 
-        public IObservable<Unit> Alert(string title, string message, string buttonTitle, bool silentlyIfPossible = false)
+        public IObservable<Unit> Alert(string title, string message, string buttonTitle)
         {
             return Observable.Create<Unit>(observer =>
             {

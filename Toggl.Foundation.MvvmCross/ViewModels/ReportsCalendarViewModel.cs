@@ -105,7 +105,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 // if (System.Math.Abs((endDate - startDate).Days) > 365)
                 if (System.Math.Abs((endDate - startDate).Days) > 4)
                 {
-                    await dialogService.Alert("Too long", "You can do a year max", "Okay, lol", true);
+                    await dialogService.Alert("Too long", "You can do a year max", "Okay, lol");
                 }
                 else
                 {

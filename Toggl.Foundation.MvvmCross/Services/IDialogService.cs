@@ -12,7 +12,7 @@ namespace Toggl.Foundation.MvvmCross.Services
             string confirmButtonText,
             string dismissButtonText);
 
-        IObservable<Unit> Alert(string title, string message, string buttonTitle, bool silentlyIfPossible = false);
+        IObservable<Unit> Alert(string title, string message, string buttonTitle);
 
         IObservable<bool> ConfirmDestructiveAction(ActionType type);
 
