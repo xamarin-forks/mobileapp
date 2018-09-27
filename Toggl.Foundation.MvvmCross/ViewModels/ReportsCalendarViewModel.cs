@@ -102,8 +102,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 var startDate = startOfSelection.DateTimeOffset;
                 var endDate = tappedDay.DateTimeOffset;
 
-                // if (System.Math.Abs((endDate - startDate).Days) > 365)
-                if (System.Math.Abs((endDate - startDate).Days) > 4)
+                if (System.Math.Abs((endDate - startDate).Days) > 365)
                 {
                     await dialogService.Alert("Too long", "You can do a year max", "Okay, lol");
                 }
