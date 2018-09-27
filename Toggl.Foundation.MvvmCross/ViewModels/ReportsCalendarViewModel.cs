@@ -64,7 +64,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public List<CalendarBaseQuickSelectShortcut> QuickSelectShortcuts { get; private set; }
 
-        public IMvxCommand<CalendarDayViewModel> CalendarDayTappedCommand { get; }
+        public IMvxAsyncCommand<CalendarDayViewModel> CalendarDayTappedCommand { get; }
 
         public IMvxCommand<CalendarBaseQuickSelectShortcut> QuickSelectCommand { get; }
 
@@ -79,13 +79,13 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             this.dialogService = dialogService;
             this.dataSource = dataSource;
 
-            CalendarDayTappedCommand = new MvxCommand<CalendarDayViewModel>(calendarDayTapped);
+            CalendarDayTappedCommand = new MvxAsyncCommand<CalendarDayViewModel>(calendarDayTapped);
             QuickSelectCommand = new MvxCommand<CalendarBaseQuickSelectShortcut>(quickSelect);
 
             disposableBag = new CompositeDisposable();
         }
 
-        private void calendarDayTapped(CalendarDayViewModel tappedDay)
+        private async Task calendarDayTapped(CalendarDayViewModel tappedDay)
         {
             if (startOfSelection == null)
             {
@@ -105,7 +105,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 // if (System.Math.Abs((endDate - startDate).Days) > 365)
                 if (System.Math.Abs((endDate - startDate).Days) > 4)
                 {
-                    dialogService.Alert("Too long", "You can do a year max", "Okay, lol", true).First();
+                    await dialogService.Alert("Too long", "You can do a year max", "Okay, lol", true);
                 }
                 else
                 {

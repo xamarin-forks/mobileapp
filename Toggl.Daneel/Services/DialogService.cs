@@ -105,18 +105,10 @@ namespace Toggl.Daneel.Services
 
                 alert.AddAction(alertAction);
 
-                if (topViewControllerProvider.TopViewController is MainTabBarController tabBarController)
-                {
-                    tabBarController
-                        .SelectedViewController
-                        .PresentViewController(alert, true, null);
-                }
-                else
-                {
-                    topViewControllerProvider
-                        .TopViewController
-                        .PresentViewController(alert, true, null);
-                }
+                topViewControllerProvider
+                    .TopViewController
+                    .PresentViewController(alert, true, null);
+
                 return Disposable.Empty;
             });
         }
