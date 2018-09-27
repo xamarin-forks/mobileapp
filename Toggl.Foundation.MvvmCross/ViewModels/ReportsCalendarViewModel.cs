@@ -22,7 +22,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
     [Preserve(AllMembers = true)]
     public sealed class ReportsCalendarViewModel : MvxViewModel
     {
-        private const int monthsToShow = 13;
+        public const int MonthsToShow = 13;
 
         //Fields
         private readonly ITimeService timeService;
@@ -45,14 +45,13 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         private CompositeDisposable disposableBag;
 
-
         public BeginningOfWeek BeginningOfWeek { get; private set; }
 
         //Properties
         [DependsOn(nameof(CurrentPage))]
         public CalendarMonth CurrentMonth => convertPageIndexTocalendarMonth(CurrentPage);
 
-        public int CurrentPage { get; set; } = monthsToShow - 1;
+        public int CurrentPage { get; set; } = MonthsToShow - 1;
 
         [DependsOn(nameof(Months), nameof(CurrentPage))]
         public int RowsInCurrentMonth => Months[CurrentPage].RowCount;
@@ -122,7 +121,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             base.Prepare();
 
             var now = timeService.CurrentDateTime;
-            initialMonth = new CalendarMonth(now.Year, now.Month).AddMonths(-(monthsToShow - 1));
+            initialMonth = new CalendarMonth(now.Year, now.Month).AddMonths(-(MonthsToShow - 1));
         }
 
         public override async Task Initialize()
@@ -165,7 +164,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private void fillMonthArray()
         {
             var monthIterator = initialMonth;
-            for (int i = 0; i < monthsToShow; i++, monthIterator = monthIterator.Next())
+            for (int i = 0; i < MonthsToShow; i++, monthIterator = monthIterator.Next())
                 Months.Add(new CalendarPageViewModel(monthIterator, BeginningOfWeek, timeService.CurrentDateTime));
         }
 

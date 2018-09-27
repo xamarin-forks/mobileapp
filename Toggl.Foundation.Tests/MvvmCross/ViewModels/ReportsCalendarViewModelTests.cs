@@ -64,7 +64,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
         public sealed class TheInitializeMethod : ReportsCalendarViewModelTest
         {
             [Fact, LogIfTooSlow]
-            public async Task InitializesTheMonthsPropertyToLast13Months()
+            public async Task InitializesTheMonthsPropertyToTheMonthsToShow()
             {
                 var now = new DateTimeOffset(2020, 4, 2, 1, 1, 1, TimeSpan.Zero);
                 TimeService.CurrentDateTime.Returns(now);
@@ -72,11 +72,11 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 await ViewModel.Initialize();
 
-                ViewModel.Months.Should().HaveCount(13);
-                var firstDateTime = now.AddMonths(-12);
+                ViewModel.Months.Should().HaveCount(ReportsCalendarViewModel.MonthsToShow);
+                var firstDateTime = now.AddMonths(-(ReportsCalendarViewModel.MonthsToShow - 1));
                 var month = new CalendarMonth(
                     firstDateTime.Year, firstDateTime.Month);
-                for (int i = 0; i < 12; i++, month = month.Next())
+                for (int i = 0; i < (ReportsCalendarViewModel.MonthsToShow - 1); i++, month = month.Next())
                 {
                     ViewModel.Months[i].CalendarMonth.Should().Be(month);
                 }
@@ -134,8 +134,8 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 observer.Received().OnNext(Arg.Is<ReportsDateRangeParameter>(
                     dateRange => ensureDateRangeIsCorrect(
                         dateRange,
-                        ViewModel.Months[12].Days[0],
-                        ViewModel.Months[12].Days[6]
+                        ViewModel.Months[ReportsCalendarViewModel.MonthsToShow].Days[0],
+                        ViewModel.Months[ReportsCalendarViewModel.MonthsToShow].Days[6]
                     )));
             }
         }
@@ -168,9 +168,9 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
         public sealed class TheCurrentPageProperty : ReportsCalendarViewModelTest
         {
             [Fact, LogIfTooSlow]
-            public void IsInitializedTo12()
+            public void IsInitializedToTheMonthsToShowConstantMinusOne()
             {
-                ViewModel.CurrentPage.Should().Be(12);
+                ViewModel.CurrentPage.Should().Be(ReportsCalendarViewModel.MonthsToShow);
             }
         }
 
