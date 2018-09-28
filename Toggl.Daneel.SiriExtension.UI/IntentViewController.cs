@@ -78,6 +78,11 @@ namespace Toggl.Daneel.SiriExtension.UI
                         }
                     }
 
+                    if (interaction.IntentHandlingStatus == INIntentHandlingStatus.Ready)
+                    {
+                        desiredSize = showConfirmation("Stop current entry?");
+                    }
+
                     break;
                 default:
                     success = false;
@@ -103,7 +108,7 @@ namespace Toggl.Daneel.SiriExtension.UI
             displayLink.AddToRunLoop(NSRunLoop.Current, NSRunLoopMode.Default);
 
             View.AddSubview(entryInfoView);
-            var width = this.ExtensionContext?.GetHostedViewMaximumAllowedSize().Width ?? 320;
+            var width = ExtensionContext?.GetHostedViewMaximumAllowedSize().Width ?? 320;
             var frame = new CGRect(0, 0, width, 60);
             entryInfoView.Frame = frame;
 
@@ -122,6 +127,8 @@ namespace Toggl.Daneel.SiriExtension.UI
 
             var frame = new CGRect(0, 0, width, boundingRect.Height + 12 * 2);
 
+            View.AddSubview(confirmationView);
+
             confirmationView.ConfirmationLabel.AttributedText = attributedString;
             confirmationView.Frame = frame;
 
@@ -132,7 +139,7 @@ namespace Toggl.Daneel.SiriExtension.UI
         {
             entryInfoView.TimeLabel.Text = secondsToString(response.EntryDuration.DoubleValue);
 
-            var attributedString = new NSMutableAttributedString("This is an entry with a very long description in three or for or many many lines of text", boldAttributes);
+            var attributedString = new NSMutableAttributedString(response.EntryDescription, boldAttributes);
 
             var startTime = DateTimeOffset.FromUnixTimeSeconds(response.EntryStart.LongValue).ToLocalTime();
             var endTime = DateTimeOffset.FromUnixTimeSeconds(response.EntryStart.LongValue + response.EntryDuration.LongValue).ToLocalTime();
@@ -143,7 +150,7 @@ namespace Toggl.Daneel.SiriExtension.UI
             attributedString.Append(timeFrameString);
             entryInfoView.DescriptionLabel.AttributedText = attributedString;
 
-            var width = this.ExtensionContext?.GetHostedViewMaximumAllowedSize().Width ?? 320;
+            var width = ExtensionContext?.GetHostedViewMaximumAllowedSize().Width ?? 320;
             var boundingRect = attributedString.GetBoundingRect(new CGSize(width - 135 - 16 * 2, nfloat.MaxValue), NSStringDrawingOptions.UsesLineFragmentOrigin | NSStringDrawingOptions.UsesFontLeading, null);
 
             View.AddSubview(entryInfoView);
