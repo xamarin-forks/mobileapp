@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Toggl.Daneel.ViewControllers;
 using Toggl.Foundation;
 using Toggl.Foundation.MvvmCross.Services;
 using Toggl.Multivac;
-using CoreFoundation;
-using Foundation;
 using UIKit;
 
 namespace Toggl.Daneel.Services

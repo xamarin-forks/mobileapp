@@ -4,7 +4,6 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Android.Support.V7.App;
-using Android.Widget;
 using MvvmCross;
 using MvvmCross.Platforms.Android;
 using Toggl.Foundation;
