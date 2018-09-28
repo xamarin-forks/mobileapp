@@ -61,8 +61,13 @@ namespace Toggl.Daneel.SiriExtension.UI
                     {
                         desiredSize = showStartTimerSuccess(startTimerIntent.EntryDescription);                         
                     }
-                    break;
 
+                    if (interaction.IntentHandlingStatus == INIntentHandlingStatus.Ready)
+                    {
+                        desiredSize = showConfirmation($"Start {startTimerIntent.EntryDescription}?");
+                    }
+
+                    break;
                 case StopTimerIntent _:
                     if (interaction.IntentHandlingStatus == INIntentHandlingStatus.Success)
                     {
@@ -101,6 +106,24 @@ namespace Toggl.Daneel.SiriExtension.UI
             var width = this.ExtensionContext?.GetHostedViewMaximumAllowedSize().Width ?? 320;
             var frame = new CGRect(0, 0, width, 60);
             entryInfoView.Frame = frame;
+
+            return frame.Size;
+        }
+
+        private CGSize showConfirmation(string confirmationText)
+        {
+            confirmationView.ConfirmationLabel.Text = "";
+
+            var attributedString = new NSMutableAttributedString(confirmationText, boldAttributes);
+
+            var width = ExtensionContext?.GetHostedViewMaximumAllowedSize().Width ?? 320;
+            var boundingRect = attributedString.GetBoundingRect(new CGSize(width - 16 * 2, nfloat.MaxValue),
+                NSStringDrawingOptions.UsesLineFragmentOrigin | NSStringDrawingOptions.UsesFontLeading, null);
+
+            var frame = new CGRect(0, 0, width, boundingRect.Height + 12 * 2);
+
+            confirmationView.ConfirmationLabel.AttributedText = attributedString;
+            confirmationView.Frame = frame;
 
             return frame.Size;
         }
