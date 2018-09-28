@@ -170,7 +170,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             [Fact, LogIfTooSlow]
             public void IsInitializedToTheMonthsToShowConstantMinusOne()
             {
-                ViewModel.CurrentPage.Should().Be(ReportsCalendarViewModel.MonthsToShow);
+                ViewModel.CurrentPage.Should().Be(ReportsCalendarViewModel.MonthsToShow - 1);
             }
         }
 
