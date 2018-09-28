@@ -13,6 +13,9 @@ namespace Toggl.Daneel.SiriExtension.UI
 	partial class IntentViewController
 	{
 		[Outlet]
+		Toggl.Daneel.SiriExtension.UI.ConfirmationView confirmationView { get; set; }
+
+		[Outlet]
 		Toggl.Daneel.SiriExtension.UI.EntryInfoView entryInfoView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
@@ -20,6 +23,11 @@ namespace Toggl.Daneel.SiriExtension.UI
 			if (entryInfoView != null) {
 				entryInfoView.Dispose ();
 				entryInfoView = null;
+			}
+
+			if (confirmationView != null) {
+				confirmationView.Dispose ();
+				confirmationView = null;
 			}
 		}
 	}
