@@ -107,6 +107,12 @@ namespace Toggl.Foundation {
             }
         }
         
+        public static string Ok {
+            get {
+                return ResourceManager.GetString("Ok", resourceCulture);
+            }
+        }
+        
         public static string SignUpTitle {
             get {
                 return ResourceManager.GetString("SignUpTitle", resourceCulture);
@@ -308,12 +314,6 @@ namespace Toggl.Foundation {
         public static string DifferentWorkspaceAlertMessage {
             get {
                 return ResourceManager.GetString("DifferentWorkspaceAlertMessage", resourceCulture);
-            }
-        }
-        
-        public static string Ok {
-            get {
-                return ResourceManager.GetString("Ok", resourceCulture);
             }
         }
         
@@ -815,6 +815,18 @@ namespace Toggl.Foundation {
             }
         }
         
+        public static string ReportTooLongTitle {
+            get {
+                return ResourceManager.GetString("ReportTooLongTitle", resourceCulture);
+            }
+        }
+        
+        public static string ReportTooLongDescription {
+            get {
+                return ResourceManager.GetString("ReportTooLongDescription", resourceCulture);
+            }
+        }
+        
         public static string ArchivedProjectDecorator {
             get {
                 return ResourceManager.GetString("ArchivedProjectDecorator", resourceCulture);
@@ -845,12 +857,6 @@ namespace Toggl.Foundation {
             }
         }
         
-        public static string DiscardMessage {
-            get {
-                return ResourceManager.GetString("DiscardMessage", resourceCulture);
-            }
-        }
-        
         public static string SelectWorkspace {
             get {
                 return ResourceManager.GetString("SelectWorkspace", resourceCulture);
@@ -860,6 +866,12 @@ namespace Toggl.Foundation {
         public static string IdleTimerNotification {
             get {
                 return ResourceManager.GetString("IdleTimerNotification", resourceCulture);
+            }
+        }
+        
+        public static string DiscardMessage {
+            get {
+                return ResourceManager.GetString("DiscardMessage", resourceCulture);
             }
         }
     }
