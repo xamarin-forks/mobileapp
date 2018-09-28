@@ -25,20 +25,21 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             : BaseViewModelTests<ReportsCalendarViewModel>
         {
             protected override ReportsCalendarViewModel CreateViewModel()
-                => new ReportsCalendarViewModel(TimeService, DataSource);
+                => new ReportsCalendarViewModel(TimeService, DialogService, DataSource);
         }
 
         public sealed class TheConstructor : ReportsCalendarViewModelTest
         {
             [Theory, LogIfTooSlow]
             [ConstructorData]
-            public void ThrowsIfAnyOfTheArgumentsIsNull(bool useTimeService, bool useDataSource)
+            public void ThrowsIfAnyOfTheArgumentsIsNull(bool useTimeService, bool useDialogService, bool useDataSource)
             {
                 var timeService = useTimeService ? TimeService : null;
+                var dialogService = useDialogService ? DialogService : null;
                 var dataSource = useDataSource ? DataSource : null;
 
                 Action tryingToConstructWithEmptyParameters =
-                    () => new ReportsCalendarViewModel(timeService, dataSource);
+                    () => new ReportsCalendarViewModel(timeService, dialogService, dataSource);
 
                 tryingToConstructWithEmptyParameters
                     .Should().Throw<ArgumentNullException>();
